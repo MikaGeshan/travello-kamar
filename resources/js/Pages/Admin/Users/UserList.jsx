@@ -222,11 +222,12 @@ export default function UserList() {
                                     Showing {start} to {end} of {totalUsers}{" "}
                                     results
                                 </span>
+
                                 <div className="flex items-center">
                                     <select
                                         value={perPage}
                                         onChange={handlePerPageChange}
-                                        className="border p-2 rounded mr-4"
+                                        className="border p-2 rounded mr-2"
                                     >
                                         <option value="5">5</option>
                                         <option value="10">10</option>
@@ -234,32 +235,41 @@ export default function UserList() {
                                         <option value="20">20</option>
                                     </select>
                                     <span>per page</span>
-                                    {/* <div className="flex ml-4">
+                                </div>
+                                <div className="flex items-center space-x-1">
+                                    <button
+                                        disabled={currentPage === 1}
+                                        onClick={() =>
+                                            handlePageChange(currentPage - 1)
+                                        }
+                                        className="px-2 py-1 border rounded-l-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                    >
+                                        {"<"}
+                                    </button>
+                                    {[...Array(totalPages)].map((_, index) => (
                                         <button
-                                            disabled={currentPage === 1}
+                                            key={index + 1}
                                             onClick={() =>
-                                                handlePageChange(
-                                                    currentPage - 1
-                                                )
+                                                handlePageChange(index + 1)
                                             }
-                                            className="px-2 py-1 border rounded-l-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                            className={`px-3 py-1 border ${
+                                                currentPage === index + 1
+                                                    ? "bg-blue-500 text-white"
+                                                    : "bg-gray-200 hover:bg-gray-300"
+                                            }`}
                                         >
-                                            {"<"}
+                                            {index + 1}
                                         </button>
-                                        <button
-                                            disabled={
-                                                currentPage === totalPages
-                                            }
-                                            onClick={() =>
-                                                handlePageChange(
-                                                    currentPage + 1
-                                                )
-                                            }
-                                            className="px-2 py-1 border rounded-r-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-                                        >
-                                            {">"}
-                                        </button>
-                                    </div> */}
+                                    ))}
+                                    <button
+                                        disabled={currentPage === totalPages}
+                                        onClick={() =>
+                                            handlePageChange(currentPage + 1)
+                                        }
+                                        className="px-2 py-1 border rounded-r-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                    >
+                                        {">"}
+                                    </button>
                                 </div>
                             </div>
                         </div>
