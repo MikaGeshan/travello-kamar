@@ -6,6 +6,7 @@ use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Http\Controllers\RoleController;
 
 
 // Admin Routes
@@ -53,6 +54,13 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/customers/list', [AdminController::class, 'customerList'])->name('admin.customers.list');
     Route::delete('/customers/{customer}', [AdminController::class, 'destroyCustomer'])->name('admin.customers.destroy');
     Route::delete('/customers', [AdminController::class, 'destroySelectedCustomers'])->name('admin.customers.destroy.selected');
+
+    // Role Routes
+    Route::get('/roles/list', function () {
+        return Inertia::render('Admin/Roles/RoleList');
+    })->name('admin.roles.list');
+
+    Route::get('/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
 });
 
 
