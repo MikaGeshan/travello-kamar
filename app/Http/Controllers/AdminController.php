@@ -114,4 +114,11 @@ class AdminController extends Controller
         $customer->delete();
         return redirect()->back()->with('success', 'Customer berhasil dihapus');
     }
+
+    public function destroySelectedCustomers(Request $request)
+    {
+        $customerIds = $request->input('ids');
+        Customer::destroy($customerIds);
+        return redirect()->back()->with('success', 'Customer berhasil dihapus');
+    }
 }

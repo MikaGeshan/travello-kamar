@@ -22,6 +22,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         return Inertia::render('Admin/Dashboard');
     })->name('admin.dashboard');
 
+    // User Routes
+
     Route::get('/users/list', function () {
         $users = User::all();
         return Inertia::render('Admin/Users/UserList', [
@@ -50,7 +52,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Customer routes
     Route::get('/customers/list', [AdminController::class, 'customerList'])->name('admin.customers.list');
     Route::delete('/customers/{customer}', [AdminController::class, 'destroyCustomer'])->name('admin.customers.destroy');
+    Route::delete('/customers', [AdminController::class, 'destroySelectedCustomers'])->name('admin.customers.destroy.selected');
 });
+
+
+// Base Web Routes
 
 // Welcome Route
 Route::get('/', function () {
@@ -104,3 +110,5 @@ Route::get('/profile/password', function () {
 
 Route::post('/profile/update-password', [AuthController::class, 'updatePassword'])->middleware('auth:customer');
 Route::delete('/profile/delete-account', [AuthController::class, 'deleteAccount'])->middleware('auth:customer');
+
+//
