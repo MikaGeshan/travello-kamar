@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\User;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
 
 class RoleController extends Controller
 {
@@ -15,7 +13,6 @@ class RoleController extends Controller
     public function index()
     {
         //
-        return Inertia::render('Admin/Roles/RoleList');
     }
 
     /**
@@ -23,10 +20,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $users = User::all();
-        return Inertia::render('Admin/Roles/CreateRole', [
-            'users' => $users,
-        ]);
+        //
     }
 
     /**

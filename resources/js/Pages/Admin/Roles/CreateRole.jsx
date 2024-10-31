@@ -3,10 +3,9 @@ import { useForm } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 
-export default function CreateRole({ users }) {
+export default function CreateRole() {
     const { data, setData, post, processing, errors } = useForm({
         name: "",
-        user_id: "",
     });
 
     const handleSubmit = (e) => {
@@ -40,41 +39,9 @@ export default function CreateRole({ users }) {
                                             type="text"
                                             placeholder="Enter role name"
                                             value={data.name}
-                                            onChange={(e) =>
-                                                setData("name", e.target.value)
-                                            }
+                                            onChange={(e) => setData("name", e.target.value)}
                                         />
-                                    </div>
-                                    <div className="w-1/2">
-                                        <label
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="user_id"
-                                        >
-                                            Assign User
-                                        </label>
-                                        <select
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="user_id"
-                                            value={data.user_id}
-                                            onChange={(e) =>
-                                                setData(
-                                                    "user_id",
-                                                    e.target.value
-                                                )
-                                            }
-                                        >
-                                            <option value="">
-                                                Select User
-                                            </option>
-                                            {users.map((user) => (
-                                                <option
-                                                    key={user.id}
-                                                    value={user.id}
-                                                >
-                                                    {user.name}
-                                                </option>
-                                            ))}
-                                        </select>
+                                        {errors.name && <div className="text-red-500 text-xs">{errors.name}</div>}
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between mt-4">
@@ -83,9 +50,7 @@ export default function CreateRole({ users }) {
                                         type="submit"
                                         disabled={processing}
                                     >
-                                        {processing
-                                            ? "Creating..."
-                                            : "Create Role"}
+                                        {processing ? "Creating..." : "Create Role"}
                                     </button>
                                 </div>
                             </form>

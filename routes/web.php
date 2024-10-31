@@ -60,7 +60,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         return Inertia::render('Admin/Roles/RoleList');
     })->name('admin.roles.list');
 
-    Route::get('/roles/create', [RoleController::class, 'create'])->name('admin.roles.create');
+    Route::get('/roles/create', function () {
+        return Inertia::render('Admin/Roles/CreateRole');
+    })->name('admin.roles.create');
+
+    Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
 });
 
 
