@@ -5,16 +5,16 @@ import AdminSidebar from "./../../../Layouts/AdminSidebar";
 
 export default function CreateUser({ roles }) {
     const { data, setData, post, processing, errors } = useForm({
-        name: '',
-        email: '',
-        password: '',
-        password_confirmation: '',
-        role: '',
+        name: "",
+        email: "",
+        password: "",
+        password_confirmation: "",
+        role: "",
     });
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post('/admin/users');
+        post("/admin/users");
     };
 
     return (
@@ -41,15 +41,23 @@ export default function CreateUser({ roles }) {
                                         </label>
                                         <input
                                             className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                                                errors.name ? 'border-red-500' : ''
+                                                errors.name
+                                                    ? "border-red-500"
+                                                    : ""
                                             }`}
                                             id="name"
                                             type="text"
                                             placeholder="Enter name"
                                             value={data.name}
-                                            onChange={e => setData('name', e.target.value)}
+                                            onChange={(e) =>
+                                                setData("name", e.target.value)
+                                            }
                                         />
-                                        {errors.name && <div className="text-red-500 text-xs mt-1">{errors.name}</div>}
+                                        {errors.name && (
+                                            <div className="text-red-500 text-xs mt-1">
+                                                {errors.name}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="w-1/2">
                                         <label
@@ -60,15 +68,23 @@ export default function CreateUser({ roles }) {
                                         </label>
                                         <input
                                             className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                                                errors.email ? 'border-red-500' : ''
+                                                errors.email
+                                                    ? "border-red-500"
+                                                    : ""
                                             }`}
                                             id="email"
                                             type="email"
                                             placeholder="Enter email"
                                             value={data.email}
-                                            onChange={e => setData('email', e.target.value)}
+                                            onChange={(e) =>
+                                                setData("email", e.target.value)
+                                            }
                                         />
-                                        {errors.email && <div className="text-red-500 text-xs mt-1">{errors.email}</div>}
+                                        {errors.email && (
+                                            <div className="text-red-500 text-xs mt-1">
+                                                {errors.email}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex space-x-4 mb-4">
@@ -81,15 +97,26 @@ export default function CreateUser({ roles }) {
                                         </label>
                                         <input
                                             className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                                                errors.password ? 'border-red-500' : ''
+                                                errors.password
+                                                    ? "border-red-500"
+                                                    : ""
                                             }`}
                                             id="password"
                                             type="password"
                                             placeholder="Enter password"
                                             value={data.password}
-                                            onChange={e => setData('password', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "password",
+                                                    e.target.value
+                                                )
+                                            }
                                         />
-                                        {errors.password && <div className="text-red-500 text-xs mt-1">{errors.password}</div>}
+                                        {errors.password && (
+                                            <div className="text-red-500 text-xs mt-1">
+                                                {errors.password}
+                                            </div>
+                                        )}
                                     </div>
                                     <div className="w-1/2">
                                         <label
@@ -104,7 +131,12 @@ export default function CreateUser({ roles }) {
                                             type="password"
                                             placeholder="Confirm password"
                                             value={data.password_confirmation}
-                                            onChange={e => setData('password_confirmation', e.target.value)}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "password_confirmation",
+                                                    e.target.value
+                                                )
+                                            }
                                         />
                                     </div>
                                 </div>
@@ -117,20 +149,29 @@ export default function CreateUser({ roles }) {
                                     </label>
                                     <select
                                         className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
-                                            errors.role ? 'border-red-500' : ''
+                                            errors.role ? "border-red-500" : ""
                                         }`}
                                         id="role"
                                         value={data.role}
-                                        onChange={e => setData('role', e.target.value)}
+                                        onChange={(e) =>
+                                            setData("role", e.target.value)
+                                        }
                                     >
                                         <option value="">Select Role</option>
-                                        {roles.map(role => (
-                                            <option key={role.id} value={role.name}>
+                                        {roles.map((role) => (
+                                            <option
+                                                key={role.id}
+                                                value={role.name}
+                                            >
                                                 {role.name}
                                             </option>
                                         ))}
                                     </select>
-                                    {errors.role && <div className="text-red-500 text-xs mt-1">{errors.role}</div>}
+                                    {errors.role && (
+                                        <div className="text-red-500 text-xs mt-1">
+                                            {errors.role}
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="flex items-center justify-between mt-4">
                                     <button
@@ -138,7 +179,9 @@ export default function CreateUser({ roles }) {
                                         type="submit"
                                         disabled={processing}
                                     >
-                                        {processing ? 'Creating...' : 'Create User'}
+                                        {processing
+                                            ? "Creating..."
+                                            : "Create User"}
                                     </button>
                                 </div>
                             </form>

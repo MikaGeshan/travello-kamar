@@ -80,6 +80,7 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:8',
+            'role' => 'required|string',
         ]);
 
         $user->name = $request->name;
@@ -89,6 +90,7 @@ class AdminController extends Controller
             $user->password = Hash::make($request->password);
         }
 
+        $user->role = $request->role;
         $user->save();
 
         return redirect()->route('admin.users.list')->with('success', 'User berhasil diperbarui');

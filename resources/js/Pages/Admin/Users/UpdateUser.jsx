@@ -159,7 +159,7 @@ export default function UpdateUser({ user, roles }) {
                                         {roles.map((role) => (
                                             <option
                                                 key={role.id}
-                                                value={role.id}
+                                                value={role.name}
                                             >
                                                 {role.name}
                                             </option>
