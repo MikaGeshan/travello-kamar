@@ -56,15 +56,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::delete('/customers', [AdminController::class, 'destroySelectedCustomers'])->name('admin.customers.destroy.selected');
 
     // Role Routes
-    Route::get('/roles/list', function () {
-        return Inertia::render('Admin/Roles/RoleList');
-    })->name('admin.roles.list');
+    Route::get('/roles/list', [RoleController::class, 'index'])->name('admin.roles.list');
 
     Route::get('/roles/create', function () {
         return Inertia::render('Admin/Roles/CreateRole');
     })->name('admin.roles.create');
-
-    Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
 });
 
 

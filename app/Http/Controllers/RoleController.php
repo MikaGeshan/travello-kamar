@@ -14,8 +14,10 @@ class RoleController extends Controller
      */
     public function index()
     {
-        //
-        return Inertia::render('Admin/Roles/RoleList');
+        $roles = Role::all();
+        return Inertia::render('Admin/Roles/RoleList', [
+            'roles' => $roles,
+        ]);
     }
 
     /**
@@ -31,18 +33,7 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            // 'user_id' => 'nullable|exists:users,id', // Tidak perlu validasi user_id
-        ]);
-
-        // Buat role baru
-        Role::create([
-            'name' => $request->name,
-            // 'user_id' => $request->user_id, // Jika Anda ingin menyimpan user_id, uncomment ini
-        ]);
-
-        return redirect()->route('admin.roles.list')->with('success', 'Role berhasil dibuat.');
+        //
     }
 
     /**
