@@ -12,11 +12,14 @@ use Illuminate\Support\Facades\Log;
 
 // Admin Routes
 
-// Admin Auth
+// Admin Login
 Route::get('/admin/login', function () {
     return Inertia::render('Admin/Auth/Login');
 });
 Route::post('/admin/login', [AdminController::class, 'login']);
+
+// Admin Logout
+Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.logout');
 
 // Admin Dashboard
 Route::middleware(['auth'])->prefix('admin')->group(function () {
@@ -72,6 +75,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 });
+
 
 
 // Base Web Routes

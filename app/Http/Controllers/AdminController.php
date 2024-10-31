@@ -129,4 +129,13 @@ class AdminController extends Controller
         Customer::destroy($customerIds);
         return redirect()->back()->with('success', 'Customer berhasil dihapus');
     }
+
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Logout pengguna
+        $request->session()->invalidate(); // Menghapus sesi
+        $request->session()->regenerateToken(); // Menghasilkan token sesi baru
+
+        return redirect('/admin/login'); // Redirect ke halaman login setelah logout
+    }
 }
