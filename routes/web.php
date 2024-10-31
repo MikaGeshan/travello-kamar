@@ -6,7 +6,8 @@ use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
-
+use App\Http\Controllers\RoleController;
+use App\Models\Role;
 
 // Admin Routes
 
@@ -22,6 +23,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         return Inertia::render('Admin/Dashboard');
     })->name('admin.dashboard');
 
+    // User Routes
     Route::get('/users/list', function () {
         $users = User::all();
         return Inertia::render('Admin/Users/UserList', [
@@ -30,14 +32,18 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     })->name('admin.users.list');
 
     Route::get('/users/create', function () {
-        return Inertia::render('Admin/Users/CreateUser');
+        $roles = Role::all();
+        return Inertia::render('Admin/Users/CreateUser', [
+            'roles' => $roles,
+        ]);
     })->name('admin.users.create');
-
     Route::post('/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
 
     Route::get('/users/{user}/edit', function (User $user) {
+        $roles = Role::all();
         return Inertia::render('Admin/Users/UpdateUser', [
-            'user' => $user
+            'user' => $user,
+            'roles' => $roles,
         ]);
     })->name('admin.users.edit');
 
@@ -50,7 +56,23 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Customer routes
     Route::get('/customers/list', [AdminController::class, 'customerList'])->name('admin.customers.list');
     Route::delete('/customers/{customer}', [AdminController::class, 'destroyCustomer'])->name('admin.customers.destroy');
+    Route::delete('/customers', [AdminController::class, 'destroySelectedCustomers'])->name('admin.customers.destroy.selected');
+
+    // Role Routes
+    Route::get('/roles/list', [RoleController::class, 'index'])->name('admin.roles.list');
+
+    Route::get('/roles/create', function () {
+        return Inertia::render('Admin/Roles/CreateRole');
+    })->name('admin.roles.create');
+    Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
+
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
+    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 });
+
+
+// Base Web Routes
 
 // Welcome Route
 Route::get('/', function () {
@@ -104,3 +126,5 @@ Route::get('/profile/password', function () {
 
 Route::post('/profile/update-password', [AuthController::class, 'updatePassword'])->middleware('auth:customer');
 Route::delete('/profile/delete-account', [AuthController::class, 'deleteAccount'])->middleware('auth:customer');
+
+//

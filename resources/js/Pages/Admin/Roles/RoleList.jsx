@@ -5,13 +5,15 @@ import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { FaSearch, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
-export default function UserList() {
-    const { users } = usePage().props;
+export default function RoleList() {
+    const { roles = [] } = usePage().props;
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedUsers, setSelectedUsers] = useState([]);
+    const [selectedRoles, setSelectedRoles] = useState([]);
 
-    const handleDelete = (userId) => {
+    console.log(roles);
+
+    const handleDelete = (roleId) => {
         Swal.fire({
             title: "Apakah anda yakin?",
             text: "Data tidak dapat dikembalikan setelah dihapus!",
@@ -23,11 +25,11 @@ export default function UserList() {
             cancelButtonText: "Batal",
         }).then((result) => {
             if (result.isConfirmed) {
-                router.delete(`/admin/users/${userId}`, {
+                router.delete(`/admin/roles/${roleId}`, {
                     onSuccess: () => {
                         Swal.fire(
                             "Terhapus!",
-                            "User berhasil dihapus.",
+                            "Role berhasil dihapus.",
                             "success"
                         );
                     },
@@ -37,18 +39,17 @@ export default function UserList() {
     };
 
     const handleDeleteSelected = () => {
-        if (selectedUsers.length === 0) {
+        if (selectedRoles.length === 0) {
             Swal.fire(
                 "Error",
-                "Pilih setidaknya satu user untuk dihapus",
+                "Pilih setidaknya satu role untuk dihapus",
                 "error"
             );
             return;
         }
-
         Swal.fire({
             title: "Apakah anda yakin?",
-            text: `Anda akan menghapus ${selectedUsers.length} user yang dipilih!`,
+            text: `Anda akan menghapus ${selectedRoles.length} role yang dipilih!`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -57,15 +58,15 @@ export default function UserList() {
             cancelButtonText: "Batal",
         }).then((result) => {
             if (result.isConfirmed) {
-                router.delete(`/admin/users`, {
-                    data: { ids: selectedUsers },
+                router.delete(`/admin/roles`, {
+                    data: { ids: selectedRoles },
                     onSuccess: () => {
                         Swal.fire(
                             "Terhapus!",
-                            `${selectedUsers.length} user berhasil dihapus.`,
+                            `${selectedRoles.length} role berhasil dihapus.`,
                             "success"
                         );
-                        setSelectedUsers([]);
+                        setSelectedRoles([]);
                     },
                 });
             }
@@ -74,21 +75,21 @@ export default function UserList() {
 
     const handleSelectAll = (e) => {
         if (e.target.checked) {
-            const currentPageUseIds = users
+            const currentPageRoleIds = roles
                 .slice(start - 1, end)
-                .map((user) => user.id);
-            setSelectedUsers(currentPageUseIds);
+                .map((role) => role.id);
+            setSelectedRoles(currentPageRoleIds);
         } else {
-            setSelectedUsers([]);
+            setSelectedRoles([]);
         }
     };
 
-    const handleSelectOne = (userId) => {
-        setSelectedUsers((prev) => {
-            if (prev.includes(userId)) {
-                return prev.filter((id) => id !== userId);
+    const handleSelectOne = (roleId) => {
+        setSelectedRoles((prev) => {
+            if (prev.includes(roleId)) {
+                return prev.filter((id) => id !== roleId);
             } else {
-                return [...prev, userId];
+                return [...prev, roleId];
             }
         });
     };
@@ -102,10 +103,10 @@ export default function UserList() {
         setCurrentPage(1);
     };
 
-    const totalUsers = users.length;
-    const totalPages = Math.ceil(totalUsers / perPage);
+    const totalRoles = roles.length; // Pastikan roles adalah array
+    const totalPages = Math.ceil(totalRoles / perPage);
     const start = (currentPage - 1) * perPage + 1;
-    const end = Math.min(currentPage * perPage, totalUsers);
+    const end = Math.min(currentPage * perPage, totalRoles);
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -116,13 +117,13 @@ export default function UserList() {
                     <div className="container mx-auto">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold text-gray-800">
-                                User List
+                                Role List
                             </h1>
                             <Link
-                                href="/admin/users/create"
+                                href="/admin/roles/create"
                                 className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-base"
                             >
-                                Add New User
+                                Add New Role
                             </Link>
                         </div>
                         <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -130,7 +131,7 @@ export default function UserList() {
                                 <div className="flex items-center">
                                     <input
                                         type="text"
-                                        placeholder="Search users"
+                                        placeholder="Search roles"
                                         className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     <button className="bg-blue-500 text-white px-4 py-3 rounded-r-md">
@@ -139,7 +140,7 @@ export default function UserList() {
                                 </div>
                             </div>
                             <div className="p-4 bg-gray-50 border-b">
-                                {selectedUsers.length > 0 && (
+                                {selectedRoles.length > 0 && (
                                     <div className="flex items-center animate-fade-in">
                                         <button
                                             onClick={handleDeleteSelected}
@@ -147,7 +148,7 @@ export default function UserList() {
                                         >
                                             <FaTrash className="mr-2" />
                                             Delete Selected (
-                                            {selectedUsers.length})
+                                            {selectedRoles.length})
                                         </button>
                                     </div>
                                 )}
@@ -160,52 +161,42 @@ export default function UserList() {
                                                 type="checkbox"
                                                 onChange={handleSelectAll}
                                                 checked={
-                                                    selectedUsers.length ===
-                                                        users.slice(
+                                                    selectedRoles.length ===
+                                                        roles.slice(
                                                             start - 1,
                                                             end
                                                         ).length &&
-                                                    users.slice(start - 1, end)
+                                                    roles.slice(start - 1, end)
                                                         .length > 0
                                                 }
                                                 className="w-4 h-4 rounded border-gray-300 cursor-pointer"
                                             />
                                         </th>
                                         <th className="p-3">ID</th>
-                                        <th className="p-3">Name</th>
-                                        <th className="p-3">Email</th>
-                                        <th className="p-3">Role</th>
+                                        <th className="p-3">Role Name</th>
                                         <th className="p-3">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {users.slice(start - 1, end).map((user) => (
-                                        <tr key={user.id} className="border-b">
+                                    {roles.slice(start - 1, end).map((role) => (
+                                        <tr key={role.id} className="border-b">
                                             <td className="p-3">
                                                 <input
                                                     type="checkbox"
-                                                    checked={selectedUsers.includes(
-                                                        user.id
+                                                    checked={selectedRoles.includes(
+                                                        role.id
                                                     )}
                                                     onChange={() =>
-                                                        handleSelectOne(user.id)
+                                                        handleSelectOne(role.id)
                                                     }
                                                     className="w-4 h-4 rounded border-gray-300 cursor-pointer"
                                                 />
                                             </td>
-                                            <td className="p-3">{user.id}</td>
-                                            <td className="p-3">{user.name}</td>
-                                            <td className="p-3">
-                                                {user.email}
-                                            </td>
-                                            <td className="p-3">
-                                                {user.role
-                                                    ? user.role
-                                                    : "No Role"}{" "}
-                                            </td>
+                                            <td className="p-3">{role.id}</td>
+                                            <td className="p-3">{role.name}</td>
                                             <td className="p-3">
                                                 <Link
-                                                    href={`/admin/users/${user.id}/edit`}
+                                                    href={`/admin/roles/${role.id}/edit`}
                                                     className="text-blue-500 hover:text-blue-700 mr-2 font-bold"
                                                 >
                                                     Edit
@@ -213,7 +204,7 @@ export default function UserList() {
                                                 <button
                                                     className="text-red-500 hover:text-red-700 font-bold"
                                                     onClick={() =>
-                                                        handleDelete(user.id)
+                                                        handleDelete(role.id)
                                                     }
                                                 >
                                                     Delete
@@ -225,7 +216,7 @@ export default function UserList() {
                             </table>
                             <div className="flex items-center justify-between p-4">
                                 <span>
-                                    Showing {start} to {end} of {totalUsers}{" "}
+                                    Showing {start} to {end} of {totalRoles}{" "}
                                     results
                                 </span>
 

@@ -1,19 +1,17 @@
 import React, { useState } from "react";
 import { Link } from "@inertiajs/react";
-import {
-    FaHome,
-    FaUsers,
-    FaShoppingCart,
-    FaClipboardList,
-    FaCog,
-    FaAngleDown,
-} from "react-icons/fa";
+import { FaHome, FaUsers, FaCog, FaAngleDown, FaUserTag } from "react-icons/fa";
 
 export default function AdminSidebar() {
     const [isUsersOpen, setIsUsersOpen] = useState(false);
+    const [isRolesOpen, setIsRolesOpen] = useState(false);
 
     const toggleUsersMenu = () => {
         setIsUsersOpen(!isUsersOpen);
+    };
+
+    const toggleRolesMenu = () => {
+        setIsRolesOpen(!isRolesOpen);
     };
 
     return (
@@ -71,6 +69,42 @@ export default function AdminSidebar() {
                                     >
                                         <span className="font-medium">
                                             Customer List
+                                        </span>
+                                    </Link>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li>
+                        <div
+                            className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
+                            onClick={toggleRolesMenu}
+                        >
+                            <span className="text-xl text-gray-600">
+                                <FaUserTag />
+                            </span>
+                            <span className="font-medium">Manage Roles</span>
+                            <span
+                                className={`text-xl text-gray-600 ml-auto transition-transform duration-300 ${
+                                    isRolesOpen ? "rotate-180" : ""
+                                }`}
+                            >
+                                <FaAngleDown />
+                            </span>
+                        </div>
+                        <div
+                            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                                isRolesOpen ? "max-h-96" : "max-h-0"
+                            }`}
+                        >
+                            <ul className="pl-4 space-y-2 py-2">
+                                <li>
+                                    <Link
+                                        href="/admin/roles/list"
+                                        className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                                    >
+                                        <span className="font-medium">
+                                            Role List
                                         </span>
                                     </Link>
                                 </li>
