@@ -24,11 +24,20 @@ export default function CustomerList() {
             if (result.isConfirmed) {
                 router.delete(`/admin/customers/${customerId}`, {
                     onSuccess: () => {
-                        Swal.fire(
-                            "Terhapus!",
-                            "Customer berhasil dihapus.",
-                            "success"
-                        );
+                        Swal.fire({
+                            title: "Terhapus!",
+                            text: "Customer berhasil dihapus.",
+                            icon: "success",
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                    },
+                    onError: () => {
+                        Swal.fire({
+                            title: "Error!",
+                            text: "Gagal menghapus customer.",
+                            icon: "error",
+                        });
                     },
                 });
             }
@@ -102,12 +111,6 @@ export default function CustomerList() {
                                                 {customer.tanggallahir}
                                             </td>
                                             <td className="p-3">
-                                                <Link
-                                                    href={`/admin/customers/${customer.id}/edit`}
-                                                    className="text-blue-500 hover:text-blue-700 mr-2 font-bold"
-                                                >
-                                                    Edit
-                                                </Link>
                                                 <button
                                                     className="text-red-500 hover:text-red-700 font-bold"
                                                     onClick={() =>

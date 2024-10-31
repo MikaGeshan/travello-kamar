@@ -45,6 +45,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
     Route::delete('/users/{user}', [AdminController::class, 'destroyUser'])->name('admin.users.destroy');
 
+    Route::delete('/users', [AdminController::class, 'destroySelectedUsers'])->name('admin.users.destroy.selected');
+
     // Customer routes
     Route::get('/customers/list', [AdminController::class, 'customerList'])->name('admin.customers.list');
     Route::delete('/customers/{customer}', [AdminController::class, 'destroyCustomer'])->name('admin.customers.destroy');

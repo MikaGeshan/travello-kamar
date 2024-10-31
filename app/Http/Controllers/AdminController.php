@@ -94,11 +94,24 @@ class AdminController extends Controller
         return redirect()->back()->with('success', 'User berhasil dihapus');
     }
 
+    public function destroySelectedUsers(Request $request)
+    {
+        $userIds = $request->input('ids');
+        User::destroy($userIds);
+        return redirect()->back()->with('success', 'User berhasil dihapus');
+    }
+
     public function customerList()
     {
         $customers = Customer::all();
         return Inertia::render('Admin/Users/CustomerList', [
             'customers' => $customers
         ]);
+    }
+
+    public function destroyCustomer(Customer $customer)
+    {
+        $customer->delete();
+        return redirect()->back()->with('success', 'Customer berhasil dihapus');
     }
 }

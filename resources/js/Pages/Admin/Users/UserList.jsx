@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { Link, usePage, router } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
-import { FaSearch } from "react-icons/fa";
+import { FaSearch, FaTrash } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 export default function UserList() {
     const { users } = usePage().props;
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
+    const [selectedUsers, setSelectedUsers] = useState([]);
 
     const handleDelete = (userId) => {
         Swal.fire({
@@ -31,6 +32,63 @@ export default function UserList() {
                         );
                     },
                 });
+            }
+        });
+    };
+
+    const handleDeleteSelected = () => {
+        if (selectedUsers.length === 0) {
+            Swal.fire(
+                "Error",
+                "Pilih setidaknya satu user untuk dihapus",
+                "error"
+            );
+            return;
+        }
+
+        Swal.fire({
+            title: "Apakah anda yakin?",
+            text: `Anda akan menghapus ${selectedUsers.length} user yang dipilih!`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Ya, hapus!",
+            cancelButtonText: "Batal",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`/admin/users`, {
+                    data: { ids: selectedUsers },
+                    onSuccess: () => {
+                        Swal.fire(
+                            "Terhapus!",
+                            `${selectedUsers.length} user berhasil dihapus.`,
+                            "success"
+                        );
+                        setSelectedUsers([]);
+                    },
+                });
+            }
+        });
+    };
+
+    const handleSelectAll = (e) => {
+        if (e.target.checked) {
+            const currentPageUseIds = users
+                .slice(start - 1, end)
+                .map((user) => user.id);
+            setSelectedUsers(currentPageUseIds);
+        } else {
+            setSelectedUsers([]);
+        }
+    };
+
+    const handleSelectOne = (userId) => {
+        setSelectedUsers((prev) => {
+            if (prev.includes(userId)) {
+                return prev.filter((id) => id !== userId);
+            } else {
+                return [...prev, userId];
             }
         });
     };
@@ -80,9 +138,39 @@ export default function UserList() {
                                     </button>
                                 </div>
                             </div>
+                            <div className="p-4 bg-gray-50 border-b">
+                                {selectedUsers.length > 0 && (
+                                    <div className="flex items-center animate-fade-in">
+                                        <button
+                                            onClick={handleDeleteSelected}
+                                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center transition-all duration-200"
+                                        >
+                                            <FaTrash className="mr-2" />
+                                            Delete Selected (
+                                            {selectedUsers.length})
+                                        </button>
+                                    </div>
+                                )}
+                            </div>
                             <table className="w-full">
                                 <thead>
                                     <tr className="bg-white border-b text-left">
+                                        <th className="p-3 w-12">
+                                            <input
+                                                type="checkbox"
+                                                onChange={handleSelectAll}
+                                                checked={
+                                                    selectedUsers.length ===
+                                                        users.slice(
+                                                            start - 1,
+                                                            end
+                                                        ).length &&
+                                                    users.slice(start - 1, end)
+                                                        .length > 0
+                                                }
+                                                className="w-4 h-4 rounded border-gray-300 cursor-pointer"
+                                            />
+                                        </th>
                                         <th className="p-3">ID</th>
                                         <th className="p-3">Name</th>
                                         <th className="p-3">Email</th>
@@ -92,6 +180,18 @@ export default function UserList() {
                                 <tbody>
                                     {users.slice(start - 1, end).map((user) => (
                                         <tr key={user.id} className="border-b">
+                                            <td className="p-3">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={selectedUsers.includes(
+                                                        user.id
+                                                    )}
+                                                    onChange={() =>
+                                                        handleSelectOne(user.id)
+                                                    }
+                                                    className="w-4 h-4 rounded border-gray-300 cursor-pointer"
+                                                />
+                                            </td>
                                             <td className="p-3">{user.id}</td>
                                             <td className="p-3">{user.name}</td>
                                             <td className="p-3">
