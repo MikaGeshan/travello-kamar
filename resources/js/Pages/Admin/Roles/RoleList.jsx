@@ -47,7 +47,6 @@ export default function RoleList() {
             );
             return;
         }
-
         Swal.fire({
             title: "Apakah anda yakin?",
             text: `Anda akan menghapus ${selectedRoles.length} role yang dipilih!`,

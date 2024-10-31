@@ -4,11 +4,12 @@ import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import Swal from "sweetalert2";
 
-export default function UpdateUser({ user }) {
+export default function UpdateUser({ user, roles }) {
     const { data, setData, put, processing, errors } = useForm({
         name: user.name,
         email: user.email,
         password: "",
+        role: user.role_id || "",
     });
 
     useEffect(() => {
@@ -16,6 +17,7 @@ export default function UpdateUser({ user }) {
             name: user.name,
             email: user.email,
             password: "",
+            role: user.role_id || "",
         });
     }, [user]);
 
@@ -135,6 +137,39 @@ export default function UpdateUser({ user }) {
                                             </div>
                                         )}
                                     </div>
+                                </div>
+                                <div className="mb-4">
+                                    <label
+                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        htmlFor="role"
+                                    >
+                                        Role
+                                    </label>
+                                    <select
+                                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                                            errors.role ? "border-red-500" : ""
+                                        }`}
+                                        id="role"
+                                        value={data.role}
+                                        onChange={(e) =>
+                                            setData("role", e.target.value)
+                                        }
+                                    >
+                                        <option value="">Select Role</option>
+                                        {roles.map((role) => (
+                                            <option
+                                                key={role.id}
+                                                value={role.id}
+                                            >
+                                                {role.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.role && (
+                                        <div className="text-red-500 text-xs mt-1">
+                                            {errors.role}
+                                        </div>
+                                    )}
                                 </div>
                                 <div className="flex items-center justify-between mt-4">
                                     <button

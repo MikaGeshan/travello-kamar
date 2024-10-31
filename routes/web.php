@@ -7,7 +7,7 @@ use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Controllers\RoleController;
-
+use App\Models\Role;
 
 // Admin Routes
 
@@ -24,7 +24,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     })->name('admin.dashboard');
 
     // User Routes
-
     Route::get('/users/list', function () {
         $users = User::all();
         return Inertia::render('Admin/Users/UserList', [
@@ -33,13 +32,18 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     })->name('admin.users.list');
 
     Route::get('/users/create', function () {
-        return Inertia::render('Admin/Users/CreateUser');
+        $roles = Role::all();
+        return Inertia::render('Admin/Users/CreateUser', [
+            'roles' => $roles,
+        ]);
     })->name('admin.users.create');
     Route::post('/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
 
     Route::get('/users/{user}/edit', function (User $user) {
+        $roles = Role::all();
         return Inertia::render('Admin/Users/UpdateUser', [
-            'user' => $user
+            'user' => $user,
+            'roles' => $roles,
         ]);
     })->name('admin.users.edit');
 

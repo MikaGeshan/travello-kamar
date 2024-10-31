@@ -3,12 +3,13 @@ import { useForm } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 
-export default function CreateUser() {
+export default function CreateUser({ roles }) {
     const { data, setData, post, processing, errors } = useForm({
         name: '',
         email: '',
         password: '',
         password_confirmation: '',
+        role: '',
     });
 
     const handleSubmit = (e) => {
@@ -106,6 +107,30 @@ export default function CreateUser() {
                                             onChange={e => setData('password_confirmation', e.target.value)}
                                         />
                                     </div>
+                                </div>
+                                <div className="mb-4">
+                                    <label
+                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        htmlFor="role"
+                                    >
+                                        Role
+                                    </label>
+                                    <select
+                                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                                            errors.role ? 'border-red-500' : ''
+                                        }`}
+                                        id="role"
+                                        value={data.role}
+                                        onChange={e => setData('role', e.target.value)}
+                                    >
+                                        <option value="">Select Role</option>
+                                        {roles.map(role => (
+                                            <option key={role.id} value={role.name}>
+                                                {role.name}
+                                            </option>
+                                        ))}
+                                    </select>
+                                    {errors.role && <div className="text-red-500 text-xs mt-1">{errors.role}</div>}
                                 </div>
                                 <div className="flex items-center justify-between mt-4">
                                     <button

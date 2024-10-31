@@ -174,6 +174,7 @@ export default function UserList() {
                                         <th className="p-3">ID</th>
                                         <th className="p-3">Name</th>
                                         <th className="p-3">Email</th>
+                                        <th className="p-3">Role</th>
                                         <th className="p-3">Actions</th>
                                     </tr>
                                 </thead>
@@ -196,6 +197,11 @@ export default function UserList() {
                                             <td className="p-3">{user.name}</td>
                                             <td className="p-3">
                                                 {user.email}
+                                            </td>
+                                            <td className="p-3">
+                                                {user.role
+                                                    ? user.role
+                                                    : "No Role"}{" "}
                                             </td>
                                             <td className="p-3">
                                                 <Link

@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Customer;
+use App\Models\Role;
 use Inertia\Inertia;
 
 class AdminController extends Controller
@@ -48,7 +49,10 @@ class AdminController extends Controller
 
     public function createUser()
     {
-        return Inertia::render('Admin/Users/CreateUser');
+        $roles = Role::all();
+        return Inertia::render('Admin/Users/CreateUser', [
+            'roles' => $roles,
+        ]);
     }
 
     public function storeUser(Request $request)
@@ -57,12 +61,14 @@ class AdminController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:8|confirmed',
+            'role' => 'required|string',
         ]);
 
         User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'role' => $request->role,
         ]);
 
         return redirect()->route('admin.users.list')->with('success', self::SUCCESS_USER_CREATION_MESSAGE);

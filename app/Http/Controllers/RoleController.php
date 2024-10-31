@@ -79,8 +79,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        $role->delete(); // Menghapus role dari database
+        $role->delete();
 
-        return redirect()->route('admin.roles.list')->with('success', 'Role berhasil dihapus.'); // Redirect dengan pesan sukses
+        return redirect()->route('admin.roles.list')->with('success', 'Role berhasil dihapus.');
     }
 }
