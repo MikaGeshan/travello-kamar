@@ -26,7 +26,7 @@ export default function CreateRole() {
                         <div className="rounded px-8 pt-6 pb-8 mb-4">
                             <form onSubmit={handleSubmit}>
                                 <div className="flex space-x-4 mb-4">
-                                    <div className="w-1/2">
+                                    <div className="w-full">
                                         <label
                                             className="block text-gray-700 text-sm font-bold mb-2"
                                             htmlFor="name"

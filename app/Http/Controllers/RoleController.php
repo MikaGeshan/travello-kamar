@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class RoleController extends Controller
 {
@@ -13,6 +15,7 @@ class RoleController extends Controller
     public function index()
     {
         //
+        return Inertia::render('Admin/Roles/RoleList');
     }
 
     /**
@@ -20,7 +23,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Roles/CreateRole',);
     }
 
     /**
@@ -28,7 +31,18 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+            // 'user_id' => 'nullable|exists:users,id', // Tidak perlu validasi user_id
+        ]);
+
+        // Buat role baru
+        Role::create([
+            'name' => $request->name,
+            // 'user_id' => $request->user_id, // Jika Anda ingin menyimpan user_id, uncomment ini
+        ]);
+
+        return redirect()->route('admin.roles.list')->with('success', 'Role berhasil dibuat.');
     }
 
     /**
