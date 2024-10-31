@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Controllers\RoleController;
 use App\Models\Role;
+use Illuminate\Support\Facades\Log;
 
 // Admin Routes
 
@@ -20,6 +21,7 @@ Route::post('/admin/login', [AdminController::class, 'login']);
 // Admin Dashboard
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
+        Log::info('Dashboard route hit');
         return Inertia::render('Admin/Dashboard');
     })->name('admin.dashboard');
 
