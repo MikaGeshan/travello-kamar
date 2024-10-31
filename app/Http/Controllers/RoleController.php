@@ -33,7 +33,13 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        Role::create($request->only('name'));
+
+        return redirect()->route('admin.roles.list')->with('success', 'Role berhasil dibuat.');
     }
 
     /**
@@ -49,7 +55,9 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        //
+        return Inertia::render('Admin/Roles/UpdateRole', [
+            'role' => $role, // Kirim data role ke tampilan
+        ]);
     }
 
     /**
@@ -57,7 +65,13 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        //
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        $role->update($request->only('name'));
+
+        return redirect()->route('admin.roles.list')->with('success', 'Role berhasil diperbarui.');
     }
 
     /**
@@ -65,6 +79,8 @@ class RoleController extends Controller
      */
     public function destroy(Role $role)
     {
-        //
+        $role->delete(); // Menghapus role dari database
+
+        return redirect()->route('admin.roles.list')->with('success', 'Role berhasil dihapus.'); // Redirect dengan pesan sukses
     }
 }

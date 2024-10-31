@@ -35,7 +35,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/users/create', function () {
         return Inertia::render('Admin/Users/CreateUser');
     })->name('admin.users.create');
-
     Route::post('/users', [AdminController::class, 'storeUser'])->name('admin.users.store');
 
     Route::get('/users/{user}/edit', function (User $user) {
@@ -61,6 +60,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/roles/create', function () {
         return Inertia::render('Admin/Roles/CreateRole');
     })->name('admin.roles.create');
+    Route::post('/roles', [RoleController::class, 'store'])->name('admin.roles.store');
+
+    Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
+    Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
+    Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 });
 
 

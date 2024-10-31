@@ -2,6 +2,7 @@ import React from "react";
 import { useForm } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
+import Swal from "sweetalert2";
 
 export default function CreateRole() {
     const { data, setData, post, processing, errors } = useForm({
@@ -10,7 +11,28 @@ export default function CreateRole() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        post("/admin/roles");
+        post("/admin/roles", {
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Role has been created successfully.",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                }).then(() => {
+                    setData("name", "");
+                });
+            },
+            onError: () => {
+                Swal.fire({
+                    title: "Error!",
+                    text: "There was an error creating the role.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+            },
+            preserveState: true,
+            preserveScroll: true,
+        });
     };
 
     return (
@@ -39,9 +61,15 @@ export default function CreateRole() {
                                             type="text"
                                             placeholder="Enter role name"
                                             value={data.name}
-                                            onChange={(e) => setData("name", e.target.value)}
+                                            onChange={(e) =>
+                                                setData("name", e.target.value)
+                                            }
                                         />
-                                        {errors.name && <div className="text-red-500 text-xs">{errors.name}</div>}
+                                        {errors.name && (
+                                            <div className="text-red-500 text-xs">
+                                                {errors.name}
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex items-center justify-between mt-4">
@@ -50,7 +78,9 @@ export default function CreateRole() {
                                         type="submit"
                                         disabled={processing}
                                     >
-                                        {processing ? "Creating..." : "Create Role"}
+                                        {processing
+                                            ? "Creating..."
+                                            : "Create Role"}
                                     </button>
                                 </div>
                             </form>
