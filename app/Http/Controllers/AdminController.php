@@ -16,7 +16,6 @@ class AdminController extends Controller
     const SUCCESS_LOGIN_MESSAGE = 'Successfully logged in!';
     const ERROR_LOGIN_MESSAGE = 'The provided credentials do not match our records.';
     const SUCCESS_USER_CREATION_MESSAGE = 'User created successfully.';
-
     public function login(Request $request)
     {
         $request->validate([
@@ -29,7 +28,8 @@ class AdminController extends Controller
         if (Auth::attempt($credentials)) {
             $request->session()->regenerate();
 
-            return redirect()->intended(route('admin.dashboard'))->with('success', self::SUCCESS_LOGIN_MESSAGE);
+
+            return redirect()->route('admin.dashboard')->with('success', self::SUCCESS_LOGIN_MESSAGE);
         }
 
         Log::warning('Failed login attempt', ['email' => $credentials['email']]);
@@ -128,5 +128,14 @@ class AdminController extends Controller
         $customerIds = $request->input('ids');
         Customer::destroy($customerIds);
         return redirect()->back()->with('success', 'Customer berhasil dihapus');
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Logout pengguna
+        $request->session()->invalidate(); // Menghapus sesi
+        $request->session()->regenerateToken(); // Menghasilkan token sesi baru
+
+        return redirect('/admin/login'); // Redirect ke halaman login setelah logout
     }
 }
