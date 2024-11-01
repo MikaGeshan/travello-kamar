@@ -19,6 +19,14 @@ export default function AdminSidebar() {
         return auth.user && auth.user.role === "Admin";
     };
 
+    const isMaskapai = () => {
+        return auth.user && auth.user.role === "Maskapai";
+    };
+
+    const canAccessCustomer = () => {
+        return isAdmin() || isMaskapai();
+    };
+
     return (
         <div className="bg-white text-gray-700 h-screen w-64 flex flex-shrink-0 shadow-lg z-5">
             <nav className="flex-grow h-full overflow-y-auto">
@@ -34,7 +42,7 @@ export default function AdminSidebar() {
                             <span className="font-medium">Dashboard</span>
                         </Link>
                     </li>
-                    {isAdmin() && (
+                    {(isAdmin() || isMaskapai()) && (
                         <li>
                             <div
                                 className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
@@ -60,26 +68,30 @@ export default function AdminSidebar() {
                                 }`}
                             >
                                 <ul className="pl-4 space-y-2 py-2">
-                                    <li>
-                                        <Link
-                                            href="/admin/users/list"
-                                            className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                                        >
-                                            <span className="font-medium">
-                                                User List
-                                            </span>
-                                        </Link>
-                                    </li>
-                                    <li>
-                                        <Link
-                                            href="/admin/customers/list"
-                                            className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                                        >
-                                            <span className="font-medium">
-                                                Customer List
-                                            </span>
-                                        </Link>
-                                    </li>
+                                    {isAdmin() && (
+                                        <li>
+                                            <Link
+                                                href="/admin/users/list"
+                                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                                            >
+                                                <span className="font-medium">
+                                                    User List
+                                                </span>
+                                            </Link>
+                                        </li>
+                                    )}
+                                    {canAccessCustomer() && (
+                                        <li>
+                                            <Link
+                                                href="/admin/customers/list"
+                                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                                            >
+                                                <span className="font-medium">
+                                                    Customer List
+                                                </span>
+                                            </Link>
+                                        </li>
+                                    )}
                                 </ul>
                             </div>
                         </li>
