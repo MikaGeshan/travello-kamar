@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
-import { FaHome, FaUsers, FaCog, FaAngleDown, FaUserTag } from "react-icons/fa";
+import {
+    FaHome,
+    FaUsers,
+    FaCog,
+    FaAngleDown,
+    FaUserTag,
+    FaPlane,
+} from "react-icons/fa";
 
 export default function AdminSidebar() {
     const [isUsersOpen, setIsUsersOpen] = useState(false);
@@ -134,6 +141,21 @@ export default function AdminSidebar() {
                                     </li>
                                 </ul>
                             </div>
+                        </li>
+                    )}
+                    {isMaskapai() && (
+                        <li>
+                            <Link
+                                href="/admin/airlines/list"
+                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                            >
+                                <span className="text-xl text-gray-600">
+                                    <FaPlane />
+                                </span>
+                                <span className="font-medium">
+                                    Airline List
+                                </span>
+                            </Link>
                         </li>
                     )}
                     <li>

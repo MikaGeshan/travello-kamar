@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Http\Controllers\RoleController;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\AirlineController;
 
 // Admin Routes
 
@@ -74,6 +75,16 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/roles/{role}/edit', [RoleController::class, 'edit'])->name('admin.roles.edit');
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
+
+    // Airline Routes
+    Route::get('/airlines/list', [AirlineController::class, 'index'])->name('maskapai.airlines.list');
+
+    Route::get('/airlines/create', function () {
+        return Inertia::render('Admin/Maskapai/CreateAirline');
+    })->name('maskapai.airlines.create');
+    Route::post('/airlines', [AirlineController::class, 'store'])->name('maskapai.airlines.store');
+
+    Route::delete('/airlines/{id}', [AirlineController::class, 'destroy'])->name('maskapai.airlines.destroy');
 });
 
 
