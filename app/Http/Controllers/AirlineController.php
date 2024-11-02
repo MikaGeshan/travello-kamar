@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Airline;
 use Illuminate\Support\Facades\Storage;
+use Inertia\Inertia;
 
 class AirlineController extends Controller
 {
@@ -13,7 +14,10 @@ class AirlineController extends Controller
      */
     public function index()
     {
-        //
+        $airlines = Airline::all();
+        return Inertia::render('Admin/Maskapai/AirlineList', [
+            'airlines' => $airlines,
+        ]);
     }
 
     /**

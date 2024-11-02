@@ -77,9 +77,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 
     // Airline Routes
-    Route::get('/airlines/list', function () {
-        return Inertia::render('Admin/Maskapai/AirlineList');
-    })->name('maskapai.airlines.list');
+    Route::get('/airlines/list', [AirlineController::class, 'index'])->name('maskapai.airlines.list');
 
     Route::get('/airlines/create', function () {
         return Inertia::render('Admin/Maskapai/CreateAirline');

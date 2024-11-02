@@ -1,35 +1,25 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { Link } from "@inertiajs/react";
+import axios from "axios";
 
-export default function AirlineList() {
-    const airlines = [
-        {
-            id: 1,
-            name: "Airline A",
-            code: "AA",
-            logo: "https://via.placeholder.com/50",
-        },
-        {
-            id: 2,
-            name: "Airline B",
-            code: "AB",
-            logo: "https://via.placeholder.com/50",
-        },
-        {
-            id: 3,
-            name: "Airline C",
-            code: "AC",
-            logo: "https://via.placeholder.com/50",
-        },
-        {
-            id: 4,
-            name: "Airline D",
-            code: "AD",
-            logo: "https://via.placeholder.com/50",
-        },
-    ];
+export default function AirlineList({ airlines }) {
+    const [images, setImages] = useState({});
+
+    useEffect(() => {
+        // Mengambil gambar dari server
+        airlines.forEach((airline) => {
+            axios.get(`/storage/${airline.logo}`, { responseType: 'blob' })
+                .then(response => {
+                    const url = URL.createObjectURL(response.data);
+                    setImages(prev => ({ ...prev, [airline.id]: url }));
+                })
+                .catch(error => {
+                    console.error("Error fetching image:", error);
+                });
+        });
+    }, [airlines]);
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -62,25 +52,20 @@ export default function AirlineList() {
                                 </thead>
                                 <tbody>
                                     {airlines.map((airline) => (
-                                        <tr
-                                            key={airline.id}
-                                            className="border-b"
-                                        >
+                                        <tr key={airline.id} className="border-b">
+                                            <td className="p-3">{airline.id}</td>
+                                            <td className="p-3">{airline.name}</td>
+                                            <td className="p-3">{airline.code}</td>
                                             <td className="p-3">
-                                                {airline.id}
-                                            </td>
-                                            <td className="p-3">
-                                                {airline.name}
-                                            </td>
-                                            <td className="p-3">
-                                                {airline.code}
-                                            </td>
-                                            <td className="p-3">
-                                                <img
-                                                    src={airline.logo}
-                                                    alt={`${airline.name} logo`}
-                                                    className="w-12 h-12 object-cover"
-                                                />
+                                                {images[airline.id] ? (
+                                                    <img
+                                                        src={images[airline.id]}
+                                                        alt={`${airline.name} logo`}
+                                                        className="w-12 h-12 object-cover"
+                                                    />
+                                                ) : (
+                                                    <span>Loading...</span>
+                                                )}
                                             </td>
                                             <td className="p-3">
                                                 <button className="text-blue-500 hover:text-blue-700 mr-2 font-bold">
