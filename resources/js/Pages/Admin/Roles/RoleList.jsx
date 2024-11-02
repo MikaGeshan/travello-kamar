@@ -15,14 +15,14 @@ export default function RoleList() {
 
     const handleDelete = (roleId) => {
         Swal.fire({
-            title: "Apakah anda yakin?",
-            text: "Data tidak dapat dikembalikan setelah dihapus!",
+            title: "Are you sure?",
+            text: "Data cannot be recovered once deleted!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, hapus!",
-            cancelButtonText: "Batal",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.isConfirmed) {
                 router.delete(`/admin/roles/${roleId}`, {

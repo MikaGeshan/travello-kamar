@@ -63,7 +63,7 @@ class AirlineController extends Controller
      */
     public function edit(string $id)
     {
-        // Logika untuk menampilkan form edit maskapai
+        //
     }
 
     /**
