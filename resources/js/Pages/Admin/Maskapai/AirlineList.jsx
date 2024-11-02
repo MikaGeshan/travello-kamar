@@ -62,10 +62,19 @@ export default function AirlineList() {
                                 </thead>
                                 <tbody>
                                     {airlines.map((airline) => (
-                                        <tr key={airline.id} className="border-b">
-                                            <td className="p-3">{airline.id}</td>
-                                            <td className="p-3">{airline.name}</td>
-                                            <td className="p-3">{airline.code}</td>
+                                        <tr
+                                            key={airline.id}
+                                            className="border-b"
+                                        >
+                                            <td className="p-3">
+                                                {airline.id}
+                                            </td>
+                                            <td className="p-3">
+                                                {airline.name}
+                                            </td>
+                                            <td className="p-3">
+                                                {airline.code}
+                                            </td>
                                             <td className="p-3">
                                                 <img
                                                     src={airline.logo}

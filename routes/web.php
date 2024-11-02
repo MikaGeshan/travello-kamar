@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Http\Controllers\RoleController;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\AirlineController;
 
 // Admin Routes
 
@@ -83,6 +84,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/airlines/create', function () {
         return Inertia::render('Admin/Maskapai/CreateAirline');
     })->name('maskapai.airlines.create');
+    Route::post('/airlines', [AirlineController::class, 'store'])->name('maskapai.airlines.store');
 });
 
 
