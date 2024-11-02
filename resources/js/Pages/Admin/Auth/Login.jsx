@@ -16,11 +16,11 @@ export default function Login() {
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
+                <h2 className="text-lg font-bold text-center">Sign in</h2>
                 <h1 className="text-2xl font-bold text-center">Fly High</h1>
-                <h4 className="text-base text-center">
+                <h4 className="text-base text-center mb-4">
                     Company Management System
                 </h4>
-                <h2 className="text-lg text-center mb-4">Sign in</h2>
                 <form onSubmit={handleSubmit}>
                     <div className="mb-4">
                         <label className="block text-sm font-medium text-gray-700">
