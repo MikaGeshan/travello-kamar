@@ -49,7 +49,7 @@ export default function CreateAirline() {
                                 Create Airline
                             </h1>
                         </div>
-                        <div className="rounded px-8 pt-6 pb-8 mb-4 bg-white shadow-md">
+                        <div className="rounded px-8 pt-6 pb-8 mb-4 ">
                             <form onSubmit={handleSubmit}>
                                 <div className="flex space-x-4 mb-4">
                                     <div className="w-1/2">
@@ -115,7 +115,7 @@ export default function CreateAirline() {
                                         Logo
                                     </label>
                                     <input
-                                        className={`shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
+                                        className={`bg-white shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline ${
                                             errors.logo ? "border-red-500" : ""
                                         }`}
                                         id="logo"

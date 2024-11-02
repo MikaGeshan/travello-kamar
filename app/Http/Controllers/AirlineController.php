@@ -79,6 +79,14 @@ class AirlineController extends Controller
      */
     public function destroy(string $id)
     {
-        // Logika untuk menghapus maskapai
+        $airline = Airline::findOrFail($id);
+
+        if ($airline->logo) {
+            Storage::disk('public')->delete($airline->logo);
+        }
+
+        $airline->delete();
+
+        return response()->json(['message' => 'Airline deleted successfully.'], 200);
     }
 }

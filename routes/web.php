@@ -83,6 +83,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
         return Inertia::render('Admin/Maskapai/CreateAirline');
     })->name('maskapai.airlines.create');
     Route::post('/airlines', [AirlineController::class, 'store'])->name('maskapai.airlines.store');
+
+    Route::delete('/airlines/{id}', [AirlineController::class, 'destroy'])->name('maskapai.airlines.destroy');
 });
 
 
