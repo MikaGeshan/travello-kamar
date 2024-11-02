@@ -19,21 +19,21 @@ export default function CustomerList() {
     };
     const handleDelete = (customerId) => {
         Swal.fire({
-            title: "Apakah anda yakin?",
-            text: "Data tidak dapat dikembalikan setelah dihapus!",
+            title: "Are you sure?",
+            text: "Data cannot be recovered once deleted!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, hapus!",
-            cancelButtonText: "Batal",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.isConfirmed) {
                 router.delete(`/admin/customers/${customerId}`, {
                     onSuccess: () => {
                         Swal.fire({
-                            title: "Terhapus!",
-                            text: "Customer berhasil dihapus.",
+                            title: "Deleted!",
+                            text: "Customer has been deleted successfully.",
                             icon: "success",
                             timer: 2000,
                             showConfirmButton: false,
@@ -42,7 +42,7 @@ export default function CustomerList() {
                     onError: () => {
                         Swal.fire({
                             title: "Error!",
-                            text: "Gagal menghapus customer.",
+                            text: "An error occurred while deleting the customer.",
                             icon: "error",
                         });
                     },
@@ -55,29 +55,29 @@ export default function CustomerList() {
         if (selectedCustomers.length === 0) {
             Swal.fire(
                 "Error",
-                "Pilih setidaknya satu customer untuk dihapus",
+                "Select at least one customer to delete",
                 "error"
             );
             return;
         }
 
         Swal.fire({
-            title: "Apakah anda yakin?",
-            text: `Anda akan menghapus ${selectedCustomers.length} customer yang dipilih!`,
+            title: "Are you sure?",
+            text: `You are about to delete ${selectedCustomers.length} selected customers!`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, hapus!",
-            cancelButtonText: "Batal",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.isConfirmed) {
                 router.delete(`/admin/customers`, {
                     data: { ids: selectedCustomers },
                     onSuccess: () => {
                         Swal.fire(
-                            "Terhapus!",
-                            `${selectedCustomers.length} customer berhasil dihapus.`,
+                            "Deleted!",
+                            `${selectedCustomers.length} customers have been deleted successfully.`,
                             "success"
                         );
                         setSelectedCustomers([]);

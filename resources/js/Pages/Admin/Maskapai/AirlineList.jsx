@@ -25,14 +25,14 @@ export default function AirlineList({ airlines }) {
 
     const handleDelete = (id) => {
         Swal.fire({
-            title: "Apakah Anda yakin?",
-            text: "Data ini akan dihapus dan tidak dapat dikembalikan!",
+            title: "Are you sure?",
+            text: "This data will be deleted and cannot be recovered!",
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, hapus!",
-            cancelButtonText: "Batal",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.isConfirmed) {
                 axios
@@ -43,8 +43,8 @@ export default function AirlineList({ airlines }) {
                                 prev.filter((airline) => airline.id !== id)
                             );
                             Swal.fire(
-                                "Terhapus!",
-                                "Maskapai berhasil dihapus.",
+                                "Deleted!",
+                                "Airline has been deleted successfully.",
                                 "success"
                             );
                         }
@@ -52,8 +52,8 @@ export default function AirlineList({ airlines }) {
                     .catch((error) => {
                         console.error("Error deleting airline:", error);
                         Swal.fire(
-                            "Gagal!",
-                            "Terjadi kesalahan saat menghapus maskapai.",
+                            "Error!",
+                            "An error occurred while deleting the airline.",
                             "error"
                         );
                     });

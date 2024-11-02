@@ -28,8 +28,8 @@ export default function RoleList() {
                 router.delete(`/admin/roles/${roleId}`, {
                     onSuccess: () => {
                         Swal.fire(
-                            "Terhapus!",
-                            "Role berhasil dihapus.",
+                            "Deleted!",
+                            "Role has been deleted successfully.",
                             "success"
                         );
                     },
@@ -40,30 +40,26 @@ export default function RoleList() {
 
     const handleDeleteSelected = () => {
         if (selectedRoles.length === 0) {
-            Swal.fire(
-                "Error",
-                "Pilih setidaknya satu role untuk dihapus",
-                "error"
-            );
+            Swal.fire("Error", "Select at least one role to delete", "error");
             return;
         }
         Swal.fire({
-            title: "Apakah anda yakin?",
-            text: `Anda akan menghapus ${selectedRoles.length} role yang dipilih!`,
+            title: "Are you sure?",
+            text: `You are about to delete ${selectedRoles.length} selected roles!`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, hapus!",
-            cancelButtonText: "Batal",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.isConfirmed) {
                 router.delete(`/admin/roles`, {
                     data: { ids: selectedRoles },
                     onSuccess: () => {
                         Swal.fire(
-                            "Terhapus!",
-                            `${selectedRoles.length} role berhasil dihapus.`,
+                            "Deleted!",
+                            `${selectedRoles.length} roles have been deleted successfully.`,
                             "success"
                         );
                         setSelectedRoles([]);
