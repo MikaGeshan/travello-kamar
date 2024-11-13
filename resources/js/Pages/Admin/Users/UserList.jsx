@@ -48,11 +48,7 @@ export default function UserList() {
 
     const handleDeleteSelected = () => {
         if (selectedUsers.length === 0) {
-            Swal.fire(
-                "Error",
-                "Select at least one user to delete",
-                "error"
-            );
+            Swal.fire("Error", "Select at least one user to delete", "error");
             return;
         }
 

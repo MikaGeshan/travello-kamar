@@ -10,6 +10,7 @@ use App\Http\Controllers\RoleController;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\AirlineController;
+use App\Http\Controllers\ProfileController;
 
 // Admin Routes
 
@@ -135,13 +136,13 @@ Route::get('/profile', function () {
     ]);
 })->middleware('auth:customer');
 
-Route::post('/profile/update', [AuthController::class, 'updateProfile'])->middleware('auth:customer');
+Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->middleware('auth:customer');
 
 Route::get('/profile/password', function () {
     return Inertia::render('Profile/Password');
 })->middleware('auth:customer');
 
-Route::post('/profile/update-password', [AuthController::class, 'updatePassword'])->middleware('auth:customer');
-Route::delete('/profile/delete-account', [AuthController::class, 'deleteAccount'])->middleware('auth:customer');
+Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->middleware('auth:customer');
+Route::delete('/profile/delete-account', [ProfileController::class, 'deleteAccount'])->middleware('auth:customer');
 
 //
