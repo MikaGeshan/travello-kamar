@@ -26,12 +26,19 @@ export default function UpdateUser({ user, roles }) {
         put(`/admin/users/${user.id}`, {
             onSuccess: () => {
                 Swal.fire(
-                    "Berhasil!",
-                    "Data user berhasil diperbarui.",
+                    "Success!",
+                    "User data has been updated successfully.",
                     "success"
                 ).then(() => {
                     window.location.href = "/admin/users/list";
                 });
+            },
+            onError: () => {
+                Swal.fire(
+                    "Error!",
+                    "An error occurred while updating the user data.",
+                    "error"
+                );
             },
         });
     };

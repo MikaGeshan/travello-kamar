@@ -2,6 +2,7 @@ import React from "react";
 import { useForm, usePage } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
+import Swal from "sweetalert2";
 
 export default function CreateUser({ roles }) {
     const { auth } = usePage().props;
@@ -16,9 +17,27 @@ export default function CreateUser({ roles }) {
     const isAdmin = () => {
         return auth.user && auth.user.role === "Admin";
     };
+
     const handleSubmit = (e) => {
         e.preventDefault();
-        post("/admin/users");
+        post("/admin/users", {
+            onSuccess: () => {
+                Swal.fire({
+                    icon: "success",
+                    title: "User Created!",
+                    text: "The user has been created successfully.",
+                    confirmButtonText: "OK",
+                });
+            },
+            onError: () => {
+                Swal.fire({
+                    icon: "error",
+                    title: "Oops...",
+                    text: "Something went wrong! Please check the form.",
+                    confirmButtonText: "OK",
+                });
+            },
+        });
     };
 
     return (

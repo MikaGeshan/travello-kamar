@@ -29,9 +29,16 @@ export default function UserList() {
                 router.delete(`/admin/users/${userId}`, {
                     onSuccess: () => {
                         Swal.fire(
-                            "Terhapus!",
-                            "User berhasil dihapus.",
+                            "Deleted!",
+                            "User has been deleted successfully.",
                             "success"
+                        );
+                    },
+                    onError: () => {
+                        Swal.fire(
+                            "Error!",
+                            "An error occurred while deleting the user.",
+                            "error"
                         );
                     },
                 });
@@ -41,34 +48,37 @@ export default function UserList() {
 
     const handleDeleteSelected = () => {
         if (selectedUsers.length === 0) {
-            Swal.fire(
-                "Error",
-                "Pilih setidaknya satu user untuk dihapus",
-                "error"
-            );
+            Swal.fire("Error", "Select at least one user to delete", "error");
             return;
         }
 
         Swal.fire({
-            title: "Apakah anda yakin?",
-            text: `Anda akan menghapus ${selectedUsers.length} user yang dipilih!`,
+            title: "Are you sure?",
+            text: `You are about to delete ${selectedUsers.length} selected users!`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
             cancelButtonColor: "#d33",
-            confirmButtonText: "Ya, hapus!",
-            cancelButtonText: "Batal",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
         }).then((result) => {
             if (result.isConfirmed) {
                 router.delete(`/admin/users`, {
                     data: { ids: selectedUsers },
                     onSuccess: () => {
                         Swal.fire(
-                            "Terhapus!",
-                            `${selectedUsers.length} user berhasil dihapus.`,
+                            "Deleted!",
+                            `${selectedUsers.length} users have been deleted successfully.`,
                             "success"
                         );
                         setSelectedUsers([]);
+                    },
+                    onError: () => {
+                        Swal.fire(
+                            "Error!",
+                            "An error occurred while deleting the selected users.",
+                            "error"
+                        );
                     },
                 });
             }

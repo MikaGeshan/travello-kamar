@@ -92,7 +92,7 @@ const Login = () => {
                                     }
                                     className="absolute inset-y-0 right-0 flex items-center pr-3"
                                 >
-                                    {showPassword ? <FiEyeOff /> : <FiEye />}
+                                    {showPassword ? <FiEye /> : <FiEyeOff />}
                                 </button>
                             </div>
                             {errors.password && (
