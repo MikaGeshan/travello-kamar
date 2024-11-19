@@ -1,11 +1,14 @@
 import React from "react";
+import { usePage } from "@inertiajs/react";
 import AdminHeader from "../../Layouts/AdminHeader";
 import AdminSidebar from "../../Layouts/AdminSidebar";
 
 export default function Dashboard() {
+    const { auth } = usePage().props;
+
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
-            <AdminHeader />
+            <AdminHeader user={auth.user} />
             <div className="flex flex-1">
                 <AdminSidebar />
                 <main className="flex-1 p-8 ml-64">

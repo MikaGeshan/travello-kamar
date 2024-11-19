@@ -12,6 +12,8 @@ import {
 export default function AdminSidebar() {
     const [isUsersOpen, setIsUsersOpen] = useState(false);
     const [isRolesOpen, setIsRolesOpen] = useState(false);
+    const [isFlightsOpen, setIsFlightsOpen] = useState(false);
+
     const { auth } = usePage().props;
 
     const toggleUsersMenu = () => {
@@ -20,6 +22,10 @@ export default function AdminSidebar() {
 
     const toggleRolesMenu = () => {
         setIsRolesOpen(!isRolesOpen);
+    };
+
+    const toggleFlightsMenu = () => {
+        setIsFlightsOpen(!isFlightsOpen);
     };
 
     const isAdmin = () => {
@@ -145,17 +151,52 @@ export default function AdminSidebar() {
                     )}
                     {isMaskapai() && (
                         <li>
-                            <Link
-                                href="/admin/airlines/list"
-                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                            <div
+                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
+                                onClick={toggleFlightsMenu}
                             >
                                 <span className="text-xl text-gray-600">
                                     <FaPlane />
                                 </span>
                                 <span className="font-medium">
-                                    Airline List
+                                    Manage Flights
                                 </span>
-                            </Link>
+                                <span
+                                    className={`text-xl text-gray-600 ml-auto transition-transform duration-300 ${
+                                        isFlightsOpen ? "rotate-180" : ""
+                                    }`}
+                                >
+                                    <FaAngleDown />
+                                </span>
+                            </div>
+                            <div
+                                className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                                    isFlightsOpen ? "max-h-96" : "max-h-0"
+                                }`}
+                            >
+                                <ul className="pl-4 space-y-2 py-2">
+                                    <li>
+                                        <Link
+                                            href="/admin/airlines/list"
+                                            className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                                        >
+                                            <span className="font-medium">
+                                                Flight List
+                                            </span>
+                                        </Link>
+                                        <li>
+                                            <Link
+                                                href="#"
+                                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
+                                            >
+                                                <span className="font-medium">
+                                                    Flight Schedules
+                                                </span>
+                                            </Link>
+                                        </li>
+                                    </li>
+                                </ul>
+                            </div>
                         </li>
                     )}
                     <li>
