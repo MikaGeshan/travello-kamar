@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useForm } from "@inertiajs/react";
 import { Link } from "@inertiajs/react";
-import { FiEye, FiEyeOff, FiSend } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiHome } from "react-icons/fi";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
     const { data, setData, post, processing, errors } = useForm({
@@ -12,14 +14,20 @@ const Register = () => {
     });
 
     const [agreed, setAgreed] = useState(false);
-    const [agreementError, setAgreementError] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
     const handleSubmit = (e) => {
         e.preventDefault();
         if (!agreed) {
-            setAgreementError("You need to agree to the terms and conditions");
+            toast.error("You need to agree to the terms and conditions", {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
             return;
         }
         post("/register");
@@ -27,18 +35,19 @@ const Register = () => {
 
     return (
         <div className="flex h-screen">
+            <ToastContainer />
             <div className="w-1/2 bg-white flex items-center justify-center">
                 <div className="text-center flex flex-col items-center">
-                    <FiSend className="mb-2 text-3xl" />
-                    <h1 className="text-4xl font-bold text-blue-800 mb-2">
-                        Fly High
+                    <FiHome className="mb-2 text-3xl" />
+                    <h1 className="text-4xl font-bold text-green-800 mb-2">
+                        Holiday Inn
                     </h1>
                     <p className="text-gray-600">
-                        Wujudkan Perjalanan dengan Caramu Sendiri
+                        Kenyamanan Tanpa Batas, Pengalaman Tak Terbatas
                     </p>
                 </div>
             </div>
-            <div className="w-1/2 bg-blue-800 flex items-center justify-center">
+            <div className="w-1/2 bg-green-800 flex items-center justify-center">
                 <div className="bg-white p-10 rounded-lg shadow-lg w-96">
                     <form onSubmit={handleSubmit}>
                         <h2 className="text-2xl font-bold mb-2 text-gray-800">
@@ -48,7 +57,7 @@ const Register = () => {
                             Already have an account?
                             <Link
                                 href="/login"
-                                className="text-gray-400 hover:underline"
+                                className="text-gray-400 hover:underline ml-1"
                             >
                                 Sign in now!
                             </Link>
@@ -67,7 +76,7 @@ const Register = () => {
                                 onChange={(e) =>
                                     setData("name", e.target.value)
                                 }
-                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm focus:ring focus:ring-blue-500"
+                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm focus:ring focus:ring-green-500"
                                 required
                             />
                             {errors.name && (
@@ -90,7 +99,7 @@ const Register = () => {
                                 onChange={(e) =>
                                     setData("email", e.target.value)
                                 }
-                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm focus:ring focus:ring-blue-500"
+                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm focus:ring focus:ring-green-500"
                                 required
                             />
                             {errors.email && (
@@ -114,7 +123,7 @@ const Register = () => {
                                     onChange={(e) =>
                                         setData("password", e.target.value)
                                     }
-                                    className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm focus:ring focus:ring-blue-500"
+                                    className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm"
                                     required
                                 />
                                 <button
@@ -155,7 +164,7 @@ const Register = () => {
                                             e.target.value
                                         )
                                     }
-                                    className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm focus:ring focus:ring-blue-500"
+                                    className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm "
                                     required
                                 />
                                 <button
@@ -194,16 +203,10 @@ const Register = () => {
                             >
                                 I agree to the terms and conditions
                             </label>
-                            {agreementError && (
-                                <span className="text-red-500 text-sm">
-                                    {agreementError}
-                                </span>
-                            )}
                         </div>
-
                         <button
                             type="submit"
-                            className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
                             disabled={processing}
                         >
                             Register

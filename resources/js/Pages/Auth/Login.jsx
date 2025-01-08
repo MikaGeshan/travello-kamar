@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useForm, Link } from "@inertiajs/react";
-import { FiEye, FiEyeOff, FiSend } from "react-icons/fi";
+import { FiEye, FiEyeOff, FiHome } from "react-icons/fi";
 
 const Login = () => {
     const { data, setData, post, processing, errors } = useForm({
@@ -19,16 +19,16 @@ const Login = () => {
         <div className="flex h-screen">
             <div className="w-1/2 bg-white flex items-center justify-center">
                 <div className="text-center flex flex-col items-center">
-                    <FiSend className="mb-2 text-3xl" />
-                    <h1 className="text-4xl font-bold text-blue-800 mb-2">
-                        Fly High
+                    <FiHome className="mb-2 text-3xl" />
+                    <h1 className="text-4xl font-bold text-green-800 mb-2">
+                        Holiday Inn
                     </h1>
                     <p className="text-gray-600">
-                        Wujudkan Perjalanan dengan Caramu Sendiri
+                        Kenyamanan Tanpa Batas, Pengalaman Tak Terbatas
                     </p>
                 </div>
             </div>
-            <div className="w-1/2 bg-blue-800 flex items-center justify-center">
+            <div className="w-1/2 bg-green-800 flex items-center justify-center">
                 <div className="bg-white p-10 rounded-lg shadow-lg w-96">
                     <h2 className="text-2xl font-bold mb-2 text-gray-800">
                         Sign in to Fly High
@@ -37,7 +37,7 @@ const Login = () => {
                         Don't have an account?
                         <Link
                             href="/register"
-                            className="text-gray-400 hover:underline"
+                            className="text-gray-400 hover:underline ml-1"
                         >
                             Register
                         </Link>
@@ -46,7 +46,7 @@ const Login = () => {
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
                             <label
-                                className="block text-gray-700"
+                                className="block text-sm font-medium text-gray-700"
                                 htmlFor="email"
                             >
                                 Email
@@ -69,7 +69,7 @@ const Login = () => {
                         </div>
                         <div className="mb-6">
                             <label
-                                className="block text-gray-700"
+                                className="block text-sm font-medium text-gray-700"
                                 htmlFor="password"
                             >
                                 Password
@@ -104,7 +104,7 @@ const Login = () => {
 
                         <button
                             type="submit"
-                            className={`w-full bg-blue-800 text-white font-bold py-2 rounded-md ${
+                            className={`w-full bg-green-800 text-white font-bold py-2 rounded-md ${
                                 processing
                                     ? "opacity-50 cursor-not-allowed"
                                     : ""

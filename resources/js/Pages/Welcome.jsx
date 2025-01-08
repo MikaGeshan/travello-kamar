@@ -36,7 +36,7 @@ export default function Welcome() {
             >
                 <h1 className="text-2xl font-bold">
                     <a href="/" className="text-gray-900 hover:text-gray-600">
-                        FlyHigh
+                        Holiday Inn
                     </a>
                 </h1>
                 <nav className="text-gray-800 font-semibold text-base flex-1 flex justify-end pr-20 space-x-6">
@@ -65,47 +65,30 @@ export default function Welcome() {
                     </Link>
                 </div>
             </header>
-            <div className="relative w-full bg-blue-600 min-h-[80vh] flex flex-col items-center justify-center">
+            <div className="relative w-full bg-green-500 min-h-[80vh] flex flex-col items-center justify-center">
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center py-20">
                     <h1 className="text-white text-4xl font-bold">
-                        Hey Buddy! where are you{" "}
-                        <span className="font-black">Flying</span> to?
+                        Booking Hotel & Penginapan Murah{" "}
                     </h1>
                     <Link href="/home" className="text-white mt-4 text-2xl">
                         Explore Now →
                     </Link>
                     <div className="mt-8 bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <label className="text-gray-500 text-xs font-medium uppercase">
-                                    From
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        className="font-semibold text-lg w-full focus:outline-none text-center"
-                                        placeholder="Departure"
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex justify-center items-center text-gray-400 text-2xl">
-                                ⇄
-                            </div>
-                            <div>
-                                <label className="text-gray-500 text-xs font-medium uppercase">
-                                    To
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        className="font-semibold text-lg w-full focus:outline-none text-center"
-                                        placeholder="Destination"
-                                    />
-                                </div>
+                        <div className="text-center">
+                            <label className="text-gray-500 text-xs font-medium uppercase">
+                                nama hotel
+                            </label>
+                            <div className="mt-2 flex justify-center">
+                                <input
+                                    className="font-semibold text-lg w-full max-w-md border border-gray-300 p-2 rounded-lg outline-none text-center"
+                                    placeholder="Kota, Hotel, atau Lokasi"
+                                />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                             <div>
                                 <label className="text-gray-500 text-xs font-medium uppercase">
-                                    Departure
+                                    Check In
                                 </label>
                                 <input
                                     type="date"
@@ -114,7 +97,7 @@ export default function Welcome() {
                             </div>
                             <div>
                                 <label className="text-gray-500 text-xs font-medium uppercase">
-                                    Return
+                                    Duration
                                 </label>
                                 <input
                                     type="date"
@@ -124,7 +107,7 @@ export default function Welcome() {
                         </div>
                         <div className="flex justify-center mt-6">
                             <button className="bg-black text-white font-semibold text-lg px-6 py-3 rounded-lg w-35">
-                                Search Flights →
+                                Search Hotel
                             </button>
                         </div>
                     </div>

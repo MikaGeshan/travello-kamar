@@ -31,47 +31,30 @@ export default function Home({ userName }) {
     return (
         <div className="flex flex-col min-h-screen">
             <Header userName={userName} isVisible={isHeaderVisible} />
-            <div className="flex flex-col items-center justify-center bg-blue-600 min-h-[80vh]">
+            <div className="relative w-full bg-green-500 min-h-[80vh] flex flex-col items-center justify-center">
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center py-20">
                     <h1 className="text-white text-4xl font-bold">
-                        Hey Buddy! where are you
-                        <span className="font-black p-2">Flying</span>to?
+                        Booking Hotel & Penginapan Murah{" "}
                     </h1>
-                    <Link href="/explore" className="text-white mt-4 text-xl">
+                    <Link href="/home" className="text-white mt-4 text-2xl">
                         Explore Now →
                     </Link>
                     <div className="mt-8 bg-white p-6 rounded-lg shadow-lg w-full max-w-4xl">
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div>
-                                <label className="text-gray-500 text-xs font-medium uppercase">
-                                    From
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        className="font-semibold text-lg w-full focus:outline-none text-center"
-                                        placeholder="Departure"
-                                    />
-                                </div>
-                            </div>
-                            <div className="flex justify-center items-center text-gray-400 text-2xl">
-                                ⇄
-                            </div>
-                            <div>
-                                <label className="text-gray-500 text-xs font-medium uppercase">
-                                    To
-                                </label>
-                                <div className="mt-2">
-                                    <input
-                                        className="font-semibold text-lg w-full focus:outline-none text-center"
-                                        placeholder="Destination"
-                                    />
-                                </div>
+                        <div className="text-center">
+                            <label className="text-gray-500 text-xs font-medium uppercase">
+                                nama hotel
+                            </label>
+                            <div className="mt-2 flex justify-center">
+                                <input
+                                    className="font-semibold text-lg w-full max-w-md border border-gray-300 p-2 rounded-lg outline-none text-center"
+                                    placeholder="Kota, Hotel, atau Lokasi"
+                                />
                             </div>
                         </div>
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                             <div>
                                 <label className="text-gray-500 text-xs font-medium uppercase">
-                                    Departure
+                                    Check In
                                 </label>
                                 <input
                                     type="date"
@@ -80,7 +63,7 @@ export default function Home({ userName }) {
                             </div>
                             <div>
                                 <label className="text-gray-500 text-xs font-medium uppercase">
-                                    Return
+                                    Duration
                                 </label>
                                 <input
                                     type="date"
@@ -90,7 +73,7 @@ export default function Home({ userName }) {
                         </div>
                         <div className="flex justify-center mt-6">
                             <button className="bg-black text-white font-semibold text-lg px-6 py-3 rounded-lg w-35">
-                                Search Flights →
+                                Search Hotel
                             </button>
                         </div>
                     </div>
