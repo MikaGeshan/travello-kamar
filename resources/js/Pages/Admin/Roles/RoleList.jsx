@@ -99,7 +99,7 @@ export default function RoleList() {
         setCurrentPage(1);
     };
 
-    const totalRoles = roles.length; // Pastikan roles adalah array
+    const totalRoles = roles.length;
     const totalPages = Math.ceil(totalRoles / perPage);
     const start = (currentPage - 1) * perPage + 1;
     const end = Math.min(currentPage * perPage, totalRoles);
@@ -117,7 +117,7 @@ export default function RoleList() {
                             </h1>
                             <Link
                                 href="/admin/roles/create"
-                                className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-base"
+                                className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md text-base"
                             >
                                 Add New Role
                             </Link>
@@ -130,7 +130,7 @@ export default function RoleList() {
                                         placeholder="Search roles"
                                         className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <button className="bg-blue-500 text-white px-4 py-3 rounded-r-md">
+                                    <button className="bg-green-500 text-white px-4 py-3 rounded-r-md">
                                         <FaSearch />
                                     </button>
                                 </div>
@@ -193,7 +193,7 @@ export default function RoleList() {
                                             <td className="p-3">
                                                 <Link
                                                     href={`/admin/roles/${role.id}/edit`}
-                                                    className="text-blue-500 hover:text-blue-700 mr-2 font-bold"
+                                                    className="text-green-500 hover:text-green-700 mr-2 font-bold"
                                                 >
                                                     Edit
                                                 </Link>
@@ -247,7 +247,7 @@ export default function RoleList() {
                                             }
                                             className={`px-3 py-1 border ${
                                                 currentPage === index + 1
-                                                    ? "bg-blue-500 text-white"
+                                                    ? "bg-green-500 text-white"
                                                     : "bg-gray-200 hover:bg-gray-300"
                                             }`}
                                         >

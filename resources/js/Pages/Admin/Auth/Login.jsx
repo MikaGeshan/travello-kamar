@@ -17,7 +17,7 @@ export default function Login() {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 rounded-lg shadow-md w-96">
                 <h2 className="text-lg font-bold text-center">Sign in</h2>
-                <h1 className="text-2xl font-bold text-center">Fly High</h1>
+                <h1 className="text-2xl font-bold text-center">Holiday Inn</h1>
                 <h4 className="text-base text-center mb-4">
                     Company Management System
                 </h4>
@@ -70,7 +70,7 @@ export default function Login() {
                     <button
                         type="submit"
                         disabled={processing}
-                        className="w-full bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600 disabled:opacity-75"
+                        className="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 disabled:opacity-75"
                     >
                         {processing ? "Signing in..." : "Sign in"}
                     </button>
