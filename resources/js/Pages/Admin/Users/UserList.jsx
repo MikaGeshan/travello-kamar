@@ -134,7 +134,7 @@ export default function UserList() {
                                 </h1>
                                 <Link
                                     href="/admin/users/create"
-                                    className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-md text-base"
+                                    className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md text-base"
                                 >
                                     Add New User
                                 </Link>
@@ -145,9 +145,9 @@ export default function UserList() {
                                         <input
                                             type="text"
                                             placeholder="Search users"
-                                            className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                            className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-green-500"
                                         />
-                                        <button className="bg-blue-500 text-white px-4 py-3 rounded-r-md">
+                                        <button className="bg-green-500 text-white px-4 py-3 rounded-r-md">
                                             <FaSearch />
                                         </button>
                                     </div>
@@ -233,7 +233,7 @@ export default function UserList() {
                                                     <td className="p-3">
                                                         <Link
                                                             href={`/admin/users/${user.id}/edit`}
-                                                            className="text-blue-500 hover:text-blue-700 mr-2 font-bold"
+                                                            className="text-green-500 hover:text-green-700 mr-2 font-bold"
                                                         >
                                                             Edit
                                                         </Link>
@@ -295,7 +295,7 @@ export default function UserList() {
                                                     className={`px-3 py-1 border ${
                                                         currentPage ===
                                                         index + 1
-                                                            ? "bg-blue-500 text-white"
+                                                            ? "bg-green-500 text-white"
                                                             : "bg-gray-200 hover:bg-gray-300"
                                                     }`}
                                                 >
