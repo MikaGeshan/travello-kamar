@@ -30,33 +30,19 @@ function SearchField() {
                 </div>
                 <div>
                     <label className="text-gray-500 text-xs font-medium uppercase">
-                        Duration
+                        Check Out
                     </label>
-                    <select
-                        value={duration}
-                        onChange={(e) => setDuration(e.target.value)}
-                        className="border border-gray-300 p-3 rounded-lg w-full mt-2 text-gray-700"
-                    >
-                        <option value="" disabled>
-                            Select Duration
-                        </option>
-                        <option value="1">1 Night</option>
-                        <option value="2">2 Nights</option>
-                        <option value="3">3 Nights</option>
-                        <option value="4">4 Nights</option>
-                        <option value="5">5 Nights</option>
-                        <option value="6">6 Nights</option>
-                        <option value="7">1 Week</option>
-                        <option value="14">2 Weeks</option>
-                        <option value="30">1 Month</option>
-                    </select>
+                    <input
+                        type="date"
+                        className="border border-gray-300 p-3 rounded-lg w-full mt-2"
+                    />
                 </div>
             </div>
             <div className="flex justify-center mt-6">
                 <Link
-                    href="/home"
+                    href="/explore"
                     method="get"
-                    className="bg-gradient-to-r from-green-700 to-green-900 text-white font-semibold text-lg px-5 py-3 rounded-lg w-64 flex items-center justify-center space-x-3 hover:from-green-800 hover:to-green-950 transition-all duration-300 group relative overflow-hidden h-14"
+                    className="bg-gradient-to-r from-blue-400 to-yellow-300 text-white font-semibold text-lg px-5 py-3 rounded-lg w-64 flex items-center justify-center space-x-3 hover:from-blue-800 hover:to-yellow-400 transition-all duration-300 group relative overflow-hidden h-14"
                 >
                     <span className="flex items-center justify-center absolute left-1/2 transform -translate-x-1/2 group-hover:translate-x-[-70%] transition-all duration-300 w-full">
                         Search Hotel
