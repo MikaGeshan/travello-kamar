@@ -78,17 +78,12 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 
     // Hotel Routes
-    Route::get('/hotels/list', [HotelController::class, 'hotelList'])->name('admin.hotels.list');
-    Route::get('/hotels/create', [HotelController::class, 'createHotel'])->name('admin.hotels.create');
-    Route::post('/hotels', [HotelController::class, 'storeHotel'])->name('admin.hotels.store');
-    Route::get('/hotels/{hotel}/edit', [HotelController::class, 'editHotel'])->name('admin.hotels.edit');
-    Route::put('/hotels/{hotel}', [HotelController::class, 'updateHotel'])->name('admin.hotels.update');
-    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroyHotel'])->name('admin.hotels.destroy');
+    Route::get('/hotels/list', [HotelController::class, 'index'])->name('admin.hotels.list');
 });
 
 
 
-// Base Web Routes
+// Client Web Routes
 
 // Welcome Route
 Route::get('/', function () {
