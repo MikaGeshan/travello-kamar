@@ -54,16 +54,10 @@ const Header = ({ auth, isVisible }) => {
                     </nav>
                     <div className="flex items-center space-x-4">
                         <Link
-                            href="/register"
-                            className="text-gray-800 hover:text-gray-600"
-                        >
-                            Register
-                        </Link>
-                        <Link
                             href="/login"
                             className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-300"
                         >
-                            Sign In
+                            Login
                         </Link>
                     </div>
                 </div>

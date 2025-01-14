@@ -2,18 +2,22 @@ import React, { useState, useEffect } from "react";
 import bali from "../../../public/storage/bali.jpg";
 import singapore from "../../../public/storage/singapore.jpg";
 import france from "../../../public/storage/france.jpeg";
-import SearchField from "../Layouts/SearchField";
 import gojek from "../../../public/storage/logo-gojek.png";
 import tokopedia from "../../../public/storage/logo-tokopedia.png";
 import mastercard from "../../../public/storage/mastercard.png";
+import bca from "../../../public/storage/bca.jpg";
 import telkomsel from "../../../public/storage/telkomsel.png";
+import bri from "../../../public/storage/Bank BRI Logo.png";
+import mandiri from "../../../public/storage/mandiri.png";
+import SearchField from "../Layouts/SearchField";
 import Header from "./../Layouts/Header";
+import Footer from "../Layouts/Footer";
 
 export default function Welcome({ auth }) {
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
-    const handleScroll = () => {
+    const imageScroll = () => {
         if (typeof window !== "undefined") {
             const scrollY = window.scrollY;
             if (scrollY > lastScrollY) {
@@ -26,9 +30,9 @@ export default function Welcome({ auth }) {
     };
 
     useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", imageScroll);
         return () => {
-            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("scroll", imageScroll);
         };
     }, [lastScrollY]);
 
@@ -84,7 +88,7 @@ export default function Welcome({ auth }) {
             <div className="flex flex-col items-center">
                 <h2 className="text-2xl font-bold mb-4">Our Partners</h2>
                 <div className="relative w-full overflow-hidden">
-                    <div className="flex animate-marquee space-x-8">
+                    <div className="flex animate-marquee space-x-10">
                         <img
                             src={gojek}
                             alt="Gojek"
@@ -101,23 +105,18 @@ export default function Welcome({ auth }) {
                             className="w-40 h-20 object-contain"
                         />
                         <img
-                            src={telkomsel}
-                            alt="Telkomsel"
+                            src={bca}
+                            alt="BCA"
                             className="w-40 h-20 object-contain"
                         />
                         <img
-                            src={gojek}
-                            alt="Gojek"
+                            src={bri}
+                            alt="BRI"
                             className="w-40 h-20 object-contain"
                         />
                         <img
-                            src={tokopedia}
-                            alt="Tokopedia"
-                            className="w-40 h-20 object-contain"
-                        />
-                        <img
-                            src={mastercard}
-                            alt="Mastercard"
+                            src={mandiri}
+                            alt="Mandiri"
                             className="w-40 h-20 object-contain"
                         />
                         <img
@@ -127,6 +126,9 @@ export default function Welcome({ auth }) {
                         />
                     </div>
                 </div>
+            </div>
+            <div className="w-screen">
+                <Footer />
             </div>
         </div>
     );

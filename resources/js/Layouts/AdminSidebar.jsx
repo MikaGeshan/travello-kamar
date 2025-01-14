@@ -1,18 +1,10 @@
 import React, { useState } from "react";
 import { Link, usePage } from "@inertiajs/react";
-import {
-    FaHome,
-    FaUsers,
-    FaCog,
-    FaAngleDown,
-    FaUserTag,
-    FaPlane,
-} from "react-icons/fa";
+import { FaHome, FaUsers, FaCog, FaAngleDown, FaUserTag } from "react-icons/fa";
 
 export default function AdminSidebar() {
     const [isUsersOpen, setIsUsersOpen] = useState(false);
     const [isRolesOpen, setIsRolesOpen] = useState(false);
-    const [isFlightsOpen, setIsFlightsOpen] = useState(false);
 
     const { auth } = usePage().props;
 
@@ -24,20 +16,8 @@ export default function AdminSidebar() {
         setIsRolesOpen(!isRolesOpen);
     };
 
-    const toggleFlightsMenu = () => {
-        setIsFlightsOpen(!isFlightsOpen);
-    };
-
     const isAdmin = () => {
         return auth.user && auth.user.role === "Admin";
-    };
-
-    const isMaskapai = () => {
-        return auth.user && auth.user.role === "Maskapai";
-    };
-
-    const canAccessCustomer = () => {
-        return isAdmin() || isMaskapai();
     };
 
     return (
@@ -55,33 +35,33 @@ export default function AdminSidebar() {
                             <span className="font-medium">Dashboard</span>
                         </Link>
                     </li>
-                    {(isAdmin() || isMaskapai()) && (
-                        <li>
-                            <div
-                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
-                                onClick={toggleUsersMenu}
-                            >
-                                <span className="text-xl text-gray-600">
-                                    <FaUsers />
-                                </span>
-                                <span className="font-medium">
-                                    Manage Users
-                                </span>
-                                <span
-                                    className={`text-xl text-gray-600 ml-auto transition-transform duration-300 ${
-                                        isUsersOpen ? "rotate-180" : ""
+                    {isAdmin() && (
+                        <>
+                            <li>
+                                <div
+                                    className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
+                                    onClick={toggleUsersMenu}
+                                >
+                                    <span className="text-xl text-gray-600">
+                                        <FaUsers />
+                                    </span>
+                                    <span className="font-medium">
+                                        Manage Users
+                                    </span>
+                                    <span
+                                        className={`text-xl text-gray-600 ml-auto transition-transform duration-300 ${
+                                            isUsersOpen ? "rotate-180" : ""
+                                        }`}
+                                    >
+                                        <FaAngleDown />
+                                    </span>
+                                </div>
+                                <div
+                                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                                        isUsersOpen ? "max-h-96" : "max-h-0"
                                     }`}
                                 >
-                                    <FaAngleDown />
-                                </span>
-                            </div>
-                            <div
-                                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                                    isUsersOpen ? "max-h-96" : "max-h-0"
-                                }`}
-                            >
-                                <ul className="pl-4 space-y-2 py-2">
-                                    {isAdmin() && (
+                                    <ul className="pl-4 space-y-2 py-2">
                                         <li>
                                             <Link
                                                 href="/admin/users/list"
@@ -92,8 +72,6 @@ export default function AdminSidebar() {
                                                 </span>
                                             </Link>
                                         </li>
-                                    )}
-                                    {canAccessCustomer() && (
                                         <li>
                                             <Link
                                                 href="/admin/customers/list"
@@ -104,100 +82,48 @@ export default function AdminSidebar() {
                                                 </span>
                                             </Link>
                                         </li>
-                                    )}
-                                </ul>
-                            </div>
-                        </li>
-                    )}
-                    {isAdmin() && (
-                        <li>
-                            <div
-                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
-                                onClick={toggleRolesMenu}
-                            >
-                                <span className="text-xl text-gray-600">
-                                    <FaUserTag />
-                                </span>
-                                <span className="font-medium">
-                                    Manage Roles
-                                </span>
-                                <span
-                                    className={`text-xl text-gray-600 ml-auto transition-transform duration-300 ${
-                                        isRolesOpen ? "rotate-180" : ""
+                                    </ul>
+                                </div>
+                            </li>
+                            <li>
+                                <div
+                                    className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
+                                    onClick={toggleRolesMenu}
+                                >
+                                    <span className="text-xl text-gray-600">
+                                        <FaUserTag />
+                                    </span>
+                                    <span className="font-medium">
+                                        Manage Roles
+                                    </span>
+                                    <span
+                                        className={`text-xl text-gray-600 ml-auto transition-transform duration-300 ${
+                                            isRolesOpen ? "rotate-180" : ""
+                                        }`}
+                                    >
+                                        <FaAngleDown />
+                                    </span>
+                                </div>
+                                <div
+                                    className={`overflow-hidden transition-all duration-300 ease-in-out ${
+                                        isRolesOpen ? "max-h-96" : "max-h-0"
                                     }`}
                                 >
-                                    <FaAngleDown />
-                                </span>
-                            </div>
-                            <div
-                                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                                    isRolesOpen ? "max-h-96" : "max-h-0"
-                                }`}
-                            >
-                                <ul className="pl-4 space-y-2 py-2">
-                                    <li>
-                                        <Link
-                                            href="/admin/roles/list"
-                                            className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                                        >
-                                            <span className="font-medium">
-                                                Role List
-                                            </span>
-                                        </Link>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
-                    )}
-                    {isMaskapai() && (
-                        <li>
-                            <div
-                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200 cursor-pointer"
-                                onClick={toggleFlightsMenu}
-                            >
-                                <span className="text-xl text-gray-600">
-                                    <FaPlane />
-                                </span>
-                                <span className="font-medium">
-                                    Manage Flights
-                                </span>
-                                <span
-                                    className={`text-xl text-gray-600 ml-auto transition-transform duration-300 ${
-                                        isFlightsOpen ? "rotate-180" : ""
-                                    }`}
-                                >
-                                    <FaAngleDown />
-                                </span>
-                            </div>
-                            <div
-                                className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                                    isFlightsOpen ? "max-h-96" : "max-h-0"
-                                }`}
-                            >
-                                <ul className="pl-4 space-y-2 py-2">
-                                    <li>
-                                        <Link
-                                            href="/admin/airlines/list"
-                                            className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                                        >
-                                            <span className="font-medium">
-                                                Flight List
-                                            </span>
-                                        </Link>
+                                    <ul className="pl-4 space-y-2 py-2">
                                         <li>
                                             <Link
-                                                href="#"
+                                                href="/admin/roles/list"
                                                 className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
                                             >
                                                 <span className="font-medium">
-                                                    Flight Schedules
+                                                    Role List
                                                 </span>
                                             </Link>
                                         </li>
-                                    </li>
-                                </ul>
-                            </div>
-                        </li>
+                                    </ul>
+                                </div>
+                            </li>
+                        </>
                     )}
                     <li>
                         <Link

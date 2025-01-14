@@ -4,12 +4,12 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\HotelController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Controllers\RoleController;
 use App\Models\Role;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\AirlineController;
 use App\Http\Controllers\ProfileController;
 
 // Admin Routes
@@ -77,15 +77,13 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 
-    // Airline Routes
-    Route::get('/airlines/list', [AirlineController::class, 'index'])->name('maskapai.airlines.list');
-
-    Route::get('/airlines/create', function () {
-        return Inertia::render('Admin/Maskapai/CreateAirline');
-    })->name('maskapai.airlines.create');
-    Route::post('/airlines', [AirlineController::class, 'store'])->name('maskapai.airlines.store');
-
-    Route::delete('/airlines/{id}', [AirlineController::class, 'destroy'])->name('maskapai.airlines.destroy');
+    // Hotel Routes
+    Route::get('/hotels/list', [HotelController::class, 'hotelList'])->name('admin.hotels.list');
+    Route::get('/hotels/create', [HotelController::class, 'createHotel'])->name('admin.hotels.create');
+    Route::post('/hotels', [HotelController::class, 'storeHotel'])->name('admin.hotels.store');
+    Route::get('/hotels/{hotel}/edit', [HotelController::class, 'editHotel'])->name('admin.hotels.edit');
+    Route::put('/hotels/{hotel}', [HotelController::class, 'updateHotel'])->name('admin.hotels.update');
+    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroyHotel'])->name('admin.hotels.destroy');
 });
 
 

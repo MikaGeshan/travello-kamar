@@ -20,7 +20,7 @@ const Login = () => {
             <div className="w-1/2 bg-white flex items-center justify-center">
                 <div className="text-center flex flex-col items-center">
                     <FiHome className="mb-2 text-3xl" />
-                    <h1 className="text-4xl font-bold text-green-800 mb-2">
+                    <h1 className="text-4xl font-bold text-blue-500 mb-2">
                         Holiday Inn
                     </h1>
                     <p className="text-gray-600">
@@ -28,7 +28,7 @@ const Login = () => {
                     </p>
                 </div>
             </div>
-            <div className="w-1/2 bg-green-800 flex items-center justify-center">
+            <div className="w-1/2 bg-blue-400 flex items-center justify-center">
                 <div className="bg-white p-10 rounded-lg shadow-lg w-96">
                     <h2 className="text-2xl font-bold mb-2 text-gray-800">
                         Sign in to Fly High
@@ -104,7 +104,7 @@ const Login = () => {
 
                         <button
                             type="submit"
-                            className={`w-full bg-green-800 text-white font-bold py-2 rounded-md ${
+                            className={`w-full bg-blue-400 text-white font-bold py-2 rounded-md ${
                                 processing
                                     ? "opacity-50 cursor-not-allowed"
                                     : ""
