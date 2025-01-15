@@ -1,13 +1,42 @@
 import React, { useState } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { FaSearch, FaTrash, FaHotel } from "react-icons/fa";
 
 export default function HotelList() {
+    const { hotels = [] } = usePage().props;
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedHotels, setSelectedHotels] = useState([]);
+
+    const handleSelectHotel = (hotelId) => {
+        setSelectedHotels((prev) =>
+            prev.includes(hotelId)
+                ? prev.filter((id) => id !== hotelId)
+                : [...prev, hotelId]
+        );
+    };
+
+    const handleSelectAll = () => {
+        if (selectedHotels.length === hotels.length) {
+            setSelectedHotels([]);
+        } else {
+            setSelectedHotels(hotels.map((hotel) => hotel.id));
+        }
+    };
+
+    const totalHotels = hotels.length;
+    const totalPages = Math.ceil(totalHotels / perPage);
+    const start = (currentPage - 1) * perPage;
+    const end = Math.min(currentPage * perPage, totalHotels);
+
+    const handlePageChange = (newPage) => setCurrentPage(newPage);
+
+    const handlePerPageChange = (event) => {
+        setPerPage(parseInt(event.target.value));
+        setCurrentPage(1);
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -21,7 +50,7 @@ export default function HotelList() {
                                 <FaHotel className="mr-3" /> Hotel List
                             </h1>
                             <Link
-                                href="/admin/hotels/create"
+                                href={"/admin/hotels/create"}
                                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                             >
                                 Add New Hotel
@@ -58,34 +87,62 @@ export default function HotelList() {
                                             <input
                                                 type="checkbox"
                                                 className="w-4 h-4 rounded border-gray-300 cursor-pointer"
+                                                checked={
+                                                    selectedHotels.length ===
+                                                    hotels.length
+                                                }
+                                                onChange={handleSelectAll}
                                             />
                                         </th>
                                         <th className="p-3">ID</th>
                                         <th className="p-3">Hotel Name</th>
+                                        <th className="p-3">Image</th>
                                         <th className="p-3">Location</th>
-                                        <th className="p-3">Total Rooms</th>
                                         <th className="p-3">Rating</th>
                                         <th className="p-3">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {[...Array(5)].map((_, index) => (
-                                        <tr key={index} className="border-b">
+                                    {hotels.slice(start, end).map((hotel) => (
+                                        <tr key={hotel.id} className="border-b">
                                             <td className="p-3">
                                                 <input
                                                     type="checkbox"
                                                     className="w-4 h-4 rounded border-gray-300 cursor-pointer"
+                                                    checked={selectedHotels.includes(
+                                                        hotel.id
+                                                    )}
+                                                    onChange={() =>
+                                                        handleSelectHotel(
+                                                            hotel.id
+                                                        )
+                                                    }
                                                 />
                                             </td>
-                                            <td className="p-3">{index + 1}</td>
-                                            <td className="p-3">Grand Hyatt</td>
-                                            <td className="p-3">Jakarta</td>
-                                            <td className="p-3">100</td>
-                                            <td className="p-3">4.5</td>
+                                            <td className="p-3">{hotel.id}</td>
+                                            <td className="p-3">
+                                                <img
+                                                    src={`${window.location.origin}/${hotel.gambar_hotel}`}
+                                                    alt={hotel.nama_hotel}
+                                                    className="w-20 h-20 object-cover rounded-md"
+                                                />
+                                            </td>
+                                            <td className="p-3">
+                                                {hotel.nama_hotel}
+                                            </td>
+                                            <td className="p-3">
+                                                {hotel.lokasi_hotel}
+                                            </td>
+                                            <td className="p-3">
+                                                {hotel.rating_hotel}
+                                            </td>
                                             <td className="p-3 flex space-x-2">
-                                                <button className="text-blue-500 hover:text-blue-700 font-bold">
+                                                <Link
+                                                    href="#"
+                                                    className="text-blue-500 hover:text-blue-700 font-bold"
+                                                >
                                                     Edit
-                                                </button>
+                                                </Link>
                                                 <button className="text-red-500 hover:text-red-700 font-bold">
                                                     Delete
                                                 </button>
@@ -94,37 +151,68 @@ export default function HotelList() {
                                     ))}
                                 </tbody>
                             </table>
-                            <div className="flex items-center justify-between p-4">
-                                <span>Showing 1 to 5 of 5 results</span>
 
-                                <div className="flex items-center">
+                            <div className="flex items-center justify-between p-4">
+                                <span>
+                                    Showing {start + 1} to {end} of{" "}
+                                    {totalHotels} results
+                                </span>
+                                <div className="flex items-center space-x-2">
                                     <select
                                         value={perPage}
-                                        className="border p-2 rounded mr-2"
+                                        onChange={handlePerPageChange}
+                                        className="border p-2 rounded"
                                     >
                                         <option value="5">5</option>
                                         <option value="10">10</option>
                                         <option value="15">15</option>
-                                        <option value="20">20</option>
                                     </select>
-                                    <span>per page</span>
-                                </div>
-                                <div className="flex items-center space-x-1">
-                                    <button
-                                        disabled
-                                        className="px-2 py-1 border rounded-l-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-                                    >
-                                        {"<"}
-                                    </button>
-                                    <button className="px-3 py-1 border bg-green-500 text-white">
-                                        1
-                                    </button>
-                                    <button
-                                        disabled
-                                        className="px-2 py-1 border rounded-r-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-                                    >
-                                        {">"}
-                                    </button>
+                                    <div className="flex items-center space-x-1">
+                                        <button
+                                            disabled={currentPage === 1}
+                                            onClick={() =>
+                                                handlePageChange(
+                                                    currentPage - 1
+                                                )
+                                            }
+                                            className="px-2 py-1 border rounded-l-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                        >
+                                            {"<"}
+                                        </button>
+                                        {[...Array(totalPages)].map(
+                                            (_, index) => (
+                                                <button
+                                                    key={index + 1}
+                                                    onClick={() =>
+                                                        handlePageChange(
+                                                            index + 1
+                                                        )
+                                                    }
+                                                    className={`px-3 py-1 border ${
+                                                        currentPage ===
+                                                        index + 1
+                                                            ? "bg-green-500 text-white"
+                                                            : "bg-gray-200 hover:bg-gray-300"
+                                                    }`}
+                                                >
+                                                    {index + 1}
+                                                </button>
+                                            )
+                                        )}
+                                        <button
+                                            disabled={
+                                                currentPage === totalPages
+                                            }
+                                            onClick={() =>
+                                                handlePageChange(
+                                                    currentPage + 1
+                                                )
+                                            }
+                                            className="px-2 py-1 border rounded-r-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                        >
+                                            {">"}
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
                         </div>

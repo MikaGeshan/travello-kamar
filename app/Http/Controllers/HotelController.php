@@ -13,8 +13,10 @@ class HotelController extends Controller
      */
     public function index()
     {
-        //
-        return Inertia::render(component: "Admin/Hotel/HotelList");
+        $hotels = Hotel::all(); // Ambil semua hotel
+        return Inertia::render('Admin/Hotel/HotelList', [
+            'hotels' => $hotels
+        ]);
     }
 
     /**
@@ -22,7 +24,7 @@ class HotelController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Admin/Hotel/CreateHotel');
     }
 
     /**
@@ -30,7 +32,28 @@ class HotelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_hotel' => 'required|string|max:255',
+            'lokasi_hotel' => 'required|string|max:255',
+            'deskripsi_hotel' => 'required|string',
+            'rating_hotel' => 'nullable|numeric|min:1|max:5',
+            'gambar_hotel' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        try {
+            if ($request->hasFile('gambar_hotel')) {
+                $image = $request->file('gambar_hotel');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/hotels'), $imageName);
+                $validatedData['gambar_hotel'] = 'uploads/hotels/' . $imageName;
+            }
+
+            $hotel = Hotel::create($validatedData);
+
+            return redirect()->route('admin.hotels.list')->with('success', 'Hotel berhasil dibuat');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Gagal membuat hotel: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -38,7 +61,9 @@ class HotelController extends Controller
      */
     public function show(Hotel $hotel)
     {
-        //
+        return Inertia::render('Admin/Hotel/ShowHotel', [
+            'hotel' => $hotel
+        ]);
     }
 
     /**
@@ -46,7 +71,9 @@ class HotelController extends Controller
      */
     public function edit(Hotel $hotel)
     {
-        //
+        return Inertia::render('Admin/Hotel/EditHotel', [
+            'hotel' => $hotel
+        ]);
     }
 
     /**
@@ -54,7 +81,34 @@ class HotelController extends Controller
      */
     public function update(Request $request, Hotel $hotel)
     {
-        //
+        $validatedData = $request->validate([
+            'nama_hotel' => 'required|string|max:255',
+            'lokasi_hotel' => 'required|string|max:255',
+            'deskripsi_hotel' => 'required|string',
+            'rating_hotel' => 'nullable|numeric|min:1|max:5',
+            'gambar_hotel' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+        ]);
+
+        try {
+            if ($request->hasFile('gambar_hotel')) {
+                // Hapus gambar lama jika ada
+                if ($hotel->gambar_hotel && file_exists(public_path($hotel->gambar_hotel))) {
+                    unlink(public_path($hotel->gambar_hotel));
+                }
+
+                $image = $request->file('gambar_hotel');
+                $imageName = time() . '.' . $image->getClientOriginalExtension();
+                $image->move(public_path('uploads/hotels'), $imageName);
+                $validatedData['gambar_hotel'] = 'uploads/hotels/' . $imageName;
+            }
+
+            // Update hotel
+            $hotel->update($validatedData);
+
+            return redirect()->route('admin.hotels.list')->with('success', 'Hotel berhasil diupdate');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Gagal mengupdate hotel: ' . $e->getMessage()]);
+        }
     }
 
     /**
@@ -62,6 +116,18 @@ class HotelController extends Controller
      */
     public function destroy(Hotel $hotel)
     {
-        //
+        try {
+            // Hapus gambar jika ada
+            if ($hotel->gambar_hotel && file_exists(public_path($hotel->gambar_hotel))) {
+                unlink(public_path($hotel->gambar_hotel));
+            }
+
+            // Hapus hotel
+            $hotel->delete();
+
+            return redirect()->route('admin.hotels.list')->with('success', 'Hotel berhasil dihapus');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Gagal menghapus hotel: ' . $e->getMessage()]);
+        }
     }
 }

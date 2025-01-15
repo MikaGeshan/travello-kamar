@@ -168,7 +168,7 @@ export default function AdminSidebar() {
                                                 className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
                                             >
                                                 <span className="font-medium">
-                                                    Hotels
+                                                    Hotel List
                                                 </span>
                                             </Link>
                                         </li>
