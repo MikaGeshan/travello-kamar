@@ -39,7 +39,7 @@ const Register = () => {
             <div className="w-1/2 bg-white flex items-center justify-center">
                 <div className="text-center flex flex-col items-center">
                     <FiHome className="mb-2 text-3xl" />
-                    <h1 className="text-4xl font-bold text-green-800 mb-2">
+                    <h1 className="text-4xl font-bold text-blue-500 mb-2">
                         Holiday Inn
                     </h1>
                     <p className="text-gray-600">
@@ -47,7 +47,7 @@ const Register = () => {
                     </p>
                 </div>
             </div>
-            <div className="w-1/2 bg-green-800 flex items-center justify-center">
+            <div className="w-1/2 bg-blue-400 flex items-center justify-center">
                 <div className="bg-white p-10 rounded-lg shadow-lg w-96">
                     <form onSubmit={handleSubmit}>
                         <h2 className="text-2xl font-bold mb-2 text-gray-800">
@@ -76,7 +76,7 @@ const Register = () => {
                                 onChange={(e) =>
                                     setData("name", e.target.value)
                                 }
-                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm focus:ring focus:ring-green-500"
+                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm"
                                 required
                             />
                             {errors.name && (
@@ -99,7 +99,7 @@ const Register = () => {
                                 onChange={(e) =>
                                     setData("email", e.target.value)
                                 }
-                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm focus:ring focus:ring-green-500"
+                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm"
                                 required
                             />
                             {errors.email && (
@@ -206,7 +206,7 @@ const Register = () => {
                         </div>
                         <button
                             type="submit"
-                            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded"
+                            className="bg-blue-400 text-white font-bold py-2 px-4 rounded"
                             disabled={processing}
                         >
                             Register

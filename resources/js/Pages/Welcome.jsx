@@ -2,14 +2,22 @@ import React, { useState, useEffect } from "react";
 import bali from "../../../public/storage/bali.jpg";
 import singapore from "../../../public/storage/singapore.jpg";
 import france from "../../../public/storage/france.jpeg";
+import gojek from "../../../public/storage/logo-gojek.png";
+import tokopedia from "../../../public/storage/logo-tokopedia.png";
+import mastercard from "../../../public/storage/mastercard.png";
+import bca from "../../../public/storage/bca.jpg";
+import telkomsel from "../../../public/storage/telkomsel.png";
+import bri from "../../../public/storage/Bank BRI Logo.png";
+import mandiri from "../../../public/storage/mandiri.png";
 import SearchField from "../Layouts/SearchField";
 import Header from "./../Layouts/Header";
+import Footer from "../Layouts/Footer";
 
 export default function Welcome({ auth }) {
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
-    const handleScroll = () => {
+    const imageScroll = () => {
         if (typeof window !== "undefined") {
             const scrollY = window.scrollY;
             if (scrollY > lastScrollY) {
@@ -22,52 +30,16 @@ export default function Welcome({ auth }) {
     };
 
     useEffect(() => {
-        window.addEventListener("scroll", handleScroll);
+        window.addEventListener("scroll", imageScroll);
         return () => {
-            window.removeEventListener("scroll", handleScroll);
+            window.removeEventListener("scroll", imageScroll);
         };
     }, [lastScrollY]);
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
-            {/* <header
-                className={`bg-white text-gray-100 py-4 px-8 flex justify-between items-center fixed top-0 left-0 w-full z-10 transition-transform duration-300 ${
-                    isHeaderVisible ? "translate-y-0" : "-translate-y-full"
-                }`}
-            >
-                <h1 className="text-2xl font-bold">
-                    <a href="/" className="text-gray-900 hover:text-gray-600">
-                        Travello
-                    </a>
-                </h1>
-                <nav className="text-gray-800 font-semibold text-base flex-1 flex justify-end pr-20 space-x-6">
-                    <a href="/" className="hover:text-gray-600">
-                        Home
-                    </a>
-                    <a href="#" className="hover:text-gray-600">
-                        Manage Booking
-                    </a>
-                    <a href="#" className="hover:text-gray-600">
-                        Customer Service
-                    </a>
-                </nav>
-                <div className="flex items-center space-x-4">
-                    <Link
-                        href="/register"
-                        className="text-gray-800 hover:text-gray-600"
-                    >
-                        Register
-                    </Link>
-                    <Link
-                        href="/login"
-                        className="bg-green-800 text-white px-4 py-2 rounded-md hover:bg-green-900"
-                    >
-                        Sign In
-                    </Link>
-                </div>
-            </header> */}
             <Header isVisible={isHeaderVisible} auth={auth} />
-            <div className="relative w-full  bg-gradient-to-r from-green-600 to-green-800  min-h-[80vh] flex flex-col items-center justify-center">
+            <div className="relative w-full bg-gradient-to-r from-blue-500 to-blue-300 min-h-[80vh] flex flex-col items-center justify-center">
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center py-20">
                     <h1 className="text-white text-4xl font-bold">
                         Booking Hotel & Penginapan Murah{" "}
@@ -77,7 +49,7 @@ export default function Welcome({ auth }) {
             </div>
             <div className="flex flex-col items-center mt-8 mb-8">
                 <h2 className="text-2xl font-bold mb-4">Travel the world!</h2>
-                <div className="grid grid-cols- 1 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105">
                         <img
                             src={bali}
@@ -112,6 +84,51 @@ export default function Welcome({ auth }) {
                         </div>
                     </div>
                 </div>
+            </div>
+            <div className="flex flex-col items-center">
+                <h2 className="text-2xl font-bold mb-4">Our Partners</h2>
+                <div className="relative w-full overflow-hidden">
+                    <div className="flex animate-marquee space-x-10">
+                        <img
+                            src={gojek}
+                            alt="Gojek"
+                            className="w-40 h-20 object-contain"
+                        />
+                        <img
+                            src={tokopedia}
+                            alt="Tokopedia"
+                            className="w-40 h-20 object-contain"
+                        />
+                        <img
+                            src={mastercard}
+                            alt="Mastercard"
+                            className="w-40 h-20 object-contain"
+                        />
+                        <img
+                            src={bca}
+                            alt="BCA"
+                            className="w-40 h-20 object-contain"
+                        />
+                        <img
+                            src={bri}
+                            alt="BRI"
+                            className="w-40 h-20 object-contain"
+                        />
+                        <img
+                            src={mandiri}
+                            alt="Mandiri"
+                            className="w-40 h-20 object-contain"
+                        />
+                        <img
+                            src={telkomsel}
+                            alt="Telkomsel"
+                            className="w-40 h-20 object-contain"
+                        />
+                    </div>
+                </div>
+            </div>
+            <div className="w-screen">
+                <Footer />
             </div>
         </div>
     );

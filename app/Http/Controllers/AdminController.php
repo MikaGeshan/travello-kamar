@@ -16,6 +16,7 @@ class AdminController extends Controller
     const SUCCESS_LOGIN_MESSAGE = 'Successfully logged in!';
     const ERROR_LOGIN_MESSAGE = 'The provided credentials do not match our records.';
     const SUCCESS_USER_CREATION_MESSAGE = 'User created successfully.';
+
     public function login(Request $request)
     {
         $request->validate([

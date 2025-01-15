@@ -14,8 +14,7 @@ const Header = ({ auth, isVisible }) => {
                     Travello
                 </a>
             </h1>
-
-            {auth && auth.user ? (
+            {auth && auth.customer ? (
                 <>
                     <nav className="text-gray-800 font-semibold text-base flex-1 flex justify-end pr-20 space-x-6">
                         <a href="/" className="hover:text-gray-600">
@@ -35,7 +34,7 @@ const Header = ({ auth, isVisible }) => {
                         >
                             <FaUserCircle size={22} />
                             <span className="font-base text-lg text-gray-900 ml-1">
-                                {auth.user.name}
+                                {auth.customer.name}
                             </span>
                         </Link>
                     </div>
@@ -55,16 +54,10 @@ const Header = ({ auth, isVisible }) => {
                     </nav>
                     <div className="flex items-center space-x-4">
                         <Link
-                            href="/register"
-                            className="text-gray-800 hover:text-gray-600"
-                        >
-                            Register
-                        </Link>
-                        <Link
                             href="/login"
-                            className="bg-green-800 text-white px-4 py-2 rounded-md hover:bg-green-900"
+                            className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-300"
                         >
-                            Sign In
+                            Login
                         </Link>
                     </div>
                 </div>
