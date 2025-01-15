@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, usePage, router } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { FaSearch, FaTrash, FaHotel } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 export default function HotelList() {
     const { hotels = [] } = usePage().props;
@@ -36,6 +37,77 @@ export default function HotelList() {
     const handlePerPageChange = (event) => {
         setPerPage(parseInt(event.target.value));
         setCurrentPage(1);
+    };
+
+    const handleDeleteHotel = (hotelId) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`/admin/hotels/${hotelId}`, {
+                    onSuccess: () => {
+                        Swal.fire(
+                            "Deleted!",
+                            "Hotel has been deleted.",
+                            "success"
+                        );
+                    },
+                    onError: () => {
+                        Swal.fire(
+                            "Error!",
+                            "There was a problem deleting the hotel.",
+                            "error"
+                        );
+                    },
+                });
+            }
+        });
+    };
+
+    const handleDeleteSelectedHotels = () => {
+        if (selectedHotels.length === 0) return;
+
+        Swal.fire({
+            title: "Delete Selected Hotels?",
+            text: `You are about to delete ${selectedHotels.length} hotel(s)`,
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete them!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.post(
+                    "/admin/hotels/bulk-delete",
+                    {
+                        hotels: selectedHotels,
+                    },
+                    {
+                        onSuccess: () => {
+                            Swal.fire(
+                                "Deleted!",
+                                `${selectedHotels.length} hotel(s) have been deleted.`,
+                                "success"
+                            );
+                            setSelectedHotels([]);
+                        },
+                        onError: () => {
+                            Swal.fire(
+                                "Error!",
+                                "There was a problem deleting the hotels.",
+                                "error"
+                            );
+                        },
+                    }
+                );
+            }
+        });
     };
 
     return (
@@ -72,7 +144,10 @@ export default function HotelList() {
                             <div className="p-4 bg-gray-50 border-b">
                                 {selectedHotels.length > 0 && (
                                     <div className="flex items-center animate-fade-in">
-                                        <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center transition-all duration-200">
+                                        <button
+                                            onClick={handleDeleteSelectedHotels}
+                                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center transition-all duration-200"
+                                        >
                                             <FaTrash className="mr-2" />
                                             Delete Selected (
                                             {selectedHotels.length})
@@ -97,6 +172,7 @@ export default function HotelList() {
                                         <th className="p-3">ID</th>
                                         <th className="p-3">Hotel Name</th>
                                         <th className="p-3">Image</th>
+                                        <th className="p-3">Description</th>
                                         <th className="p-3">Location</th>
                                         <th className="p-3">Rating</th>
                                         <th className="p-3">Actions</th>
@@ -121,6 +197,9 @@ export default function HotelList() {
                                             </td>
                                             <td className="p-3">{hotel.id}</td>
                                             <td className="p-3">
+                                                {hotel.nama_hotel}
+                                            </td>
+                                            <td className="p-3">
                                                 <img
                                                     src={`${window.location.origin}/${hotel.gambar_hotel}`}
                                                     alt={hotel.nama_hotel}
@@ -128,7 +207,7 @@ export default function HotelList() {
                                                 />
                                             </td>
                                             <td className="p-3">
-                                                {hotel.nama_hotel}
+                                                {hotel.deskripsi_hotel}
                                             </td>
                                             <td className="p-3">
                                                 {hotel.lokasi_hotel}
@@ -136,16 +215,25 @@ export default function HotelList() {
                                             <td className="p-3">
                                                 {hotel.rating_hotel}
                                             </td>
-                                            <td className="p-3 flex space-x-2">
-                                                <Link
-                                                    href="#"
-                                                    className="text-blue-500 hover:text-blue-700 font-bold"
-                                                >
-                                                    Edit
-                                                </Link>
-                                                <button className="text-red-500 hover:text-red-700 font-bold">
-                                                    Delete
-                                                </button>
+                                            <td className="p-3 space-x-2">
+                                                <div className="flex items-center space-x-2">
+                                                    <Link
+                                                        href={`/admin/hotels/${hotel.id}/edit`}
+                                                        className="text-blue-500 hover:text-blue-700 font-bold"
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                    <button
+                                                        onClick={() =>
+                                                            handleDeleteHotel(
+                                                                hotel.id
+                                                            )
+                                                        }
+                                                        className="text-red-500 hover:text-red-700 font-bold"
+                                                    >
+                                                        Delete
+                                                    </button>
+                                                </div>
                                             </td>
                                         </tr>
                                     ))}

@@ -81,7 +81,6 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/hotels/list', [HotelController::class, 'index'])->name('admin.hotels.list');
     Route::get('/hotels/create', [HotelController::class, 'create'])->name('admin.hotels.create');
     Route::post('/hotels', [HotelController::class, 'store'])->name('admin.hotels.store');
-    Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('admin.hotels.show');
     Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('admin.hotels.edit');
     Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('admin.hotels.update');
     Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->name('admin.hotels.destroy');

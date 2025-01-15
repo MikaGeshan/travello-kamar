@@ -13,7 +13,7 @@ class HotelController extends Controller
      */
     public function index()
     {
-        $hotels = Hotel::all(); // Ambil semua hotel
+        $hotels = Hotel::all();
         return Inertia::render('Admin/Hotel/HotelList', [
             'hotels' => $hotels
         ]);
@@ -35,7 +35,7 @@ class HotelController extends Controller
         $validatedData = $request->validate([
             'nama_hotel' => 'required|string|max:255',
             'lokasi_hotel' => 'required|string|max:255',
-            'deskripsi_hotel' => 'required|string',
+            'deskripsi_hotel' => 'required|string|max:5000',
             'rating_hotel' => 'nullable|numeric|min:1|max:5',
             'gambar_hotel' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -61,9 +61,7 @@ class HotelController extends Controller
      */
     public function show(Hotel $hotel)
     {
-        return Inertia::render('Admin/Hotel/ShowHotel', [
-            'hotel' => $hotel
-        ]);
+        //
     }
 
     /**
@@ -71,7 +69,7 @@ class HotelController extends Controller
      */
     public function edit(Hotel $hotel)
     {
-        return Inertia::render('Admin/Hotel/EditHotel', [
+        return Inertia::render('Admin/Hotel/UpdateHotel', props: [
             'hotel' => $hotel
         ]);
     }
@@ -84,14 +82,13 @@ class HotelController extends Controller
         $validatedData = $request->validate([
             'nama_hotel' => 'required|string|max:255',
             'lokasi_hotel' => 'required|string|max:255',
-            'deskripsi_hotel' => 'required|string',
+            'deskripsi_hotel' => 'required|string|max:5000',
             'rating_hotel' => 'nullable|numeric|min:1|max:5',
             'gambar_hotel' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
 
         try {
             if ($request->hasFile('gambar_hotel')) {
-                // Hapus gambar lama jika ada
                 if ($hotel->gambar_hotel && file_exists(public_path($hotel->gambar_hotel))) {
                     unlink(public_path($hotel->gambar_hotel));
                 }
@@ -102,7 +99,6 @@ class HotelController extends Controller
                 $validatedData['gambar_hotel'] = 'uploads/hotels/' . $imageName;
             }
 
-            // Update hotel
             $hotel->update($validatedData);
 
             return redirect()->route('admin.hotels.list')->with('success', 'Hotel berhasil diupdate');
@@ -117,12 +113,10 @@ class HotelController extends Controller
     public function destroy(Hotel $hotel)
     {
         try {
-            // Hapus gambar jika ada
             if ($hotel->gambar_hotel && file_exists(public_path($hotel->gambar_hotel))) {
                 unlink(public_path($hotel->gambar_hotel));
             }
 
-            // Hapus hotel
             $hotel->delete();
 
             return redirect()->route('admin.hotels.list')->with('success', 'Hotel berhasil dihapus');
