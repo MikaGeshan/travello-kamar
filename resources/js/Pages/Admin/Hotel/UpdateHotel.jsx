@@ -3,6 +3,7 @@ import { useForm } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { FaHotel, FaImage } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 export default function UpdateHotel({ hotel }) {
     const [imagePreview, setImagePreview] = useState(
@@ -11,9 +12,9 @@ export default function UpdateHotel({ hotel }) {
             : null
     );
 
-    const { data, setData, errors } = useForm({
-        nama_hotel: hotel.nama_hotel || "",
-        lokasi_hotel: hotel.lokasi_hotel || "",
+    const { data, setData, put, errors } = useForm({
+        nama_hotel: hotel.nama_hotel,
+        lokasi_hotel: hotel.lokasi_hotel,
         gambar_hotel: null,
         deskripsi_hotel: hotel.deskripsi_hotel || "",
         rating_hotel: hotel.rating_hotel || "",
@@ -25,7 +26,7 @@ export default function UpdateHotel({ hotel }) {
             lokasi_hotel: hotel.lokasi_hotel,
             gambar_hotel: null,
             deskripsi_hotel: hotel.deskripsi_hotel,
-            rating_hotel: hotel.rating_hotel,
+            rating_hotel: hotel.rating_hotel || "",
         });
     }, [hotel]);
 
@@ -43,6 +44,10 @@ export default function UpdateHotel({ hotel }) {
             if (file) {
                 reader.readAsDataURL(file);
             }
+        } else if (id === "rating_hotel") {
+            if (value !== "" && value !== String(hotel.rating_hotel)) {
+                setData(id, value);
+            }
         } else {
             setData(id, value);
         }
@@ -50,7 +55,24 @@ export default function UpdateHotel({ hotel }) {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Hotel data to be updated:", data);
+        put(`/admin/hotels/${hotel.id}`, {
+            onSuccess: () => {
+                Swal.fire(
+                    "Success!",
+                    "Hotel data has been updated successfully.",
+                    "success"
+                ).then(() => {
+                    window.location.href = "/admin/hotels/list";
+                });
+            },
+            onError: () => {
+                Swal.fire(
+                    "Error!",
+                    "An error occurred while updating the hotel data.",
+                    "error"
+                );
+            },
+        });
     };
 
     return (
@@ -171,17 +193,28 @@ export default function UpdateHotel({ hotel }) {
                                                     : ""
                                             }`}
                                             id="rating_hotel"
-                                            value={data.rating_hotel}
-                                            onChange={handleChange}
+                                            value={data.rating_hotel || ""}
+                                            onChange={(e) => handleChange(e)}
                                         >
-                                            <option value="">
-                                                Select Rating
-                                            </option>
-                                            <option value="1">1 Star</option>
-                                            <option value="2">2 Stars</option>
-                                            <option value="3">3 Stars</option>
-                                            <option value="4">4 Stars</option>
-                                            <option value="5">5 Stars</option>
+                                            {data.rating_hotel ? (
+                                                <option
+                                                    value={data.rating_hotel}
+                                                >
+                                                    {data.rating_hotel}
+                                                    {data.rating_hotel > 1
+                                                        ? "s"
+                                                        : ""}
+                                                </option>
+                                            ) : (
+                                                <option value="">
+                                                    Select Rating
+                                                </option>
+                                            )}
+                                            <option value="1">1 </option>
+                                            <option value="2">2 </option>
+                                            <option value="3">3 </option>
+                                            <option value="4">4 </option>
+                                            <option value="5">5 </option>
                                         </select>
                                         {errors.rating_hotel && (
                                             <div className="text-red-500 text-xs mt-1">
@@ -222,7 +255,7 @@ export default function UpdateHotel({ hotel }) {
                                         className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-5 rounded-md focus:outline-none focus:shadow-outline"
                                         type="submit"
                                     >
-                                        Log Hotel Data
+                                        Update Data
                                     </button>
                                 </div>
                             </form>
