@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\KamarController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Controllers\RoleController;
@@ -84,6 +85,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('admin.hotels.edit');
     Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('admin.hotels.update');
     Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->name('admin.hotels.destroy');
+
+    // Room Routes
+    Route::get('/rooms/list', action: [KamarController::class, 'index'])->name('admin.rooms.list');
+    Route::get('/rooms/create', action: [KamarController::class, 'create'])->name('admin.rooms.create');
 });
 
 

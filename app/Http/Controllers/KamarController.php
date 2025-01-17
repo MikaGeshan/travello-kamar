@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kamar;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class KamarController extends Controller
 {
@@ -13,6 +14,7 @@ class KamarController extends Controller
     public function index()
     {
         //
+        return Inertia::render('Admin/Rooms/RoomList');
     }
 
     /**
@@ -21,6 +23,7 @@ class KamarController extends Controller
     public function create()
     {
         //
+        return Inertia::render('Admin/Rooms/CreateRoom');
     }
 
     /**

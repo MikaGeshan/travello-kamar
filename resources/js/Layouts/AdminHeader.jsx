@@ -38,7 +38,7 @@ export default function AdminHeader() {
                                     >
                                         <div className="flex items-center">
                                             <FaSignOutAlt className="mr-2" />
-                                            <span>Logout</span>
+                                            <span>mika Kontol</span>
                                         </div>
                                     </Link>
                                 </div>

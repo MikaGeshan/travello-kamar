@@ -24,6 +24,7 @@ return new class extends Migration
                 'Booked',
                 'Not Available'
             ])->default('Available');
+            $table->string('gambar_kamar')->nullable();
             $table->timestamps();
         });
     }
