@@ -191,11 +191,6 @@ export default function RoomList() {
                                                     {room.status}
                                                 </td>
                                                 <td className="p-3">
-                                                    {/* <img
-                                                        src={`${window.location.origin}/${room.gambar_kamar}`}
-                                                        alt={room.jenis_kamar}
-                                                        className="w-20 h-20 object-cover rounded-md"
-                                                    /> */}
                                                     <img
                                                         src={room.gambar_kamar}
                                                         alt={room.jenis_kamar}

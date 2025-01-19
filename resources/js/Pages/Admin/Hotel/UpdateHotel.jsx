@@ -202,7 +202,7 @@ export default function UpdateHotel({ hotel }) {
                                                 >
                                                     {data.rating_hotel}
                                                     {data.rating_hotel > 1
-                                                        ? "s"
+                                                        ? ""
                                                         : ""}
                                                 </option>
                                             ) : (

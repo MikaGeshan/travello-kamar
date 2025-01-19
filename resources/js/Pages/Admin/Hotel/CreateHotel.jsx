@@ -58,7 +58,6 @@ export default function CreateHotel() {
                     icon: "success",
                     confirmButtonText: "OK",
                 }).then(() => {
-
                     setData({
                         nama_hotel: "",
                         lokasi_hotel: "",
@@ -70,9 +69,13 @@ export default function CreateHotel() {
                 });
             },
             onError: (errors) => {
+                const errorMessages = Object.values(errors)
+                    .flat()
+                    .join("<br />");
+
                 Swal.fire({
                     title: "Error!",
-                    text: "Gagal membuat hotel. Silakan periksa kembali input Anda.",
+                    html: `<p>Gagal membuat hotel. Silakan periksa kembali</p>`,
                     icon: "error",
                     confirmButtonText: "OK",
                 });
@@ -97,32 +100,6 @@ export default function CreateHotel() {
                         </div>
                         <div className="bg-white shadow-md rounded-lg p-8">
                             <form onSubmit={handleSubmit}>
-                                {errors.nama_hotel && (
-                                    <div className="text-red-500 mb-2">
-                                        {errors.nama_hotel}
-                                    </div>
-                                )}
-                                {errors.lokasi_hotel && (
-                                    <div className="text-red-500 mb-2">
-                                        {errors.lokasi_hotel}
-                                    </div>
-                                )}
-                                {errors.rating_hotel && (
-                                    <div className="text-red-500 mb-2">
-                                        {errors.rating_hotel}
-                                    </div>
-                                )}
-                                {errors.gambar_hotel && (
-                                    <div className="text-red-500 mb-2">
-                                        {errors.gambar_hotel}
-                                    </div>
-                                )}
-                                {errors.deskripsi_hotel && (
-                                    <div className="text-red-500 mb-2">
-                                        {errors.deskripsi_hotel}
-                                    </div>
-                                )}
-
                                 <div className="flex space-x-4 mb-4">
                                     <div className="w-1/2">
                                         <label
