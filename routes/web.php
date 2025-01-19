@@ -89,6 +89,7 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     // Room Routes
     Route::get('/rooms/list', action: [KamarController::class, 'index'])->name('admin.rooms.list');
     Route::get('/rooms/create', action: [KamarController::class, 'create'])->name('admin.rooms.create');
+    Route::post('/rooms', action: [KamarController::class, 'store'])->name('admin.rooms.store');
 });
 
 

@@ -6,7 +6,7 @@ import { FaHotel, FaImage } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 export default function CreateRoom() {
-    const { data, setData, processing, errors } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         jenis_kamar: "",
         harga: "",
         status: "Available",
@@ -26,7 +26,7 @@ export default function CreateRoom() {
             reader.onloadend = () => {
                 setImagePreview(reader.result);
             };
-            if (file) {
+            if (file) {``
                 reader.readAsDataURL(file);
             }
         } else {
@@ -37,28 +37,46 @@ export default function CreateRoom() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        console.log({
-            jenis_kamar: data.jenis_kamar,
-            harga: data.harga,
-            status: data.status,
-            gambar_kamar: data.gambar_kamar,
-        });
+        const formData = new FormData();
+        formData.append("jenis_kamar", data.jenis_kamar);
+        formData.append("harga", data.harga);
+        formData.append("status", data.status);
 
-        Swal.fire({
-            title: "Success!",
-            text: `Room ${data.jenis_kamar} data logged to console.`,
-            icon: "success",
-            confirmButtonText: "OK",
-        });
+        if (data.gambar_kamar) {
+            formData.append("gambar_kamar", data.gambar_kamar);
+        }
 
-        // Reset the form
-        setData({
-            jenis_kamar: "",
-            harga: "",
-            status: "Available",
-            gambar_kamar: null,
+        post("/admin/rooms", {
+            data: formData,
+            forceFormData: true,
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: `Room ${data.jenis_kamar} has been created successfully.`,
+                    icon: "success",
+                    confirmButtonText: "OK",
+                }).then(() => {
+                    setData({
+                        jenis_kamar: "",
+                        harga: "",
+                        status: "Available",
+                        gambar_kamar: null,
+                    });
+                    setImagePreview(null);
+                });
+            },
+            onError: (errors) => {
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to create room. Please check your input.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+                console.error("Error creating room:", errors);
+            },
+            preserveState: true,
+            preserveScroll: true,
         });
-        setImagePreview(null);
     };
 
     return (
@@ -198,8 +216,8 @@ export default function CreateRoom() {
                                         disabled={processing}
                                     >
                                         {processing
-                                            ? "Logging..."
-                                            : "Log Room Data"}
+                                            ? "Creating..."
+                                            : "Create Room"}
                                     </button>
                                 </div>
                             </form>

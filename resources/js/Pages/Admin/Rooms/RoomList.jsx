@@ -1,46 +1,12 @@
 import React, { useState } from "react";
-import { Link } from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { FaSearch, FaTrash, FaBed } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 export default function RoomList() {
-    const [rooms, setRooms] = useState([
-        {
-            id: 1,
-            nama_kamar: "Deluxe Room",
-            hotel_id: 1,
-            nama_hotel: "Grand Luxury Hotel",
-            tipe_kamar: "Deluxe",
-            harga_kamar: 250,
-            kapasitas: 2,
-            gambar_kamar: "/path/to/room1.jpg",
-            deskripsi_kamar: "Spacious room with city view"
-        },
-        {
-            id: 2,
-            nama_kamar: "Standard Room",
-            hotel_id: 2,
-            nama_hotel: "Seaside Resort",
-            tipe_kamar: "Standard",
-            harga_kamar: 150,
-            kapasitas: 2,
-            gambar_kamar: "/path/to/room2.jpg",
-            deskripsi_kamar: "Comfortable room with basic amenities"
-        },
-        {
-            id: 3,
-            nama_kamar: "Suite Room",
-            hotel_id: 3,
-            nama_hotel: "Mountain Retreat",
-            tipe_kamar: "Suite",
-            harga_kamar: 350,
-            kapasitas: 3,
-            gambar_kamar: "/path/to/room3.jpg",
-            deskripsi_kamar: "Luxurious suite with mountain view"
-        }
-    ]);
+    const { rooms = [] } = usePage().props;
 
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
@@ -63,9 +29,8 @@ export default function RoomList() {
         }
     };
 
-    const filteredRooms = rooms.filter(room =>
-        room.nama_kamar.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        room.nama_hotel.toLowerCase().includes(searchTerm.toLowerCase())
+    const filteredRooms = rooms.filter((room) =>
+        room.jenis_kamar.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     const totalRooms = filteredRooms.length;
@@ -91,7 +56,6 @@ export default function RoomList() {
             confirmButtonText: "Yes, delete it!",
         }).then((result) => {
             if (result.isConfirmed) {
-                setRooms(rooms.filter(room => room.id !== roomId));
                 Swal.fire("Deleted!", "Room has been deleted.", "success");
             }
         });
@@ -110,9 +74,13 @@ export default function RoomList() {
             confirmButtonText: "Yes, delete them!",
         }).then((result) => {
             if (result.isConfirmed) {
-                setRooms(rooms.filter(room => !selectedRooms.includes(room.id)));
+                // Call your delete API here
                 setSelectedRooms([]);
-                Swal.fire("Deleted!", `${selectedRooms.length} room(s) have been deleted.`, "success");
+                Swal.fire(
+                    "Deleted!",
+                    `${selectedRooms.length} room(s) have been deleted.`,
+                    "success"
+                );
             }
         });
     };
@@ -140,9 +108,11 @@ export default function RoomList() {
                                 <div className="flex items-center">
                                     <input
                                         type="text"
-                                        placeholder="Search rooms by name or hotel"
+                                        placeholder="Search rooms by type"
                                         value={searchTerm}
-                                        onChange={(e) => setSearchTerm(e.target.value)}
+                                        onChange={(e) =>
+                                            setSearchTerm(e.target.value)
+                                        }
                                         className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     <button className="bg-green-500 text-white px-4 py-3 rounded-r-md">
@@ -171,70 +141,96 @@ export default function RoomList() {
                                             <input
                                                 type="checkbox"
                                                 className="w-4 h-4 rounded border-gray-300 cursor-pointer"
-                                                checked={selectedRooms.length === filteredRooms.length}
+                                                checked={
+                                                    selectedRooms.length ===
+                                                    filteredRooms.length
+                                                }
                                                 onChange={handleSelectAll}
                                             />
                                         </th>
                                         <th className="p-3">ID</th>
-                                        <th className="p-3">Room Name</th>
-                                        <th className="p-3">Hotel</th>
-                                 <th className="p-3">Image</th>
-                                        <th className="p-3">Description</th>
-                                        <th className="p-3">Type</th>
+                                        <th className="p-3">Room Type</th>
                                         <th className="p-3">Price</th>
-                                        <th className="p-3">Capacity</th>
+                                        <th className="p-3">Status</th>
+                                        <th className="p-3">Image</th>
                                         <th className="p-3">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {filteredRooms.slice(start, end).map((room) => (
-                                        <tr key={room.id} className="border-b">
-                                            <td className="p-3">
-                                                <input
-                                                    type="checkbox"
-                                                    className="w-4 h-4 rounded border-gray-300 cursor-pointer"
-                                                    checked={selectedRooms.includes(room.id)}
-                                                    onChange={() => handleSelectRoom(room.id)}
-                                                />
-                                            </td>
-                                            <td className="p-3">{room.id}</td>
-                                            <td className="p-3">{room.nama_kamar}</td>
-                                            <td className="p-3">{room.nama_hotel}</td>
-                                            <td className="p-3">
-                                                <img
-                                                    src={`${window.location.origin}${room.gambar_kamar}`}
-                                                    alt={room.nama_kamar}
-                                                    className="w-20 h-20 object-cover rounded-md"
-                                                />
-                                            </td>
-                                            <td className="p-3">{room.deskripsi_kamar}</td>
-                                            <td className="p-3">{room.tipe_kamar}</td>
-                                            <td className="p-3">${room.harga_kamar}</td>
-                                            <td className="p-3">{room.kapasitas}</td>
-                                            <td className="p-3 space-x-2">
-                                                <div className="flex items-center space-x-2">
-                                                    <Link
-                                                        href={`/admin/rooms/${room.id}/edit`}
-                                                        className="text-blue-500 hover:text-blue-700 font-bold"
-                                                    >
-                                                        Edit
-                                                    </Link>
-                                                    <button
-                                                        onClick={() => handleDeleteRoom(room.id)}
-                                                        className="text-red-500 hover:text-red-700 font-bold"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                    {filteredRooms
+                                        .slice(start, end)
+                                        .map((room) => (
+                                            <tr
+                                                key={room.id}
+                                                className="border-b"
+                                            >
+                                                <td className="p-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="w-4 h-4 rounded border-gray-300 cursor-pointer"
+                                                        checked={selectedRooms.includes(
+                                                            room.id
+                                                        )}
+                                                        onChange={() =>
+                                                            handleSelectRoom(
+                                                                room.id
+                                                            )
+                                                        }
+                                                    />
+                                                </td>
+                                                <td className="p-3">
+                                                    {room.id}
+                                                </td>
+                                                <td className="p-3">
+                                                    {room.jenis_kamar}
+                                                </td>
+                                                <td className="p-3">
+                                                    Rp {room.harga}
+                                                </td>
+                                                <td className="p-3">
+                                                    {room.status}
+                                                </td>
+                                                <td className="p-3">
+                                                    {/* <img
+                                                        src={`${window.location.origin}/${room.gambar_kamar}`}
+                                                        alt={room.jenis_kamar}
+                                                        className="w-20 h-20 object-cover rounded-md"
+                                                    /> */}
+                                                    <img
+                                                        src={room.gambar_kamar}
+                                                        alt={room.jenis_kamar}
+                                                        className="w-20 h-20 object-cover rounded-md"
+                                                    />
+                                                </td>
+                                                <td className="p-3 space-x-2">
+                                                    <div className="flex items-center space-x-2">
+                                                        <Link
+                                                            href={`/admin/rooms/${room.id}/edit`}
+                                                            className="text-blue-500 hover:text-blue-700 font-bold"
+                                                        >
+                                                            Edit
+                                                        </Link>
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDeleteRoom(
+                                                                    room.id
+                                                                )
+                                                            }
+                                                            className="text-red-500 hover:text-red-700 font-bold"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </table>
 
                             <div className="flex items-center justify-between p-4">
                                 <span>
-                                    Showing {start + 1} to {end} of {totalRooms} results
+                                    Showing {start + 1} to {end} of {totalRooms}{" "}
+                                    results
                                 </span>
                                 <div className="flex items-center space-x-2">
                                     <select
@@ -249,27 +245,44 @@ export default function RoomList() {
                                     <div className="flex items-center space-x-1">
                                         <button
                                             disabled={currentPage === 1}
-                                            onClick={() => handlePageChange(currentPage - 1)}
+                                            onClick={() =>
+                                                handlePageChange(
+                                                    currentPage - 1
+                                                )
+                                            }
                                             className="px-2 py-1 border rounded-l-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
                                         >
                                             {"<"}
                                         </button>
-                                        {[...Array(totalPages)].map((_, index) => (
-                                            <button
-                                                key={index + 1}
-                                                onClick={() => handlePageChange(index + 1)}
-                                                className={`px-3 py-1 border ${
-                                                    currentPage === index + 1
-                                                        ? "bg-green-500 text-white"
-                                                        : "bg-gray-200 hover:bg-gray-300"
-                                                }`}
-                                            >
-                                                {index + 1}
-                                            </button>
-                                        ))}
+                                        {[...Array(totalPages)].map(
+                                            (_, index) => (
+                                                <button
+                                                    key={index + 1}
+                                                    onClick={() =>
+                                                        handlePageChange(
+                                                            index + 1
+                                                        )
+                                                    }
+                                                    className={`px-3 py-1 border ${
+                                                        currentPage ===
+                                                        index + 1
+                                                            ? "bg-green-500 text-white"
+                                                            : "bg-gray-200 hover:bg-gray-300"
+                                                    }`}
+                                                >
+                                                    {index + 1}
+                                                </button>
+                                            )
+                                        )}
                                         <button
-                                            disabled={currentPage === totalPages}
-                                            onClick={() => handlePageChange(currentPage + 1)}
+                                            disabled={
+                                                currentPage === totalPages
+                                            }
+                                            onClick={() =>
+                                                handlePageChange(
+                                                    currentPage + 1
+                                                )
+                                            }
                                             className="px-2 py-1 border rounded-r-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
                                         >
                                             {">"}
