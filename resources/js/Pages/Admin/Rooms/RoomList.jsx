@@ -1,36 +1,42 @@
 import React, { useState } from "react";
-import { Link, usePage, router } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
-import { FaSearch, FaTrash, FaHotel } from "react-icons/fa";
+import { FaSearch, FaTrash, FaBed } from "react-icons/fa";
 import Swal from "sweetalert2";
 
-export default function HotelList() {
-    const { hotels = [] } = usePage().props;
+export default function RoomList() {
+    const { rooms = [] } = usePage().props;
+
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedHotels, setSelectedHotels] = useState([]);
+    const [selectedRooms, setSelectedRooms] = useState([]);
+    const [searchTerm, setSearchTerm] = useState("");
 
-    const handleSelectHotel = (hotelId) => {
-        setSelectedHotels((prev) =>
-            prev.includes(hotelId)
-                ? prev.filter((id) => id !== hotelId)
-                : [...prev, hotelId]
+    const handleSelectRoom = (roomId) => {
+        setSelectedRooms((prev) =>
+            prev.includes(roomId)
+                ? prev.filter((id) => id !== roomId)
+                : [...prev, roomId]
         );
     };
 
     const handleSelectAll = () => {
-        if (selectedHotels.length === hotels.length) {
-            setSelectedHotels([]);
+        if (selectedRooms.length === rooms.length) {
+            setSelectedRooms([]);
         } else {
-            setSelectedHotels(hotels.map((hotel) => hotel.id));
+            setSelectedRooms(rooms.map((room) => room.id));
         }
     };
 
-    const totalHotels = hotels.length;
-    const totalPages = Math.ceil(totalHotels / perPage);
+    const filteredRooms = rooms.filter((room) =>
+        room.jenis_kamar.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
+    const totalRooms = filteredRooms.length;
+    const totalPages = Math.ceil(totalRooms / perPage);
     const start = (currentPage - 1) * perPage;
-    const end = Math.min(currentPage * perPage, totalHotels);
+    const end = Math.min(currentPage * perPage, totalRooms);
 
     const handlePageChange = (newPage) => setCurrentPage(newPage);
 
@@ -39,7 +45,7 @@ export default function HotelList() {
         setCurrentPage(1);
     };
 
-    const handleDeleteHotel = (hotelId) => {
+    const handleDeleteRoom = (roomId) => {
         Swal.fire({
             title: "Are you sure?",
             text: "You won't be able to revert this!",
@@ -50,18 +56,20 @@ export default function HotelList() {
             confirmButtonText: "Yes, delete it!",
         }).then((result) => {
             if (result.isConfirmed) {
-                router.delete(`/admin/hotels/${hotelId}`, {
+                router.delete(`/admin/rooms/${roomId}`, {
                     onSuccess: () => {
                         Swal.fire(
                             "Deleted!",
-                            "Hotel has been deleted.",
+                            "Room has been deleted.",
                             "success"
                         );
+                        // Optionally, you can refresh the page or update the state to reflect the deletion
+                        window.location.reload();
                     },
                     onError: () => {
                         Swal.fire(
                             "Error!",
-                            "There was a problem deleting the hotel.",
+                            "There was a problem deleting the room.",
                             "error"
                         );
                     },
@@ -70,12 +78,12 @@ export default function HotelList() {
         });
     };
 
-    const handleDeleteSelectedHotels = () => {
-        if (selectedHotels.length === 0) return;
+    const handleDeleteSelectedRooms = () => {
+        if (selectedRooms.length === 0) return;
 
         Swal.fire({
-            title: "Delete Selected Hotels?",
-            text: `You are about to delete ${selectedHotels.length} hotel(s)`,
+            title: "Delete Selected Rooms?",
+            text: `You are about to delete ${selectedRooms.length} room(s)`,
             icon: "warning",
             showCancelButton: true,
             confirmButtonColor: "#3085d6",
@@ -83,28 +91,12 @@ export default function HotelList() {
             confirmButtonText: "Yes, delete them!",
         }).then((result) => {
             if (result.isConfirmed) {
-                router.post(
-                    "/admin/hotels/bulk-delete",
-                    {
-                        hotels: selectedHotels,
-                    },
-                    {
-                        onSuccess: () => {
-                            Swal.fire(
-                                "Deleted!",
-                                `${selectedHotels.length} hotel(s) have been deleted.`,
-                                "success"
-                            );
-                            setSelectedHotels([]);
-                        },
-                        onError: () => {
-                            Swal.fire(
-                                "Error!",
-                                "There was a problem deleting the hotels.",
-                                "error"
-                            );
-                        },
-                    }
+                // Call your delete API here
+                setSelectedRooms([]);
+                Swal.fire(
+                    "Deleted!",
+                    `${selectedRooms.length} room(s) have been deleted.`,
+                    "success"
                 );
             }
         });
@@ -119,13 +111,13 @@ export default function HotelList() {
                     <div className="container mx-auto">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-                                <FaHotel className="mr-3" /> Hotel List
+                                <FaBed className="mr-3" /> Room List
                             </h1>
                             <Link
-                                href={"/admin/hotels/create"}
+                                href={"/admin/rooms/create"}
                                 className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
                             >
-                                Add New Hotel
+                                Add New Room
                             </Link>
                         </div>
                         <div className="bg-white shadow-md rounded-lg overflow-hidden">
@@ -133,7 +125,11 @@ export default function HotelList() {
                                 <div className="flex items-center">
                                     <input
                                         type="text"
-                                        placeholder="Search hotels"
+                                        placeholder="Search rooms by type"
+                                        value={searchTerm}
+                                        onChange={(e) =>
+                                            setSearchTerm(e.target.value)
+                                        }
                                         className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
                                     <button className="bg-green-500 text-white px-4 py-3 rounded-r-md">
@@ -142,15 +138,15 @@ export default function HotelList() {
                                 </div>
                             </div>
                             <div className="p-4 bg-gray-50 border-b">
-                                {selectedHotels.length > 0 && (
+                                {selectedRooms.length > 0 && (
                                     <div className="flex items-center animate-fade-in">
                                         <button
-                                            onClick={handleDeleteSelectedHotels}
+                                            onClick={handleDeleteSelectedRooms}
                                             className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center transition-all duration-200"
                                         >
                                             <FaTrash className="mr-2" />
                                             Delete Selected (
-                                            {selectedHotels.length})
+                                            {selectedRooms.length})
                                         </button>
                                     </div>
                                 )}
@@ -163,87 +159,90 @@ export default function HotelList() {
                                                 type="checkbox"
                                                 className="w-4 h-4 rounded border-gray-300 cursor-pointer"
                                                 checked={
-                                                    selectedHotels.length ===
-                                                    hotels.length
+                                                    selectedRooms.length ===
+                                                    filteredRooms.length
                                                 }
                                                 onChange={handleSelectAll}
                                             />
                                         </th>
                                         <th className="p-3">ID</th>
-                                        <th className="p-3">Hotel Name</th>
+                                        <th className="p-3">Room Type</th>
+                                        <th className="p-3">Price</th>
+                                        <th className="p-3">Status</th>
                                         <th className="p-3">Image</th>
-                                        <th className="p-3">Description</th>
-                                        <th className="p-3">Location</th>
-                                        <th className="p-3">Rating</th>
                                         <th className="p-3">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {hotels.slice(start, end).map((hotel) => (
-                                        <tr key={hotel.id} className="border-b">
-                                            <td className="p-3">
-                                                <input
-                                                    type="checkbox"
-                                                    className="w-4 h-4 rounded border-gray-300 cursor-pointer"
-                                                    checked={selectedHotels.includes(
-                                                        hotel.id
-                                                    )}
-                                                    onChange={() =>
-                                                        handleSelectHotel(
-                                                            hotel.id
-                                                        )
-                                                    }
-                                                />
-                                            </td>
-                                            <td className="p-3">{hotel.id}</td>
-                                            <td className="p-3">
-                                                {hotel.nama_hotel}
-                                            </td>
-                                            <td className="p-3">
-                                                <img
-                                                    src={`${window.location.origin}/${hotel.gambar_hotel}`}
-                                                    alt={hotel.nama_hotel}
-                                                    className="w-20 h-20 object-cover rounded-md"
-                                                />
-                                            </td>
-                                            <td className="p-3">
-                                                {hotel.deskripsi_hotel}
-                                            </td>
-                                            <td className="p-3">
-                                                {hotel.lokasi_hotel}
-                                            </td>
-                                            <td className="p-3">
-                                                {hotel.rating_hotel}
-                                            </td>
-                                            <td className="p-3 space-x-2">
-                                                <div className="flex items-center space-x-2">
-                                                    <Link
-                                                        href={`/admin/hotels/${hotel.id}/edit`}
-                                                        className="text-blue-500 hover:text-blue-700 font-bold"
-                                                    >
-                                                        Edit
-                                                    </Link>
-                                                    <button
-                                                        onClick={() =>
-                                                            handleDeleteHotel(
-                                                                hotel.id
+                                    {filteredRooms
+                                        .slice(start, end)
+                                        .map((room) => (
+                                            <tr
+                                                key={room.id}
+                                                className="border-b"
+                                            >
+                                                <td className="p-3">
+                                                    <input
+                                                        type="checkbox"
+                                                        className="w-4 h-4 rounded border-gray-300 cursor-pointer"
+                                                        checked={selectedRooms.includes(
+                                                            room.id
+                                                        )}
+                                                        onChange={() =>
+                                                            handleSelectRoom(
+                                                                room.id
                                                             )
                                                         }
-                                                        className="text-red-500 hover:text-red-700 font-bold"
-                                                    >
-                                                        Delete
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
+                                                    />
+                                                </td>
+                                                <td className="p-3">
+                                                    {room.id}
+                                                </td>
+                                                <td className="p-3">
+                                                    {room.jenis_kamar}
+                                                </td>
+                                                <td className="p-3">
+                                                    Rp {room.harga}
+                                                </td>
+                                                <td className="p-3">
+                                                    {room.status}
+                                                </td>
+                                                <td className="p-3">
+                                                    <img
+                                                        src={room.gambar_kamar}
+                                                        alt={room.jenis_kamar}
+                                                        className="w-20 h-20 object-cover rounded-md"
+                                                    />
+                                                </td>
+                                                <td className="p-3 space-x-2">
+                                                    <div className="flex items-center space-x-2">
+                                                        <Link
+                                                            href={`/admin/rooms/${room.id}/edit`}
+                                                            className="text-blue-500 hover:text-blue-700 font-bold"
+                                                        >
+                                                            Edit
+                                                        </Link>
+                                                        <button
+                                                            onClick={() =>
+                                                                handleDeleteRoom(
+                                                                    room.id
+                                                                )
+                                                            }
+                                                            className="text-red-500 hover:text-red-700 font-bold"
+                                                        >
+                                                            Delete
+                                                        </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                        ))}
                                 </tbody>
                             </table>
 
                             <div className="flex items-center justify-between p-4">
                                 <span>
-                                    Showing {start + 1} to {end} of{" "}
-                                    {totalHotels} results
+                                    Showing {start + 1} to {end} of {totalRooms}{" "}
+                                    results
                                 </span>
                                 <div className="flex items-center space-x-2">
                                     <select

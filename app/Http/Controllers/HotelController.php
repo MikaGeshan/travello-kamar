@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Hotel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class HotelController extends Controller
@@ -13,7 +14,7 @@ class HotelController extends Controller
      */
     public function index()
     {
-        $hotels = Hotel::all(); // Ambil semua hotel
+        $hotels = Hotel::all();
         return Inertia::render('Admin/Hotel/HotelList', [
             'hotels' => $hotels
         ]);
@@ -35,7 +36,7 @@ class HotelController extends Controller
         $validatedData = $request->validate([
             'nama_hotel' => 'required|string|max:255',
             'lokasi_hotel' => 'required|string|max:255',
-            'deskripsi_hotel' => 'required|string',
+            'deskripsi_hotel' => 'required|string|max:5000',
             'rating_hotel' => 'nullable|numeric|min:1|max:5',
             'gambar_hotel' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048'
         ]);
@@ -61,9 +62,7 @@ class HotelController extends Controller
      */
     public function show(Hotel $hotel)
     {
-        return Inertia::render('Admin/Hotel/ShowHotel', [
-            'hotel' => $hotel
-        ]);
+        //
     }
 
     /**
@@ -71,7 +70,7 @@ class HotelController extends Controller
      */
     public function edit(Hotel $hotel)
     {
-        return Inertia::render('Admin/Hotel/EditHotel', [
+        return Inertia::render('Admin/Hotel/UpdateHotel', props: [
             'hotel' => $hotel
         ]);
     }
@@ -79,36 +78,32 @@ class HotelController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Hotel $hotel)
+    public function update(Request $request, $id)
     {
+        $hotel = Hotel::findOrFail($id);
+
         $validatedData = $request->validate([
             'nama_hotel' => 'required|string|max:255',
             'lokasi_hotel' => 'required|string|max:255',
-            'deskripsi_hotel' => 'required|string',
+            'deskripsi_hotel' => 'nullable|string|max:5000',
             'rating_hotel' => 'nullable|numeric|min:1|max:5',
-            'gambar_hotel' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'gambar_hotel' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        try {
-            if ($request->hasFile('gambar_hotel')) {
-                // Hapus gambar lama jika ada
-                if ($hotel->gambar_hotel && file_exists(public_path($hotel->gambar_hotel))) {
-                    unlink(public_path($hotel->gambar_hotel));
-                }
+        if ($request->hasFile('gambar_hotel')) {
+            $gambarPath = $request->file('gambar_hotel')->store('uploads/hotels', 'public');
+            $validatedData['gambar_hotel'] = $gambarPath;
 
-                $image = $request->file('gambar_hotel');
-                $imageName = time() . '.' . $image->getClientOriginalExtension();
-                $image->move(public_path('uploads/hotels'), $imageName);
-                $validatedData['gambar_hotel'] = 'uploads/hotels/' . $imageName;
+            if ($hotel->gambar_hotel) {
+                Storage::disk('public')->delete($hotel->gambar_hotel);
             }
-
-            // Update hotel
-            $hotel->update($validatedData);
-
-            return redirect()->route('admin.hotels.list')->with('success', 'Hotel berhasil diupdate');
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => 'Gagal mengupdate hotel: ' . $e->getMessage()]);
+        } else {
+            $validatedData['gambar_hotel'] = $hotel->gambar_hotel;
         }
+
+        $hotel->update($validatedData);
+
+        return redirect()->back()->with('success', 'Hotel berhasil diperbarui.');
     }
 
     /**
@@ -117,12 +112,12 @@ class HotelController extends Controller
     public function destroy(Hotel $hotel)
     {
         try {
-            // Hapus gambar jika ada
+            $hotel= Hotel::findOrFail($hotel->id);
+
             if ($hotel->gambar_hotel && file_exists(public_path($hotel->gambar_hotel))) {
                 unlink(public_path($hotel->gambar_hotel));
             }
 
-            // Hapus hotel
             $hotel->delete();
 
             return redirect()->route('admin.hotels.list')->with('success', 'Hotel berhasil dihapus');

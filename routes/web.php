@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\HotelController;
+use App\Http\Controllers\KamarController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Http\Controllers\RoleController;
@@ -81,10 +82,15 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/hotels/list', [HotelController::class, 'index'])->name('admin.hotels.list');
     Route::get('/hotels/create', [HotelController::class, 'create'])->name('admin.hotels.create');
     Route::post('/hotels', [HotelController::class, 'store'])->name('admin.hotels.store');
-    Route::get('/hotels/{hotel}', [HotelController::class, 'show'])->name('admin.hotels.show');
     Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('admin.hotels.edit');
     Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('admin.hotels.update');
     Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->name('admin.hotels.destroy');
+
+    // Room Routes
+    Route::get('/rooms/list', [KamarController::class, 'index'])->name('admin.rooms.list');
+    Route::get('/rooms/create', [KamarController::class, 'create'])->name('admin.rooms.create');
+    Route::post('/rooms', [KamarController::class, 'store'])->name('admin.rooms.store');
+    Route::delete('/rooms/{room}', [KamarController::class, 'destroy'])->name('admin.rooms.destroy');
 });
 
 
@@ -103,7 +109,7 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return Inertia::render('Auth/Login');
 })->name('login');
-Route::post('/login', action: [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', function () {
     return Inertia::render('Auth/Register');
 });

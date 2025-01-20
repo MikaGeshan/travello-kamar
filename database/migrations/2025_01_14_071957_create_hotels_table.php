@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('hotels', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->string('nama_hotel') -> unique();
-            $table->string('deskripsi_hotel');
+            $table->string('nama_hotel')->unique();
+            $table->text('deskripsi_hotel');
             $table->string('lokasi_hotel');
             $table->string('gambar_hotel');
             $table->decimal('rating_hotel');

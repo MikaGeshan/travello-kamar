@@ -5,13 +5,12 @@ import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { FaHotel, FaImage } from "react-icons/fa";
 import Swal from "sweetalert2";
 
-export default function CreateHotel() {
+export default function CreateRoom() {
     const { data, setData, post, processing, errors } = useForm({
-        nama_hotel: "",
-        lokasi_hotel: "",
-        gambar_hotel: null,
-        deskripsi_hotel: "",
-        rating_hotel: "",
+        jenis_kamar: "",
+        harga: "",
+        status: "Available",
+        gambar_kamar: null,
     });
 
     const [imagePreview, setImagePreview] = useState(null);
@@ -19,15 +18,15 @@ export default function CreateHotel() {
     const handleChange = (e) => {
         const { id, value, files } = e.target;
 
-        if (id === "gambar_hotel") {
+        if (id === "gambar_kamar") {
             const file = files[0];
-            setData("gambar_hotel", file);
+            setData("gambar_kamar", file);
 
             const reader = new FileReader();
             reader.onloadend = () => {
                 setImagePreview(reader.result);
             };
-            if (file) {
+            if (file) {``
                 reader.readAsDataURL(file);
             }
         } else {
@@ -39,47 +38,41 @@ export default function CreateHotel() {
         e.preventDefault();
 
         const formData = new FormData();
-        formData.append("nama_hotel", data.nama_hotel);
-        formData.append("lokasi_hotel", data.lokasi_hotel);
-        formData.append("deskripsi_hotel", data.deskripsi_hotel || "");
-        formData.append("rating_hotel", data.rating_hotel);
+        formData.append("jenis_kamar", data.jenis_kamar);
+        formData.append("harga", data.harga);
+        formData.append("status", data.status);
 
-        if (data.gambar_hotel) {
-            formData.append("gambar_hotel", data.gambar_hotel);
+        if (data.gambar_kamar) {
+            formData.append("gambar_kamar", data.gambar_kamar);
         }
 
-        post("/admin/hotels", {
+        post("/admin/rooms", {
             data: formData,
             forceFormData: true,
             onSuccess: () => {
                 Swal.fire({
                     title: "Success!",
-                    text: `Hotel ${data.nama_hotel} berhasil dibuat`,
+                    text: `Room ${data.jenis_kamar} has been created successfully.`,
                     icon: "success",
                     confirmButtonText: "OK",
                 }).then(() => {
                     setData({
-                        nama_hotel: "",
-                        lokasi_hotel: "",
-                        gambar_hotel: null,
-                        deskripsi_hotel: "",
-                        rating_hotel: "",
+                        jenis_kamar: "",
+                        harga: "",
+                        status: "Available",
+                        gambar_kamar: null,
                     });
                     setImagePreview(null);
                 });
             },
             onError: (errors) => {
-                const errorMessages = Object.values(errors)
-                    .flat()
-                    .join("<br />");
-
                 Swal.fire({
                     title: "Error!",
-                    html: `<p>Gagal membuat hotel. Silakan periksa kembali</p>`,
+                    text: "Failed to create room. Please check your input.",
                     icon: "error",
                     confirmButtonText: "OK",
                 });
-                console.error("Error creating hotel:", errors);
+                console.error("Error creating room:", errors);
             },
             preserveState: true,
             preserveScroll: true,
@@ -95,41 +88,68 @@ export default function CreateHotel() {
                     <div className="container mx-auto">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-                                <FaHotel className="mr-3" /> Create Hotel
+                                <FaHotel className="mr-3" /> Create Room
                             </h1>
                         </div>
                         <div className="bg-white shadow-md rounded-lg p-8">
                             <form onSubmit={handleSubmit}>
+                                {errors.jenis_kamar && (
+                                    <div className="text-red-500 mb-2">
+                                        {errors.jenis_kamar}
+                                    </div>
+                                )}
+                                {errors.harga && (
+                                    <div className="text-red-500 mb-2">
+                                        {errors.harga}
+                                    </div>
+                                )}
+                                {errors.gambar_kamar && (
+                                    <div className="text-red-500 mb-2">
+                                        {errors.gambar_kamar}
+                                    </div>
+                                )}
+
                                 <div className="flex space-x-4 mb-4">
                                     <div className="w-1/2">
                                         <label
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="nama_hotel"
+                                            htmlFor="jenis_kamar"
                                         >
-                                            Hotel Name
+                                            Room Type
                                         </label>
-                                        <input
+                                        <select
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="nama_hotel"
-                                            type="text"
-                                            placeholder="Enter hotel name"
-                                            value={data.nama_hotel}
+                                            id="jenis_kamar"
+                                            value={data.jenis_kamar}
                                             onChange={handleChange}
-                                        />
+                                        >
+                                            <option value="">
+                                                Select Room Type
+                                            </option>
+                                            <option value="Standard Room">
+                                                Standard Room
+                                            </option>
+                                            <option value="Deluxe Room">
+                                                Deluxe Room
+                                            </option>
+                                            <option value="Suite Room">
+                                                Suite Room
+                                            </option>
+                                        </select>
                                     </div>
                                     <div className="w-1/2">
                                         <label
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="lokasi_hotel"
+                                            htmlFor="harga"
                                         >
-                                            Location
+                                            Price
                                         </label>
                                         <input
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="lokasi_hotel"
-                                            type="text"
-                                            placeholder="Enter hotel location"
-                                            value={data.lokasi_hotel}
+                                            id="harga"
+                                            type="number"
+                                            placeholder="Enter room price"
+                                            value={data.harga}
                                             onChange={handleChange}
                                         />
                                     </div>
@@ -139,14 +159,14 @@ export default function CreateHotel() {
                                     <div className="w-1/2">
                                         <label
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="gambar_hotel"
+                                            htmlFor="gambar_kamar"
                                         >
-                                            Hotel Image
+                                            Room Image
                                         </label>
                                         <div className="flex items-center">
                                             <input
                                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                id="gambar_hotel"
+                                                id="gambar_kamar"
                                                 type="file"
                                                 accept="image/*"
                                                 onChange={handleChange}
@@ -157,7 +177,7 @@ export default function CreateHotel() {
                                             <div className="mt-2">
                                                 <img
                                                     src={imagePreview}
-                                                    alt="Hotel Preview"
+                                                    alt="Room Preview"
                                                     className="w-32 h-32 object-cover rounded"
                                                 />
                                             </div>
@@ -166,43 +186,27 @@ export default function CreateHotel() {
                                     <div className="w-1/2">
                                         <label
                                             className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="rating_hotel"
+                                            htmlFor="status"
                                         >
-                                            Rating
+                                            Status
                                         </label>
                                         <select
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="rating_hotel"
-                                            value={data.rating_hotel}
+                                            id="status"
+                                            value={data.status}
                                             onChange={handleChange}
                                         >
-                                            <option value="">
-                                                Select Rating
+                                            <option value="Available">
+                                                Available
                                             </option>
-                                            <option value="1">1 Star</option>
-                                            <option value="2">2 Stars</option>
-                                            <option value="3">3 Stars</option>
-                                            <option value="4">4 Stars</option>
-                                            <option value="5">5 Stars</option>
+                                            <option value="Booked">
+                                                Booked
+                                            </option>
+                                            <option value="Not Available">
+                                                Not Available
+                                            </option>
                                         </select>
                                     </div>
-                                </div>
-
-                                <div className="mb-4">
-                                    <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
-                                        htmlFor="deskripsi_hotel"
-                                    >
-                                        Description
-                                    </label>
-                                    <textarea
-                                        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                        id="deskripsi_hotel"
-                                        placeholder="Enter hotel description"
-                                        rows="4"
-                                        value={data.deskripsi_hotel}
-                                        onChange={handleChange}
-                                    ></textarea>
                                 </div>
 
                                 <div className="flex items-center justify-between mt-4">
@@ -213,7 +217,7 @@ export default function CreateHotel() {
                                     >
                                         {processing
                                             ? "Creating..."
-                                            : "Create Hotel"}
+                                            : "Create Room"}
                                     </button>
                                 </div>
                             </form>

@@ -174,11 +174,11 @@ export default function AdminSidebar() {
                                         </li>
                                         <li>
                                             <Link
-                                                href="/admin/room/list"
+                                                href="/admin/rooms/list"
                                                 className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
                                             >
                                                 <span className="font-medium">
-                                                    Rooms
+                                                    Room List
                                                 </span>
                                             </Link>
                                         </li>

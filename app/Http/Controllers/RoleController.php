@@ -56,7 +56,7 @@ class RoleController extends Controller
     public function edit(Role $role)
     {
         return Inertia::render('Admin/Roles/UpdateRole', [
-            'role' => $role, // Kirim data role ke tampilan
+            'role' => $role,
         ]);
     }
 
