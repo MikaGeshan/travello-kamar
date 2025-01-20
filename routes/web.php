@@ -87,9 +87,10 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->name('admin.hotels.destroy');
 
     // Room Routes
-    Route::get('/rooms/list', action: [KamarController::class, 'index'])->name('admin.rooms.list');
-    Route::get('/rooms/create', action: [KamarController::class, 'create'])->name('admin.rooms.create');
-    Route::post('/rooms', action: [KamarController::class, 'store'])->name('admin.rooms.store');
+    Route::get('/rooms/list', [KamarController::class, 'index'])->name('admin.rooms.list');
+    Route::get('/rooms/create', [KamarController::class, 'create'])->name('admin.rooms.create');
+    Route::post('/rooms', [KamarController::class, 'store'])->name('admin.rooms.store');
+    Route::delete('/rooms/{room}', [KamarController::class, 'destroy'])->name('admin.rooms.destroy');
 });
 
 
@@ -108,7 +109,7 @@ Route::get('/', function () {
 Route::get('/login', function () {
     return Inertia::render('Auth/Login');
 })->name('login');
-Route::post('/login', action: [AuthController::class, 'login']);
+Route::post('/login', [AuthController::class, 'login']);
 Route::get('/register', function () {
     return Inertia::render('Auth/Register');
 });

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link, usePage } from "@inertiajs/react";
+import { Link, router, usePage } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { FaSearch, FaTrash, FaBed } from "react-icons/fa";
@@ -56,7 +56,24 @@ export default function RoomList() {
             confirmButtonText: "Yes, delete it!",
         }).then((result) => {
             if (result.isConfirmed) {
-                Swal.fire("Deleted!", "Room has been deleted.", "success");
+                router.delete(`/admin/rooms/${roomId}`, {
+                    onSuccess: () => {
+                        Swal.fire(
+                            "Deleted!",
+                            "Room has been deleted.",
+                            "success"
+                        );
+                        // Optionally, you can refresh the page or update the state to reflect the deletion
+                        window.location.reload();
+                    },
+                    onError: () => {
+                        Swal.fire(
+                            "Error!",
+                            "There was a problem deleting the room.",
+                            "error"
+                        );
+                    },
+                });
             }
         });
     };

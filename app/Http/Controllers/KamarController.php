@@ -14,7 +14,6 @@ class KamarController extends Controller
     public function index()
     {
         $rooms = Kamar::all()->map(function ($room) {
-            // Pastikan gambar menggunakan URL asset()
             $room->gambar_kamar = asset('storage/' . $room->gambar_kamar);
             return $room;
         });
@@ -139,19 +138,20 @@ class KamarController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Kamar $kamar)
+    public function destroy($id)
     {
         try {
+            $kamar = Kamar::findOrFail($id);
+
+            if ($kamar->gambar_kamar && file_exists(storage_path('app/public/' . $kamar->gambar_kamar))) {
+                unlink(storage_path('app/public/' . $kamar->gambar_kamar));
+            }
+
             $kamar->delete();
 
-            return response()->json([
-                'message' => 'Data kamar berhasil dihapus.',
-            ]);
+            return redirect()->route('admin.rooms.list')->with('success', 'Kamar berhasil dihapus');
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Terjadi kesalahan saat menghapus data kamar.',
-                'error' => $e->getMessage(),
-            ], 500);
+            return back()->withErrors(['error' => 'Gagal menghapus kamar: ' . $e->getMessage()]);
         }
     }
 }

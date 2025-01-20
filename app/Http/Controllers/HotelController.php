@@ -112,6 +112,8 @@ class HotelController extends Controller
     public function destroy(Hotel $hotel)
     {
         try {
+            $hotel= Hotel::findOrFail($hotel->id);
+
             if ($hotel->gambar_hotel && file_exists(public_path($hotel->gambar_hotel))) {
                 unlink(public_path($hotel->gambar_hotel));
             }
