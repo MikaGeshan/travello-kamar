@@ -63,8 +63,6 @@ export default function RoomList() {
                             "Room has been deleted.",
                             "success"
                         );
-                        // Optionally, you can refresh the page or update the state to reflect the deletion
-                        window.location.reload();
                     },
                     onError: () => {
                         Swal.fire(
@@ -91,7 +89,6 @@ export default function RoomList() {
             confirmButtonText: "Yes, delete them!",
         }).then((result) => {
             if (result.isConfirmed) {
-                // Call your delete API here
                 setSelectedRooms([]);
                 Swal.fire(
                     "Deleted!",
@@ -100,6 +97,23 @@ export default function RoomList() {
                 );
             }
         });
+    };
+
+    const formatPrice = (price) => {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
+
+    const getStatusColor = (status) => {
+        switch (status) {
+            case "Available":
+                return "text-green-500";
+            case "Booked":
+                return "text-yellow-500";
+            case "Not Available":
+                return "text-red-500";
+            default:
+                return "";
+        }
     };
 
     return (
@@ -166,8 +180,10 @@ export default function RoomList() {
                                             />
                                         </th>
                                         <th className="p-3">ID</th>
+                                        <th className="p-3">Room Name</th>
                                         <th className="p-3">Room Type</th>
                                         <th className="p-3">Price</th>
+                                        <th className="p-3">Facilities</th>
                                         <th className="p-3">Status</th>
                                         <th className="p-3">Image</th>
                                         <th className="p-3">Actions</th>
@@ -199,12 +215,18 @@ export default function RoomList() {
                                                     {room.id}
                                                 </td>
                                                 <td className="p-3">
+                                                    {room.nama_kamar}
+                                                </td>
+                                                <td className="p-3">
                                                     {room.jenis_kamar}
                                                 </td>
                                                 <td className="p-3">
-                                                    Rp {room.harga}
+                                                    Rp {formatPrice(room.harga)}
                                                 </td>
                                                 <td className="p-3">
+                                                    {room.fasilitas}
+                                                </td>
+                                                <td className={`p-3 ${getStatusColor(room.status)}`}>
                                                     {room.status}
                                                 </td>
                                                 <td className="p-3">
