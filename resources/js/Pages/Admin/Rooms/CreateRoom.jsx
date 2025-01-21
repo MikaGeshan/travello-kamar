@@ -7,8 +7,10 @@ import Swal from "sweetalert2";
 
 export default function CreateRoom() {
     const { data, setData, post, processing, errors } = useForm({
+        nama_kamar: "",
         jenis_kamar: "",
         harga: "",
+        fasilitas: "",
         status: "Available",
         gambar_kamar: null,
     });
@@ -38,8 +40,10 @@ export default function CreateRoom() {
         e.preventDefault();
 
         const formData = new FormData();
+        formData.append("nama_kamar", data.nama_kamar);
         formData.append("jenis_kamar", data.jenis_kamar);
         formData.append("harga", data.harga);
+        formData.append("fasilitas", data.fasilitas);
         formData.append("status", data.status);
 
         if (data.gambar_kamar) {
@@ -52,13 +56,15 @@ export default function CreateRoom() {
             onSuccess: () => {
                 Swal.fire({
                     title: "Success!",
-                    text: `Room ${data.jenis_kamar} has been created successfully.`,
+                    text: `Room ${data.nama_kamar} has been created successfully.`,
                     icon: "success",
                     confirmButtonText: "OK",
                 }).then(() => {
                     setData({
+                        nama_kamar: "",
                         jenis_kamar: "",
                         harga: "",
+                        fasilitas: "",
                         status: "Available",
                         gambar_kamar: null,
                     });
@@ -113,10 +119,46 @@ export default function CreateRoom() {
                                     <div className="w-1/2">
                                         <label
                                             className="block text-gray-700 text-sm font-bold mb-2"
+                                            htmlFor="nama_kamar"
+                                        >
+                                            Room Name
+                                        </label>
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="nama_kamar"
+                                            type="text"
+                                            placeholder="Enter room name"
+                                            value={data.nama_kamar}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                    <div className="w-1/2">
+                                        <label
+                                            className="block text-gray-700 text-sm font-bold mb-2"
+                                            htmlFor="fasilitas"
+                                        >
+                                            Facilities
+                                        </label>
+                                        <input
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="fasilitas"
+                                            type="text"
+                                            placeholder="Enter room facilities"
+                                            value={data.fasilitas}
+                                            onChange={handleChange}
+                                        />
+                                    </div>
+                                </div>
+
+                                <div className="flex space-x-4 mb-4">
+                                    <div className="w-1/2">
+                                        <label
+                                            className="block text-gray-700 text-sm font-bold mb-2"
                                             htmlFor="jenis_kamar"
                                         >
                                             Room Type
                                         </label>
+
                                         <select
                                             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                             id="jenis_kamar"

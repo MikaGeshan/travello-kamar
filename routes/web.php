@@ -90,6 +90,8 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/rooms/list', [KamarController::class, 'index'])->name('admin.rooms.list');
     Route::get('/rooms/create', [KamarController::class, 'create'])->name('admin.rooms.create');
     Route::post('/rooms', [KamarController::class, 'store'])->name('admin.rooms.store');
+    Route::get('/rooms/{room}/edit', [KamarController::class, 'edit'])->name('admin.rooms.edit');
+    Route::put('/rooms/{room}', [KamarController::class, 'update'])->name('admin.rooms.update');
     Route::delete('/rooms/{room}', [KamarController::class, 'destroy'])->name('admin.rooms.destroy');
 });
 

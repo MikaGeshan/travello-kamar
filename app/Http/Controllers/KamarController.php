@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kamar;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 
 class KamarController extends Controller
@@ -37,8 +38,10 @@ class KamarController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
+            'nama_kamar' => 'required',
             'jenis_kamar' => 'required|in:Standard Room,Deluxe Room,Suite Room',
             'harga' => 'required|numeric|min:0',
+            'fasilitas' => 'nullable|max:1000',
             'status' => 'nullable|in:Available,Booked,Not Available',
             'gambar_kamar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
@@ -46,28 +49,22 @@ class KamarController extends Controller
         try {
             $gambarPath = null;
 
-            // Cek dan simpan gambar jika ada
             if ($request->hasFile('gambar_kamar')) {
                 $gambarPath = $request->file('gambar_kamar')->store('gambar_kamar', 'public');
             }
 
-            // Simpan data ke database
             $kamar = new Kamar();
+            $kamar->nama_kamar = $validatedData['nama_kamar'];
             $kamar->jenis_kamar = $validatedData['jenis_kamar'];
             $kamar->harga = $validatedData['harga'];
+            $kamar->fasilitas = $validatedData['fasilitas'];
             $kamar->status = $validatedData['status'] ?? 'Available';
             $kamar->gambar_kamar = $gambarPath;
             $kamar->save();
 
-            return response()->json([
-                'message' => 'Data kamar berhasil disimpan.',
-                'data' => $kamar,
-            ], 201);
+            return redirect()->route('admin.rooms.list')->with('success', 'Kamar berhasil ditambahkan.');
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Terjadi kesalahan saat menyimpan data kamar.',
-                'error' => $e->getMessage(),
-            ], 500);
+            return back()->withErrors(['error' => 'Gagal menambahkan kamar: ' . $e->getMessage()]);
         }
     }
 
@@ -76,7 +73,6 @@ class KamarController extends Controller
      */
     public function show(Kamar $kamar)
     {
-        // Menampilkan data detail kamar
         $kamar->gambar_kamar = asset('storage/' . $kamar->gambar_kamar);
 
         return response()->json([
@@ -87,52 +83,43 @@ class KamarController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Kamar $kamar)
+    public function edit(Kamar $room)
     {
-        return Inertia::render('Admin/Rooms/EditRoom', [
-            'room' => [
-                'id' => $kamar->id,
-                'jenis_kamar' => $kamar->jenis_kamar,
-                'harga' => $kamar->harga,
-                'status' => $kamar->status,
-                'gambar_kamar' => asset('storage/' . $kamar->gambar_kamar),
-            ],
+        return Inertia::render('Admin/Rooms/UpdateRoom', [
+            'room' => $room,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Kamar $kamar)
+    public function update(Request $request, $id)
     {
+        $kamar = Kamar::findOrFail($id);
+
         $validatedData = $request->validate([
+            'nama_kamar' => 'required',
             'jenis_kamar' => 'required|in:Standard Room,Deluxe Room,Suite Room',
             'harga' => 'required|numeric|min:0',
+            'fasilitas' => 'nullable|max:1000',
             'status' => 'nullable|in:Available,Booked,Not Available',
             'gambar_kamar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        try {
-            if ($request->hasFile('gambar_kamar')) {
-                $gambarPath = $request->file('gambar_kamar')->store('gambar_kamar', 'public');
-                $kamar->gambar_kamar = $gambarPath;
+        if ($request->hasFile('gambar_kamar')) {
+            $gambarPath = $request->file('gambar_kamar')->store('storage/gambar_kamar', options: 'public');
+            $validatedData['gambar_hotel'] = $gambarPath;
+
+            if ($kamar->gambar_kamar) {
+                Storage::disk('public')->delete($kamar->gambar_kamar);
             }
-
-            $kamar->jenis_kamar = $validatedData['jenis_kamar'];
-            $kamar->harga = $validatedData['harga'];
-            $kamar->status = $validatedData['status'] ?? $kamar->status;
-            $kamar->save();
-
-            return response()->json([
-                'message' => 'Data kamar berhasil diperbarui.',
-                'data' => $kamar,
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Terjadi kesalahan saat memperbarui data kamar.',
-                'error' => $e->getMessage(),
-            ], 500);
+        } else {
+            $validatedData['gambar_kamar'] = $kamar->gambar_kamar;
         }
+
+        $kamar->update($validatedData);
+
+        return redirect()->back()->with('success', 'Hotel berhasil diperbarui.');
     }
 
     /**
