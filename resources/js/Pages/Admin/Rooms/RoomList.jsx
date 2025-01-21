@@ -129,7 +129,7 @@ export default function RoomList() {
                             </h1>
                             <Link
                                 href={"/admin/rooms/create"}
-                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                             >
                                 Add New Room
                             </Link>
@@ -146,7 +146,7 @@ export default function RoomList() {
                                         }
                                         className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <button className="bg-green-500 text-white px-4 py-3 rounded-r-md">
+                                    <button className="bg-blue-500 text-white px-4 py-3 rounded-r-md">
                                         <FaSearch />
                                     </button>
                                 </div>
@@ -300,7 +300,7 @@ export default function RoomList() {
                                                     className={`px-3 py-1 border ${
                                                         currentPage ===
                                                         index + 1
-                                                            ? "bg-green-500 text-white"
+                                                            ? "bg-blue-500 text-white"
                                                             : "bg-gray-200 hover:bg-gray-300"
                                                     }`}
                                                 >

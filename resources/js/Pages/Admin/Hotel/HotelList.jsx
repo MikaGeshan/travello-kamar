@@ -123,7 +123,7 @@ export default function HotelList() {
                             </h1>
                             <Link
                                 href={"/admin/hotels/create"}
-                                className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
                             >
                                 Add New Hotel
                             </Link>
@@ -136,7 +136,7 @@ export default function HotelList() {
                                         placeholder="Search hotels"
                                         className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     />
-                                    <button className="bg-green-500 text-white px-4 py-3 rounded-r-md">
+                                    <button className="bg-blue-500 text-white px-4 py-3 rounded-r-md">
                                         <FaSearch />
                                     </button>
                                 </div>

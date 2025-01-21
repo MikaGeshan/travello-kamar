@@ -70,7 +70,7 @@ export default function Login() {
                     <button
                         type="submit"
                         disabled={processing}
-                        className="w-full bg-green-800 text-white p-2 rounded-md hover:bg-green-900 disabled:opacity-75"
+                        className="w-full bg-blue-800 text-white p-2 rounded-md hover:bg-blue-900 disabled:opacity-75"
                     >
                         {processing ? "Signing in..." : "Sign in"}
                     </button>
