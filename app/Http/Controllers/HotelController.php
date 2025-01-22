@@ -112,7 +112,7 @@ class HotelController extends Controller
     public function destroy(Hotel $hotel)
     {
         try {
-            $hotel= Hotel::findOrFail($hotel->id);
+            $hotel = Hotel::findOrFail($hotel->id);
 
             if ($hotel->gambar_hotel && file_exists(public_path($hotel->gambar_hotel))) {
                 unlink(public_path($hotel->gambar_hotel));
@@ -124,5 +124,17 @@ class HotelController extends Controller
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Gagal menghapus hotel: ' . $e->getMessage()]);
         }
+    }
+
+    public function showComponentHotel()
+    {
+        $hotels = Hotel::all();
+        return Inertia::render('Home/Explore', [
+            'hotels' => $hotels,
+        ]);
+    }
+
+    public function showHotelDetail () {
+        return Inertia::render('Home/HotelDetail');
     }
 }
