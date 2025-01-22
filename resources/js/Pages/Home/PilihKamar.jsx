@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../Layouts/Header";
 import SearchBar from "../../Layouts/SearchBar";
-import HotelCard from "../../Layouts/HotelCard";
 
-export default function Explore({ userName, auth }) {
+export default function PilihKamar({ userName, auth }) {
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -37,6 +36,8 @@ export default function Explore({ userName, auth }) {
                 <div className="sticky top-16 z-10 bg-white shadow-md">
                     <SearchBar />
                 </div>
+            </div>
+            <div>
             </div>
         </div>
     );

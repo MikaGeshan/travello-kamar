@@ -2,15 +2,8 @@ import { Link } from "@inertiajs/react";
 import React from "react";
 import { FaMapMarkerAlt, FaStar } from "react-icons/fa";
 
-function HotelCard({ name, description, location, rating, image }) {
-    console.log("HotelCard Props: ", {
-        name,
-        description,
-        location,
-        rating,
-        image,
-    });
-    return (
+function HotelCard({ id, name, description, location, rating, image }) {
+        return (
         <div className="flex bg-white shadow-md rounded-lg overflow-hidden border border-gray-300">
             <div className="w-1/4">
                 <img
@@ -46,9 +39,8 @@ function HotelCard({ name, description, location, rating, image }) {
                         Di luar pajak & biaya
                     </span>
                 </div>
-
                 <Link
-                    href="/PilihKamar"
+                    href={`/pilihkamar/${id}`}
                     method="get"
                     className="bg-orange-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-orange-400 transition mt-4"
                 >

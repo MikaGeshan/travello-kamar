@@ -133,8 +133,4 @@ class HotelController extends Controller
             'hotels' => $hotels,
         ]);
     }
-
-    public function showHotelDetail () {
-        return Inertia::render('Home/HotelDetail');
-    }
 }

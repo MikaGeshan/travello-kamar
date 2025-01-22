@@ -44,6 +44,7 @@ export default function Explore({ userName, auth, hotels }) {
                         hotels.map((hotel) => (
                             <HotelCard
                                 key={hotel.id}
+                                id={hotel.id}
                                 name={hotel.nama_hotel}
                                 description={hotel.deskripsi_hotel}
                                 location={hotel.lokasi_hotel}

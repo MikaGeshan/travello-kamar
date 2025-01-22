@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hotel;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -141,8 +142,15 @@ class KamarController extends Controller
             return back()->withErrors(['error' => 'Gagal menghapus kamar: ' . $e->getMessage()]);
         }
     }
-    public function showComponentKamar()
+    public function showComponentKamar($id)
     {
-        return Inertia::render('Home/PilihKamar');
+        $hotel = Hotel::findOrFail($id);
+
+        $kamars = Kamar::where('id', operator: $id)->get();
+
+        return Inertia::render('Home/PilihKamar', [
+            'hotel' => $hotel,
+            'kamars' => $kamars,
+        ]);
     }
 }
