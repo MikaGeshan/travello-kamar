@@ -141,4 +141,8 @@ class KamarController extends Controller
             return back()->withErrors(['error' => 'Gagal menghapus kamar: ' . $e->getMessage()]);
         }
     }
+    public function showComponentKamar()
+    {
+        return Inertia::render('Home/PilihKamar');
+    }
 }

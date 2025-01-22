@@ -3,9 +3,7 @@ import Header from "../../Layouts/Header";
 import SearchBar from "../../Layouts/SearchBar";
 import HotelCard from "../../Layouts/HotelCard";
 
-export default function Explore({ userName, auth, hotels }) {
-    console.log(hotels);
-
+export default function Explore({ userName, auth }) {
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -38,22 +36,6 @@ export default function Explore({ userName, auth, hotels }) {
             <div className="pt-20">
                 <div className="sticky top-16 z-10 bg-white shadow-md">
                     <SearchBar />
-                </div>
-                <div className="p-4 mb-4 space-y-4">
-                    {hotels.length > 0 ? (
-                        hotels.map((hotel) => (
-                            <HotelCard
-                                key={hotel.id}
-                                name={hotel.nama_hotel}
-                                description={hotel.deskripsi_hotel}
-                                location={hotel.lokasi_hotel}
-                                rating={hotel.rating_hotel}
-                                image={hotel.gambar_hotel}
-                            />
-                        ))
-                    ) : (
-                        <p>No hotels available.</p>
-                    )}
                 </div>
             </div>
         </div>

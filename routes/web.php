@@ -152,4 +152,7 @@ Route::get('/profile/password', function () {
 Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->middleware('auth:customer');
 Route::delete('/profile/delete-account', [ProfileController::class, 'deleteAccount'])->middleware('auth:customer');
 
-//
+// Explore Routes
+Route::get('/explore', [HotelController::class, 'showComponentHotel'])->middleware('auth:customer');
+Route::get('/HotelDetail', [HotelController::class, 'showHotelDetail'])->middleware('auth:customer');
+Route::get('/PilihKamar', [KamarController::class, 'showComponentKamar'])->middleware('auth:customer');
