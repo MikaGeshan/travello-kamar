@@ -14,7 +14,7 @@ const Header = ({ auth, isVisible }) => {
                     Travello
                 </a>
             </h1>
-            {auth && auth.customer ? (
+            {auth.customer ? (
                 <>
                     <nav className="text-gray-800 font-semibold text-base flex-1 flex justify-end pr-20 space-x-6">
                         <a href="/" className="hover:text-gray-600">

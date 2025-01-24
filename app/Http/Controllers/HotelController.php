@@ -15,7 +15,7 @@ class HotelController extends Controller
     public function index()
     {
         $hotels = Hotel::all();
-        return Inertia::render('Admin/Hotel/HotelList', [
+        return Inertia::render('Admin/Hotels/HotelList', [
             'hotels' => $hotels
         ]);
     }
