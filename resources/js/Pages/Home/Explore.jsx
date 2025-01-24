@@ -4,8 +4,6 @@ import SearchBar from "../../Layouts/SearchBar";
 import HotelCard from "../../Layouts/HotelCard";
 
 export default function Explore({ userName, auth, hotels }) {
-    console.log(hotels);
-
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
