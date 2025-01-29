@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 
 export default function RoomList() {
     const { rooms = [] } = usePage().props;
-
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedRooms, setSelectedRooms] = useState([]);

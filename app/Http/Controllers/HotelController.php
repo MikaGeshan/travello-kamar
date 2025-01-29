@@ -15,7 +15,7 @@ class HotelController extends Controller
     public function index()
     {
         $hotels = Hotel::all();
-        return Inertia::render('Admin/Hotels/HotelList', [
+        return Inertia::render('Admin/Hotel/HotelList', [
             'hotels' => $hotels
         ]);
     }
@@ -70,7 +70,7 @@ class HotelController extends Controller
      */
     public function edit(Hotel $hotel)
     {
-        return Inertia::render('Admin/Hotel/UpdateHotel', props: [
+        return Inertia::render('Admin/Hotel/UpdateHotel', [
             'hotel' => $hotel
         ]);
     }

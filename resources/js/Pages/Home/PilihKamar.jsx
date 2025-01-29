@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../Layouts/Header";
 import SearchBar from "../../Layouts/SearchBar";
+import RoomCard from "./../../Layouts/RoomCard";
 
 export default function PilihKamar({ userName, auth, hotel, kamars }) {
     console.log("Data", hotel);
@@ -49,30 +50,56 @@ export default function PilihKamar({ userName, auth, hotel, kamars }) {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <Header
-                userName={userName}
-                isVisible={isHeaderVisible}
-                auth={auth}
-            />
+            <div className="sticky top-16 z-10 bg-white shadow-md border-b border-gray-200">
+                <Header
+                    userName={userName}
+                    isVisible={isHeaderVisible}
+                    auth={auth}
+                />
+            </div>
             <div className="pt-20">
-                <div className="sticky top-16 z-10 bg-white shadow-md">
+                <div>
                     <SearchBar />
                 </div>
             </div>
-            <div className="p-4  ">
+            <div className="flex justify-center p-4">
                 <img
                     src={`${window.location.origin}/${hotel.gambar_hotel}`}
                     alt={hotel.nama_hotel}
-                    className="overflow-hidden w-1/2 h-1/2"
+                    className="overflow-hidden w-3/4 max-w-2xl h-auto rounded-md"
                 />
             </div>
-            <div className="p-4 bg-white shadow-md rounded-md">
-                <div>
-                    <h1>{hotel.nama_hotel}</h1>
-                    <h1>{hotel.deskripsi_hotel}</h1>
-                    <div>{renderStars(hotel.rating_hotel)}</div>
+            <div className="flex justify-center p-4">
+                <div className="bg-white shadow-xl rounded-md p-6 w-3/4 max-w-2xl">
+                    <div>
+                        <h1 className="text-2xl font-bold">
+                            {hotel.nama_hotel}
+                        </h1>
+                        <p className="text-gray-600 mt-2">
+                            {hotel.deskripsi_hotel}
+                        </p>
+                        <div className="mt-2">
+                            {renderStars(hotel.rating_hotel)}
+                        </div>
+                    </div>
+                    <div>Available Rooms</div>
+                    <div>
+                        {kamars.length > 0 ? (
+                            kamars.map((kamar) => (
+                                <RoomCard
+                                    key={kamar.id}
+                                    name={kamar.nama_kamar}
+                                    type={kamar.jenis_kamar}
+                                    price={kamar.harga}
+                                    facilities={kamar.fasilitas}
+                                    image={kamar.gambar_kamar}
+                                />
+                            ))
+                        ) : (
+                            <p>No rooms available.</p>
+                        )}
+                    </div>
                 </div>
-
             </div>
         </div>
     );

@@ -38,7 +38,7 @@ export default function Welcome({ auth }) {
 
     return (
         <div className="flex flex-col items-center justify-center min-h-screen">
-            <Header isVisible={isHeaderVisible} auth={auth.customer} />
+            <Header isVisible={isHeaderVisible} auth={auth} />
             <div className="relative w-full bg-gradient-to-r from-blue-500 to-blue-300 min-h-[80vh] flex flex-col items-center justify-center">
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center py-20">
                     <h1 className="text-white text-4xl font-bold">
