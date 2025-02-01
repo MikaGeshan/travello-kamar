@@ -155,7 +155,7 @@ class KamarController extends Controller
     {
         $hotel = Hotel::findOrFail($id);
 
-        $kamars = Kamar::where('id', operator: $id)->get();
+        $kamars = Kamar::where('hotel_id', operator: $id)->get();
 
         return Inertia::render('Home/PilihKamar', [
             'hotel' => $hotel,

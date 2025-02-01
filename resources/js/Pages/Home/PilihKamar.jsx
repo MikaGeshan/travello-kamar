@@ -4,7 +4,6 @@ import SearchBar from "../../Layouts/SearchBar";
 import RoomCard from "./../../Layouts/RoomCard";
 
 export default function PilihKamar({ userName, auth, hotel, kamars }) {
-    console.log("Data", hotel);
     console.log("Data", kamars);
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
@@ -50,7 +49,7 @@ export default function PilihKamar({ userName, auth, hotel, kamars }) {
 
     return (
         <div className="flex flex-col min-h-screen">
-            <div className="sticky top-16 z-10 bg-white shadow-md border-b border-gray-200">
+            <div className="top-16 z-10 ">
                 <Header
                     userName={userName}
                     isVisible={isHeaderVisible}
@@ -82,8 +81,10 @@ export default function PilihKamar({ userName, auth, hotel, kamars }) {
                             {renderStars(hotel.rating_hotel)}
                         </div>
                     </div>
-                    <div>Available Rooms</div>
                     <div>
+                        <h2 className="text-xl font-semibold mt-4">
+                            Available Rooms
+                        </h2>
                         {kamars.length > 0 ? (
                             kamars.map((kamar) => (
                                 <RoomCard
@@ -92,11 +93,11 @@ export default function PilihKamar({ userName, auth, hotel, kamars }) {
                                     type={kamar.jenis_kamar}
                                     price={kamar.harga}
                                     facilities={kamar.fasilitas}
-                                    image={kamar.gambar_kamar}
+                                    image={`http://localhost:8001/storage/${kamar.gambar_kamar}`}
                                 />
                             ))
                         ) : (
-                            <p>No rooms available.</p>
+                            <p className="text-gray-500">No rooms available.</p>
                         )}
                     </div>
                 </div>

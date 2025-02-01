@@ -1,6 +1,9 @@
 import React from "react";
 
 export default function RoomCard({ name, image, facilities, price, type }) {
+    const formatPrice = (price) => {
+        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
+    };
     return (
         <div className="flex border rounded-lg shadow-lg p-4 bg-white">
             <div className="w-1/3">
@@ -21,7 +24,7 @@ export default function RoomCard({ name, image, facilities, price, type }) {
                     </div>
                     <div className="text-right">
                         <p className="text-red-500 font-bold text-lg">
-                            Rp {price.toLocaleString("id-ID")}
+                            Rp {formatPrice(price)}
                         </p>
                         <p className="text-xs text-gray-500">
                             Di luar pajak & biaya

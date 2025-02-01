@@ -3,7 +3,7 @@ import React from "react";
 import { FaMapMarkerAlt, FaStar } from "react-icons/fa";
 
 function HotelCard({ id, name, description, location, rating, image }) {
-        return (
+    return (
         <div className="flex bg-white shadow-md rounded-lg overflow-hidden border border-gray-300">
             <div className="w-1/4">
                 <img
@@ -29,23 +29,15 @@ function HotelCard({ id, name, description, location, rating, image }) {
                         {description}
                     </span>
                 </div>
-            </div>
-            <div className="flex flex-col justify-between p-4 w-1/4 text-right">
-                <div>
-                    <div className="text-orange-500 text-2xl font-bold">
-                        Rp 1.011.466
-                    </div>
-                    <span className="text-gray-400 text-sm">
-                        Di luar pajak & biaya
-                    </span>
+                <div className="space-x-2 mt-4 mb-4">
+                    <Link
+                        href={`/pilihkamar/${id}`}
+                        method="get"
+                        className="bg-orange-500 text-white font-semibold py-3 px-6 text-lg rounded-md hover:bg-orange-400 transition"
+                    >
+                        Pilih Kamar
+                    </Link>
                 </div>
-                <Link
-                    href={`/pilihkamar/${id}`}
-                    method="get"
-                    className="bg-orange-500 text-white font-semibold py-2 px-4 rounded-md hover:bg-orange-400 transition mt-4"
-                >
-                    Pilih Kamar
-                </Link>
             </div>
         </div>
     );
