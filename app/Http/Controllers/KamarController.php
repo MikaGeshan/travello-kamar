@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Hotel;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -29,7 +30,11 @@ class KamarController extends Controller
      */
     public function create()
     {
-        return Inertia::render('Admin/Rooms/CreateRoom');
+        $hotels = Hotel::all();
+
+        return Inertia::render('Admin/Rooms/CreateRoom', [
+            'hotels' => $hotels,
+        ]);
     }
 
     /**
@@ -44,6 +49,7 @@ class KamarController extends Controller
             'fasilitas' => 'nullable|max:1000',
             'status' => 'nullable|in:Available,Booked,Not Available',
             'gambar_kamar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
+            'hotel_id' => 'required|exists:hotels,id',
         ]);
 
         try {
@@ -60,6 +66,7 @@ class KamarController extends Controller
             $kamar->fasilitas = $validatedData['fasilitas'];
             $kamar->status = $validatedData['status'] ?? 'Available';
             $kamar->gambar_kamar = $gambarPath;
+            $kamar->hotel_id = $validatedData['hotel_id'];
             $kamar->save();
 
             return redirect()->route('admin.rooms.list')->with('success', 'Kamar berhasil ditambahkan.');
@@ -85,8 +92,11 @@ class KamarController extends Controller
      */
     public function edit(Kamar $room)
     {
+        $hotels = Hotel::all();
+
         return Inertia::render('Admin/Rooms/UpdateRoom', [
             'room' => $room,
+            'hotels' => $hotels,
         ]);
     }
 
@@ -141,8 +151,15 @@ class KamarController extends Controller
             return back()->withErrors(['error' => 'Gagal menghapus kamar: ' . $e->getMessage()]);
         }
     }
-    public function showComponentKamar()
+    public function showComponentKamar($id)
     {
-        return Inertia::render('Home/PilihKamar');
+        $hotel = Hotel::findOrFail($id);
+
+        $kamars = Kamar::where('hotel_id', operator: $id)->get();
+
+        return Inertia::render('Home/PilihKamar', [
+            'hotel' => $hotel,
+            'kamars' => $kamars,
+        ]);
     }
 }

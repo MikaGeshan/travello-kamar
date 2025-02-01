@@ -5,7 +5,7 @@ import AdminSidebar from "./../../../Layouts/AdminSidebar";
 import { FaHotel, FaImage } from "react-icons/fa";
 import Swal from "sweetalert2";
 
-export default function CreateRoom() {
+export default function CreateRoom({ hotels }) {
     const { data, setData, post, processing, errors } = useForm({
         nama_kamar: "",
         jenis_kamar: "",
@@ -13,6 +13,7 @@ export default function CreateRoom() {
         fasilitas: "",
         status: "Available",
         gambar_kamar: null,
+        hotel_id: "",
     });
 
     const [imagePreview, setImagePreview] = useState(null);
@@ -28,7 +29,7 @@ export default function CreateRoom() {
             reader.onloadend = () => {
                 setImagePreview(reader.result);
             };
-            if (file) {``
+            if (file) {
                 reader.readAsDataURL(file);
             }
         } else {
@@ -45,6 +46,7 @@ export default function CreateRoom() {
         formData.append("harga", data.harga);
         formData.append("fasilitas", data.fasilitas);
         formData.append("status", data.status);
+        formData.append("hotel_id", data.hotel_id);
 
         if (data.gambar_kamar) {
             formData.append("gambar_kamar", data.gambar_kamar);
@@ -67,6 +69,7 @@ export default function CreateRoom() {
                         fasilitas: "",
                         status: "Available",
                         gambar_kamar: null,
+                        hotel_id: "",
                     });
                     setImagePreview(null);
                 });
@@ -247,6 +250,35 @@ export default function CreateRoom() {
                                             <option value="Not Available">
                                                 Not Available
                                             </option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div className="flex space-x-4 mb-4">
+                                    <div className="w-1/2">
+                                        <label
+                                            className="block text-gray-700 text-sm font-bold mb-2"
+                                            htmlFor="hotel_id"
+                                        >
+                                            Hotel
+                                        </label>
+                                        <select
+                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            id="hotel_id"
+                                            value={data.hotel_id}
+                                            onChange={handleChange}
+                                        >
+                                            <option value="">
+                                                Select Hotel
+                                            </option>
+                                            {hotels.map((hotel) => (
+                                                <option
+                                                    key={hotel.id}
+                                                    value={hotel.id}
+                                                >
+                                                    {hotel.nama_hotel}
+                                                </option>
+                                            ))}
                                         </select>
                                     </div>
                                 </div>

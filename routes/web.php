@@ -154,5 +154,7 @@ Route::delete('/profile/delete-account', [ProfileController::class, 'deleteAccou
 
 // Explore Routes
 Route::get('/explore', [HotelController::class, 'showComponentHotel'])->middleware('auth:customer');
-Route::get('/HotelDetail', [HotelController::class, 'showHotelDetail'])->middleware('auth:customer');
-Route::get('/PilihKamar', [KamarController::class, 'showComponentKamar'])->middleware('auth:customer');
+
+// Memilih Kamar
+Route::get('/pilihkamar/{id}', [KamarController::class, 'showComponentKamar'])
+    ->middleware('auth:customer');

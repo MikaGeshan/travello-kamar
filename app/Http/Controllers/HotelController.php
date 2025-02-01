@@ -70,7 +70,7 @@ class HotelController extends Controller
      */
     public function edit(Hotel $hotel)
     {
-        return Inertia::render('Admin/Hotel/UpdateHotel', props: [
+        return Inertia::render('Admin/Hotel/UpdateHotel', [
             'hotel' => $hotel
         ]);
     }
@@ -132,9 +132,5 @@ class HotelController extends Controller
         return Inertia::render('Home/Explore', [
             'hotels' => $hotels,
         ]);
-    }
-
-    public function showHotelDetail () {
-        return Inertia::render('Home/HotelDetail');
     }
 }

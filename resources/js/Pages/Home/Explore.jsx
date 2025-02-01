@@ -4,8 +4,6 @@ import SearchBar from "../../Layouts/SearchBar";
 import HotelCard from "../../Layouts/HotelCard";
 
 export default function Explore({ userName, auth, hotels }) {
-    console.log(hotels);
-
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -36,14 +34,15 @@ export default function Explore({ userName, auth, hotels }) {
                 auth={auth}
             />
             <div className="pt-20">
-                <div className="sticky top-16 z-10 bg-white shadow-md">
+                <div className="top-16 z-10 ">
                     <SearchBar />
                 </div>
-                <div className="p-4 mb-4 space-y-4">
+                <div className="p-4 mb-4 space-y-4 max-w-4xl mx-auto">
                     {hotels.length > 0 ? (
                         hotels.map((hotel) => (
                             <HotelCard
                                 key={hotel.id}
+                                id={hotel.id}
                                 name={hotel.nama_hotel}
                                 description={hotel.deskripsi_hotel}
                                 location={hotel.lokasi_hotel}

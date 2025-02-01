@@ -71,43 +71,7 @@ export default function HotelList() {
     };
 
     const handleDeleteSelectedHotels = () => {
-        if (selectedHotels.length === 0) return;
-
-        Swal.fire({
-            title: "Delete Selected Hotels?",
-            text: `You are about to delete ${selectedHotels.length} hotel(s)`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete them!",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.post(
-                    "/admin/hotels/bulk-delete",
-                    {
-                        hotels: selectedHotels,
-                    },
-                    {
-                        onSuccess: () => {
-                            Swal.fire(
-                                "Deleted!",
-                                `${selectedHotels.length} hotel(s) have been deleted.`,
-                                "success"
-                            );
-                            setSelectedHotels([]);
-                        },
-                        onError: () => {
-                            Swal.fire(
-                                "Error!",
-                                "There was a problem deleting the hotels.",
-                                "error"
-                            );
-                        },
-                    }
-                );
-            }
-        });
+        console.log(selectedHotels);
     };
 
     return (
@@ -239,7 +203,6 @@ export default function HotelList() {
                                     ))}
                                 </tbody>
                             </table>
-
                             <div className="flex items-center justify-between p-4">
                                 <span>
                                     Showing {start + 1} to {end} of{" "}

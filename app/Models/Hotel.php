@@ -14,4 +14,9 @@ class Hotel extends Model
         'gambar_hotel',
         'rating_hotel'
     ];
-} 
+
+    public function kamars()
+    {
+        return $this->hasMany(Kamar::class, 'hotel_id', 'id');
+    }
+}
