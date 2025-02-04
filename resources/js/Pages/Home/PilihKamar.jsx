@@ -4,7 +4,6 @@ import SearchBar from "../../Layouts/SearchBar";
 import RoomCard from "./../../Layouts/RoomCard";
 
 export default function PilihKamar({ userName, auth, hotel, kamars }) {
-    console.log("Data", kamars);
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
     const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -89,6 +88,7 @@ export default function PilihKamar({ userName, auth, hotel, kamars }) {
                             kamars.map((kamar) => (
                                 <RoomCard
                                     key={kamar.id}
+                                    id={kamar.id}
                                     name={kamar.nama_kamar}
                                     type={kamar.jenis_kamar}
                                     price={kamar.harga}

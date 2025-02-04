@@ -1,4 +1,4 @@
-import { Link, useForm } from "@inertiajs/react";
+import { useForm } from "@inertiajs/react";
 import React from "react";
 import Sidebar from "../../Layouts/ProfileSidebar";
 import ProfileHeader from "../../Layouts/ProfileHeader";
@@ -8,12 +8,14 @@ import "react-toastify/dist/ReactToastify.css";
 export default function Profile({
     userName,
     userEmail,
+    userNomorTelepon,
     userJenisKelamin,
     userTanggalLahir,
 }) {
     const { data, setData, post, processing, errors } = useForm({
         name: userName,
         email: userEmail,
+        nomor_telepon: userNomorTelepon || "",
         jeniskelamin: userJenisKelamin || "",
         tanggallahir: userTanggalLahir || "",
     });
@@ -88,6 +90,28 @@ export default function Profile({
                             {errors.email && (
                                 <div className="text-red-500">
                                     {errors.email}
+                                </div>
+                            )}
+                        </div>
+                        <div>
+                            <label
+                                htmlFor="text"
+                                className="block text-gray-700"
+                            >
+                                Phone Number
+                            </label>
+                            <input
+                                type="text"
+                                name="nomor_telepon"
+                                value={data.nomor_telepon || ""}
+                                onChange={(e) =>
+                                    setData("nomor_telepon", e.target.value)
+                                }
+                                className="w-full border border-gray-300 rounded p-2"
+                            />
+                            {errors.nomor_telepon && (
+                                <div className="text-red-500">
+                                    {errors.nomor_telepon}
                                 </div>
                             )}
                         </div>

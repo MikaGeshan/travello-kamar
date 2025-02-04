@@ -133,11 +133,13 @@ Route::get('/explore', function () {
 Route::get('/profile', function () {
     $userName = Auth::guard('customer')->user()->name;
     $userEmail = Auth::guard('customer')->user()->email;
+    $userNomorTelepon = Auth::guard('customer')->user()->nomor_telepon;
     $userJenisKelamin = Auth::guard('customer')->user()->jeniskelamin;
     $userTanggalLahir = Auth::guard('customer')->user()->tanggallahir;
     return Inertia::render('Profile/Profile', [
         'userName' => $userName,
         'userEmail' => $userEmail,
+        'userNomorTelepon' => $userNomorTelepon,
         'userJenisKelamin' => $userJenisKelamin,
         'userTanggalLahir' => $userTanggalLahir,
     ]);
@@ -157,4 +159,8 @@ Route::get('/explore', [HotelController::class, 'showComponentHotel'])->middlewa
 
 // Memilih Kamar
 Route::get('/pilihkamar/{id}', [KamarController::class, 'showComponentKamar'])
+    ->middleware('auth:customer');
+
+// Booking
+Route::get('/booking/{id}', [KamarController::class, 'showBooking'])
     ->middleware('auth:customer');

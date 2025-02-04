@@ -20,6 +20,7 @@ class ProfileController extends Controller
         $validatedData = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:customers,email,' . $user->id,
+            'nomor_telepon' => 'nullable|string|max:15|regex:/^[0-9]+$/|unique:customers,nomor_telepon,',
             'jeniskelamin' => 'nullable|string|in:Laki-Laki,Perempuan',
             'tanggallahir' => 'nullable|date',
         ]);
@@ -27,6 +28,7 @@ class ProfileController extends Controller
         $user->update([
             'name' => $validatedData['name'],
             'email' => $validatedData['email'],
+            'nomor_telepon' => $validatedData['nomor_telepon'],
             'jeniskelamin' => $validatedData['jeniskelamin'],
             'tanggallahir' => $validatedData['tanggallahir'],
         ]);

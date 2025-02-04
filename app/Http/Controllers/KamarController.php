@@ -162,4 +162,20 @@ class KamarController extends Controller
             'kamars' => $kamars,
         ]);
     }
+
+    public function showBooking($id)
+    {
+        $kamar = Kamar::findOrFail($id);
+
+        $hotel = $kamar->hotel;
+
+        if (!$hotel) {
+            abort(404, 'Hotel tidak ditemukan untuk kamar ini.');
+        }
+
+        return Inertia::render('Home/BookingDetails', [
+            'kamar' => $kamar,
+            'hotel' => $hotel,
+        ]);
+    }
 }
