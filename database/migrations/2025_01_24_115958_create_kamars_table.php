@@ -27,8 +27,6 @@ return new class extends Migration
             ])->default('Available');
             $table->text('fasilitas');
             $table->string('gambar_kamar');
-            $table->unsignedBigInteger('hotel_id');
-            $table->foreign('hotel_id')->references('id')->on('hotels')->onDelete('cascade');
             $table->timestamps();
         });
     }

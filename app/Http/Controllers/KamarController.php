@@ -30,11 +30,7 @@ class KamarController extends Controller
      */
     public function create()
     {
-        $hotels = Hotel::all();
-
-        return Inertia::render('Admin/Rooms/CreateRoom', [
-            'hotels' => $hotels,
-        ]);
+        #create
     }
 
     /**
@@ -49,7 +45,6 @@ class KamarController extends Controller
             'fasilitas' => 'nullable|max:1000',
             'status' => 'nullable|in:Available,Booked,Not Available',
             'gambar_kamar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
-            'hotel_id' => 'required|exists:hotels,id',
         ]);
 
         try {
@@ -66,7 +61,6 @@ class KamarController extends Controller
             $kamar->fasilitas = $validatedData['fasilitas'];
             $kamar->status = $validatedData['status'] ?? 'Available';
             $kamar->gambar_kamar = $gambarPath;
-            $kamar->hotel_id = $validatedData['hotel_id'];
             $kamar->save();
 
             return redirect()->route('admin.rooms.list')->with('success', 'Kamar berhasil ditambahkan.');
@@ -92,11 +86,8 @@ class KamarController extends Controller
      */
     public function edit(Kamar $room)
     {
-        $hotels = Hotel::all();
-
         return Inertia::render('Admin/Rooms/UpdateRoom', [
             'room' => $room,
-            'hotels' => $hotels,
         ]);
     }
 
@@ -153,29 +144,9 @@ class KamarController extends Controller
     }
     public function showComponentKamar($id)
     {
-        $hotel = Hotel::findOrFail($id);
-
-        $kamars = Kamar::where('hotel_id', operator: $id)->get();
-
+        $kamars = Kamar::findOrfail($id);
         return Inertia::render('Home/PilihKamar', [
-            'hotel' => $hotel,
             'kamars' => $kamars,
-        ]);
-    }
-
-    public function showBooking($id)
-    {
-        $kamar = Kamar::findOrFail($id);
-
-        $hotel = $kamar->hotel;
-
-        if (!$hotel) {
-            abort(404, 'Hotel tidak ditemukan untuk kamar ini.');
-        }
-
-        return Inertia::render('Home/BookingDetails', [
-            'kamar' => $kamar,
-            'hotel' => $hotel,
         ]);
     }
 }

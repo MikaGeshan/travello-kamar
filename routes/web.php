@@ -4,7 +4,6 @@ use App\Http\Controllers\AdminController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\HotelController;
 use App\Http\Controllers\KamarController;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
@@ -78,17 +77,11 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::put('/roles/{role}', [RoleController::class, 'update'])->name('admin.roles.update');
     Route::delete('/roles/{role}', [RoleController::class, 'destroy'])->name('admin.roles.destroy');
 
-    // Hotel Routes
-    Route::get('/hotels/list', [HotelController::class, 'index'])->name('admin.hotels.list');
-    Route::get('/hotels/create', [HotelController::class, 'create'])->name('admin.hotels.create');
-    Route::post('/hotels', [HotelController::class, 'store'])->name('admin.hotels.store');
-    Route::get('/hotels/{hotel}/edit', [HotelController::class, 'edit'])->name('admin.hotels.edit');
-    Route::put('/hotels/{hotel}', [HotelController::class, 'update'])->name('admin.hotels.update');
-    Route::delete('/hotels/{hotel}', [HotelController::class, 'destroy'])->name('admin.hotels.destroy');
-
     // Room Routes
     Route::get('/rooms/list', [KamarController::class, 'index'])->name('admin.rooms.list');
-    Route::get('/rooms/create', [KamarController::class, 'create'])->name('admin.rooms.create');
+    Route::get('/rooms/create', function () {
+        return Inertia::render('Admin/Rooms/CreateRoom');
+    })->name('admin.rooms.create');
     Route::post('/rooms', [KamarController::class, 'store'])->name('admin.rooms.store');
     Route::get('/rooms/{room}/edit', [KamarController::class, 'edit'])->name('admin.rooms.edit');
     Route::put('/rooms/{room}', [KamarController::class, 'update'])->name('admin.rooms.update');
@@ -154,8 +147,6 @@ Route::get('/profile/password', function () {
 Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->middleware('auth:customer');
 Route::delete('/profile/delete-account', [ProfileController::class, 'deleteAccount'])->middleware('auth:customer');
 
-// Explore Routes
-Route::get('/explore', [HotelController::class, 'showComponentHotel'])->middleware('auth:customer');
 
 // Memilih Kamar
 Route::get('/pilihkamar/{id}', [KamarController::class, 'showComponentKamar'])
