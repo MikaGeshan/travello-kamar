@@ -40,7 +40,7 @@ const Register = () => {
                 <div className="text-center flex flex-col items-center">
                     <FiHome className="mb-2 text-3xl" />
                     <h1 className="text-4xl font-bold text-blue-500 mb-2">
-                        Holiday Inn
+                        Travello
                     </h1>
                     <p className="text-gray-600">
                         Kenyamanan Tanpa Batas, Pengalaman Tak Terbatas

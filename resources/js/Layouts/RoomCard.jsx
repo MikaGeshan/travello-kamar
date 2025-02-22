@@ -1,9 +1,11 @@
+import { Link } from "@inertiajs/react";
 import React from "react";
 
-export default function RoomCard({ name, image, facilities, price, type }) {
+export default function RoomCard({ id, name, image, facilities, price, type }) {
     const formatPrice = (price) => {
         return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
     };
+
     return (
         <div className="flex border rounded-lg shadow-lg p-4 bg-white">
             <div className="w-1/3">
@@ -19,19 +21,22 @@ export default function RoomCard({ name, image, facilities, price, type }) {
                     <div>
                         <h3 className="font-semibold">{type}</h3>
                         <p className="text-xs text-gray-500 mt-1">
-                            <h1>{facilities}</h1>
+                            {facilities}
                         </p>
                     </div>
-                    <div className="text-right">
+                    <div className="flex flex-col items-end">
                         <p className="text-red-500 font-bold text-lg">
                             Rp {formatPrice(price)}
                         </p>
-                        <p className="text-xs text-gray-500">
+                        <p className="text-xs text-gray-500 mb-2">
                             Di luar pajak & biaya
                         </p>
-                        <button className="mt-2 bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700">
+                        <Link
+                            href={`/booking/${id}`}
+                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700"
+                        >
                             Pilih
-                        </button>
+                        </Link>
                     </div>
                 </div>
             </div>

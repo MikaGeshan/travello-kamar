@@ -13,6 +13,7 @@ class Customer extends Authenticatable
         'name',
         'email',
         'password',
+        'nomor_telepon',
         'jeniskelamin',
         'tanggallahir',
     ];

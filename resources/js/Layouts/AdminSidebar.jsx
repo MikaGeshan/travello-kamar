@@ -144,7 +144,7 @@ export default function AdminSidebar() {
                                         <FaHotel />
                                     </span>
                                     <span className="font-medium">
-                                        Manage Hotels and Rooms
+                                        Manage Rooms
                                     </span>
                                     <span
                                         className={`text-xl text-gray-600 ml-auto transition-transform duration-300 ${
@@ -162,16 +162,6 @@ export default function AdminSidebar() {
                                     }`}
                                 >
                                     <ul className="pl-4 space-y-2 py-2">
-                                        <li>
-                                            <Link
-                                                href="/admin/hotels/list"
-                                                className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                                            >
-                                                <span className="font-medium">
-                                                    Hotel List
-                                                </span>
-                                            </Link>
-                                        </li>
                                         <li>
                                             <Link
                                                 href="/admin/rooms/list"

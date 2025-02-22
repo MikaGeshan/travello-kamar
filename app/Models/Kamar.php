@@ -13,12 +13,6 @@ class Kamar extends Model
         'fasilitas',
         'harga',
         'gambar_kamar',
-        'hotel_id',
         'status'
     ];
-
-    public function hotel()
-    {
-        return $this->belongsTo(Hotel::class, 'hotel_id', 'id');
-    }
 }
