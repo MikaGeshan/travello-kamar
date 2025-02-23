@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
@@ -86,6 +87,12 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/rooms/{room}/edit', [KamarController::class, 'edit'])->name('admin.rooms.edit');
     Route::put('/rooms/{room}', [KamarController::class, 'update'])->name('admin.rooms.update');
     Route::delete('/rooms/{room}', [KamarController::class, 'destroy'])->name('admin.rooms.destroy');
+
+    // Reservation Routes
+    Route::get('/reservations/list', function () {
+        return Inertia::render('Admin/Reservations/ReservationList');
+    })->name('admin.reservations.list');
+    Route::get('/reservations/create', [ReservationController::class, 'create'])->name('admin.reservations.create');
 });
 
 

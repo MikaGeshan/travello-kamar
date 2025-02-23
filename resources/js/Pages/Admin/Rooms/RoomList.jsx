@@ -225,7 +225,11 @@ export default function RoomList() {
                                                 <td className="p-3">
                                                     {room.fasilitas}
                                                 </td>
-                                                <td className={`p-3 ${getStatusColor(room.status)}`}>
+                                                <td
+                                                    className={`p-3 ${getStatusColor(
+                                                        room.status
+                                                    )}`}
+                                                >
                                                     {room.status}
                                                 </td>
                                                 <td className="p-3">
