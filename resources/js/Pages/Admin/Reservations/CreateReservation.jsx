@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useForm } from "@inertiajs/react";
 import Select from "react-select";
 import { FaRegAddressBook } from "react-icons/fa";
 import AdminHeader from "../../../Layouts/AdminHeader";
 import AdminSidebar from "../../../Layouts/AdminSidebar";
+import Swal from "sweetalert2";
 
 function CreateReservation({ rooms, customers }) {
     const today = new Date().toISOString().split("T")[0];
-    const [checkIn, setCheckIn] = useState(today);
-    const [checkOut, setCheckOut] = useState("");
-    const [roomId, setRoomId] = useState("");
-    const [price, setPrice] = useState("");
-    const [reservationCode, setReservationCode] = useState("");
-    const [selectedCustomer, setSelectedCustomer] = useState(null);
-    const [paymentStatus, setPaymentStatus] = useState("Pending");
+
+    const { data, setData, post, processing, errors } = useForm({
+        reservation_code: "",
+        customer_id: "",
+        room_id: "",
+        guests: "",
+        check_in: today,
+        check_out: "",
+        total_price: "",
+        payment_status: "Pending",
+    });
 
     const customerOptions = customers.map((customer) => ({
         value: customer.id,
@@ -20,92 +26,109 @@ function CreateReservation({ rooms, customers }) {
     }));
 
     const handleCustomerChange = (selectedOption) => {
-        setSelectedCustomer(selectedOption);
+        setData("customer_id", selectedOption ? selectedOption.value : "");
     };
 
-    const handlePaymentStatusChange = (e) => {
-        setPaymentStatus(e.target.value);
+    const handleCheckInChange = (e) => {
+        setData("check_in", e.target.value);
     };
 
-    const formatDate = (dateString) => {
-        if (!dateString) return "";
-        const [year, month, day] = dateString.split("-");
-        return `${day}${month}${year.slice(2)}`;
+    const handleCheckOutChange = (e) => {
+        setData("check_out", e.target.value);
     };
 
-    const generateReservationCode = (checkIn, roomId) => {
-        if (checkIn && roomId) {
-            const formattedCheckIn = formatDate(checkIn);
-            const selectedRoom = rooms.find(
-                (room) => room.id === parseInt(roomId)
-            );
-            const roomInitial = selectedRoom
-                ? selectedRoom.nama_kamar.charAt(0).toUpperCase()
-                : "";
-            const randomNum = Math.floor(1 + Math.random() * 9);
-            const randomChar = String.fromCharCode(65 + (randomNum % 26));
-
-            return `TO-${formattedCheckIn}-${roomInitial}${randomNum}${randomChar}`;
-        }
-        return "";
+    const handleRoomChange = (selectedOption) => {
+        setData("room_id", selectedOption ? selectedOption.value : "");
     };
 
-    const calculateTotalPrice = (roomPrice, checkIn, checkOut) => {
-        if (!checkIn || !checkOut) return roomPrice;
+    const roomOptions = rooms
+        .filter((room) => room.status !== "Booked")
+        .map((room) => ({
+            value: room.id,
+            label: `${room.jenis_kamar} - ${
+                room.nomor_kamar
+            } (${room.harga.toLocaleString()} IDR)`,
+        }));
+
+    const calculateTotalPrice = (roomId, checkIn, checkOut) => {
+        if (!roomId || !checkIn || !checkOut) return 0;
+        const selectedRoom = rooms.find((room) => room.id === parseInt(roomId));
+        if (!selectedRoom) return 0;
+
         const startDate = new Date(checkIn);
         const endDate = new Date(checkOut);
         const stayDuration = Math.max(
             1,
             (endDate - startDate) / (1000 * 60 * 60 * 24)
         );
-        return roomPrice * stayDuration;
+
+        return selectedRoom.harga * stayDuration;
     };
 
-    const handleCheckInChange = (e) => {
-        setCheckIn(e.target.value);
-        setReservationCode(generateReservationCode(e.target.value, roomId));
-    };
-
-    const handleCheckOutChange = (e) => {
-        setCheckOut(e.target.value);
-        const selectedRoom = rooms.find((room) => room.id === parseInt(roomId));
-        if (selectedRoom) {
-            setPrice(
-                calculateTotalPrice(selectedRoom.harga, checkIn, e.target.value)
-            );
-        }
-    };
-
-    const handleRoomChange = (e) => {
-        const selectedRoomId = e.target.value;
-        setRoomId(selectedRoomId);
-        const selectedRoom = rooms.find(
-            (room) => room.id === parseInt(selectedRoomId)
+    useEffect(() => {
+        setData(
+            "total_price",
+            calculateTotalPrice(data.room_id, data.check_in, data.check_out)
         );
-        if (selectedRoom) {
-            setPrice(
-                calculateTotalPrice(selectedRoom.harga, checkIn, checkOut)
+    }, [data.room_id, data.check_in, data.check_out]);
+
+    const generateReservationCode = (checkIn, roomId) => {
+        if (checkIn && roomId) {
+            const selectedRoom = rooms.find(
+                (room) => room.id === parseInt(roomId)
             );
-        } else {
-            setPrice("");
+
+            if (!selectedRoom || !selectedRoom.nomor_kamar) return "";
+
+            const roomNumber = selectedRoom.nomor_kamar;
+            const roomPrefix = roomNumber.substring(0, 3).toUpperCase();
+            const formattedCheckIn = checkIn.split("-").reverse().join("");
+            const roomSuffix = roomNumber.slice(-2).toUpperCase();
+
+            return `${roomPrefix}-${formattedCheckIn}-${roomSuffix}`;
         }
-        setReservationCode(generateReservationCode(checkIn, selectedRoomId));
+        return "";
     };
+
+    useEffect(() => {
+        setData(
+            "reservation_code",
+            generateReservationCode(data.check_in, data.room_id)
+        );
+        console.log(data);
+    }, [data.check_in, data.room_id]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const reservationData = {
-            reservationCode,
-            customerId: selectedCustomer ? selectedCustomer.value : null,
-            checkIn,
-            checkOut,
-            roomId,
-            price,
-            paymentStatus,
-        };
+        const updatedTotalPrice = calculateTotalPrice(
+            data.room_id,
+            data.check_in,
+            data.check_out
+        );
+        setData("total_price", updatedTotalPrice);
 
-        console.log("Reservation Data:", reservationData);
+        setTimeout(() => {
+            post("/admin/reservations/create", {
+                onSuccess: () => {
+                    Swal.fire({
+                        title: "Success!",
+                        text: "Reservation created successfully.",
+                        icon: "success",
+                        confirmButtonText: "OK",
+                    });
+                },
+                onError: (errors) => {
+                    console.error("Submission error:", errors);
+                    Swal.fire({
+                        title: "Error!",
+                        text: "Failed to create reservation. Please try again.",
+                        icon: "error",
+                        confirmButtonText: "OK",
+                    });
+                },
+            });
+        }, 100);
     };
 
     return (
@@ -123,31 +146,46 @@ function CreateReservation({ rooms, customers }) {
                         </div>
                         <div className="bg-white shadow-md rounded-lg p-8">
                             <form onSubmit={handleSubmit}>
-                                <div className="flex space-x-4 mb-4">
-                                    <div className="w-1/2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                                            Reservation Code
-                                        </label>
-                                        <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-                                            type="text"
-                                            value={reservationCode}
-                                            readOnly
-                                        />
-                                    </div>
-                                    <div className="w-1/2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                                            Customer Name
-                                        </label>
-                                        <Select
-                                            options={customerOptions}
-                                            value={selectedCustomer}
-                                            onChange={handleCustomerChange}
-                                            placeholder="Select / Search Customer"
-                                            isSearchable
-                                            className="shadow border rounded w-full"
-                                        />
-                                    </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Reservation Code
+                                    </label>
+                                    <input
+                                        className="shadow border rounded w-full py-2 px-3 bg-gray-200 text-gray-700"
+                                        type="text"
+                                        value={data.reservation_code}
+                                        readOnly
+                                    />
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Customer Name
+                                    </label>
+                                    <Select
+                                        options={customerOptions}
+                                        onChange={handleCustomerChange}
+                                        placeholder="Select / Search Customer"
+                                        isSearchable
+                                        className="shadow border rounded w-full"
+                                    />
+                                    {errors.customer_id && (
+                                        <p className="text-red-500 text-xs">
+                                            {errors.customer_id}
+                                        </p>
+                                    )}
+                                </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Guests
+                                    </label>
+                                    <input
+                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
+                                        type="number"
+                                        value={data.guests}
+                                        onChange={(e) =>
+                                            setData("guests", e.target.value)
+                                        }
+                                    />
                                 </div>
                                 <div className="flex space-x-4 mb-4">
                                     <div className="w-1/2">
@@ -155,9 +193,9 @@ function CreateReservation({ rooms, customers }) {
                                             Check In
                                         </label>
                                         <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            className="shadow border rounded w-full py-2 px-3 text-gray-700"
                                             type="date"
-                                            value={checkIn}
+                                            value={data.check_in}
                                             onChange={handleCheckInChange}
                                         />
                                     </div>
@@ -166,70 +204,81 @@ function CreateReservation({ rooms, customers }) {
                                             Check Out
                                         </label>
                                         <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                            className="shadow border rounded w-full py-2 px-3 text-gray-700"
                                             type="date"
-                                            value={checkOut}
+                                            value={data.check_out}
                                             onChange={handleCheckOutChange}
                                         />
                                     </div>
                                 </div>
-                                <div className="flex space-x-4 mb-4">
-                                    <div className="w-1/2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                                            Room Name / Type
-                                        </label>
-                                        <select
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            value={roomId}
-                                            onChange={handleRoomChange}
-                                        >
-                                            <option value="">
-                                                Select Room
-                                            </option>
-                                            {rooms.map((room) => (
-                                                <option
-                                                    key={room.id}
-                                                    value={room.id}
-                                                >
-                                                    {room.nama_kamar}
-                                                </option>
-                                            ))}
-                                        </select>
-                                    </div>
-                                    <div className="w-1/2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                                            Price (Total)
-                                        </label>
-                                        <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline bg-gray-200"
-                                            type="text"
-                                            value={price}
-                                            readOnly
-                                        />
-                                    </div>
-                                    <div className="w-1/2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                                            Payment Status
-                                        </label>
-                                        <select
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            value={paymentStatus}
-                                            onChange={handlePaymentStatusChange}
-                                        >
-                                            <option>Paid</option>
-                                            <option>Pending</option>
-                                            <option>Cancelled</option>
-                                        </select>
-                                    </div>
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Room Type
+                                    </label>
+                                    <Select
+                                        options={roomOptions}
+                                        onChange={handleRoomChange}
+                                        placeholder="Select / Search Room"
+                                        isSearchable
+                                        className="shadow border rounded w-full"
+                                    />
+                                    {errors.room_id && (
+                                        <p className="text-red-500 text-xs">
+                                            {errors.room_id}
+                                        </p>
+                                    )}
                                 </div>
-                                <div className="flex items-center justify-between mt-4">
-                                    <button
-                                        type="submit"
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
-                                    >
-                                        Create Reservation
-                                    </button>
+                                {/* Total Price */}
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Total Price
+                                    </label>
+                                    <input
+                                        className="shadow border rounded w-full py-2 px-3 bg-gray-200 text-gray-700"
+                                        type="text"
+                                        value={(() => {
+                                            const selectedRoom = rooms.find(
+                                                (room) =>
+                                                    room.id ===
+                                                    parseInt(data.room_id)
+                                            );
+                                            if (
+                                                !selectedRoom ||
+                                                !data.check_in ||
+                                                !data.check_out
+                                            )
+                                                return "Rp 0";
+
+                                            const hargaPerMalam =
+                                                selectedRoom.harga;
+                                            const startDate = new Date(
+                                                data.check_in
+                                            );
+                                            const endDate = new Date(
+                                                data.check_out
+                                            );
+                                            const stayDuration = Math.max(
+                                                1,
+                                                (endDate - startDate) /
+                                                    (1000 * 60 * 60 * 24)
+                                            );
+
+                                            return `Rp ${(
+                                                hargaPerMalam * stayDuration
+                                            ).toLocaleString()}`;
+                                        })()}
+                                        readOnly
+                                    />
                                 </div>
+                                <button
+                                    type="submit"
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+                                    disabled={processing}
+                                >
+                                    {processing
+                                        ? "Submitting..."
+                                        : "Create Reservation"}
+                                </button>
                             </form>
                         </div>
                     </div>

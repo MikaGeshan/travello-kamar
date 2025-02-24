@@ -89,10 +89,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::delete('/rooms/{room}', [KamarController::class, 'destroy'])->name('admin.rooms.destroy');
 
     // Reservation Routes
-    Route::get('/reservations/list', function () {
-        return Inertia::render('Admin/Reservations/ReservationList');
-    })->name('admin.reservations.list');
+    Route::get('/reservations/list', [ReservationController::class, 'index'])->name('admin.reservations.list');
     Route::get('/reservations/create', [ReservationController::class, 'create'])->name('admin.reservations.create');
+    Route::post('/reservations/create', [ReservationController::class, 'store'])->name('admin.reservations.create');
 });
 
 

@@ -2,18 +2,23 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Kamar extends Model
 {
     //
+    use HasFactory;
     protected $fillable = [
-        'nama_kamar',
+        'nomor_kamar',
         'jenis_kamar',
         'fasilitas',
         'harga',
-        'gambar_kamar',
         'status'
+    ];
+
+    protected $casts = [
+        'fasilitas' => 'array',
     ];
 
     public function reservations()

@@ -76,26 +76,41 @@ export default function RoomList() {
     };
 
     const handleDeleteSelectedRooms = () => {
-        if (selectedRooms.length === 0) return;
-
-        Swal.fire({
-            title: "Delete Selected Rooms?",
-            text: `You are about to delete ${selectedRooms.length} room(s)`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete them!",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setSelectedRooms([]);
-                Swal.fire(
-                    "Deleted!",
-                    `${selectedRooms.length} room(s) have been deleted.`,
-                    "success"
-                );
-            }
-        });
+        // if (selectedRooms.length === 0) {
+        //     Swal.fire("Error", "Select at least one room to delete", "error");
+        //     return;
+        // }
+        // Swal.fire({
+        //     title: "Are you sure?",
+        //     text: `You are about to delete ${selectedRooms.length} selected rooms!`,
+        //     icon: "warning",
+        //     showCancelButton: true,
+        //     confirmButtonColor: "#3085d6",
+        //     cancelButtonColor: "#d33",
+        //     confirmButtonText: "Yes, delete them!",
+        //     cancelButtonText: "Cancel",
+        // }).then((result) => {
+        //     if (result.isConfirmed) {
+        //         router.delete(`/admin/rooms`, {
+        //             data: { ids: selectedRooms }, // Mengirim array ID kamar yang dipilih
+        //             onSuccess: () => {
+        //                 Swal.fire(
+        //                     "Deleted!",
+        //                     `${selectedRooms.length} rooms have been deleted successfully.`,
+        //                     "success"
+        //                 );
+        //                 setSelectedRooms([]); // Reset pilihan setelah penghapusan berhasil
+        //             },
+        //             onError: () => {
+        //                 Swal.fire(
+        //                     "Error!",
+        //                     "There was a problem deleting the rooms.",
+        //                     "error"
+        //                 );
+        //             },
+        //         });
+        //     }
+        // });
     };
 
     const formatPrice = (price) => {
@@ -178,13 +193,11 @@ export default function RoomList() {
                                                 onChange={handleSelectAll}
                                             />
                                         </th>
-                                        <th className="p-3">ID</th>
-                                        <th className="p-3">Room Name</th>
+                                        <th className="p-3">Room Number</th>
                                         <th className="p-3">Room Type</th>
                                         <th className="p-3">Price</th>
                                         <th className="p-3">Facilities</th>
                                         <th className="p-3">Status</th>
-                                        <th className="p-3">Image</th>
                                         <th className="p-3">Actions</th>
                                     </tr>
                                 </thead>
@@ -211,11 +224,9 @@ export default function RoomList() {
                                                     />
                                                 </td>
                                                 <td className="p-3">
-                                                    {room.id}
+                                                    {room.nomor_kamar}
                                                 </td>
-                                                <td className="p-3">
-                                                    {room.nama_kamar}
-                                                </td>
+
                                                 <td className="p-3">
                                                     {room.jenis_kamar}
                                                 </td>
@@ -223,7 +234,28 @@ export default function RoomList() {
                                                     Rp {formatPrice(room.harga)}
                                                 </td>
                                                 <td className="p-3">
-                                                    {room.fasilitas}
+                                                    {Array.isArray(
+                                                        room.fasilitas
+                                                    ) ? (
+                                                        <ul className="list-disc list-inside">
+                                                            {room.fasilitas.map(
+                                                                (
+                                                                    item,
+                                                                    index
+                                                                ) => (
+                                                                    <li
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                    >
+                                                                        {item}
+                                                                    </li>
+                                                                )
+                                                            )}
+                                                        </ul>
+                                                    ) : (
+                                                        <p>{room.fasilitas}</p>
+                                                    )}
                                                 </td>
                                                 <td
                                                     className={`p-3 ${getStatusColor(
@@ -232,13 +264,7 @@ export default function RoomList() {
                                                 >
                                                     {room.status}
                                                 </td>
-                                                <td className="p-3">
-                                                    <img
-                                                        src={room.gambar_kamar}
-                                                        alt={room.jenis_kamar}
-                                                        className="w-20 h-20 object-cover rounded-md"
-                                                    />
-                                                </td>
+
                                                 <td className="p-3 space-x-2">
                                                     <div className="flex items-center space-x-2">
                                                         <Link

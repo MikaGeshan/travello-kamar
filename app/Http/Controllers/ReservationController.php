@@ -16,6 +16,11 @@ class ReservationController extends Controller
     public function index()
     {
         //
+        $reservations = Reservation::with('customer', 'room')->get();
+
+        return Inertia::render('Admin/Reservations/ReservationList', [
+            'reservations' => $reservations,
+        ]);
     }
 
     /**
@@ -32,15 +37,38 @@ class ReservationController extends Controller
         ]);
     }
 
-
-
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'reservation_code' => 'required|string|unique:reservations,reservation_code',
+            'customer_id' => 'required|exists:customers,id',
+            'room_id' => 'required|exists:kamars,id',
+            'check_in' => 'required|date',
+            'check_out' => 'required|date|after:check_in',
+            'guests' => 'required|integer|min:1',
+            'total_price' => 'required|integer|min:0',
+            'payment_status' => 'required|in:Paid,Pending,Cancelled',
+        ]);
+
+        $reservation = Reservation::create([
+            'reservation_code' => $request->reservation_code,
+            'customer_id' => $request->customer_id,
+            'room_id' => $request->room_id,
+            'check_in' => $request->check_in,
+            'check_out' => $request->check_out,
+            'guests' => $request->guests,
+            'total_price' => $request->total_price,
+            'payment_status' => $request->payment_status,
+        ]);
+
+        Kamar::where('id', $request->room_id)->update(['status' => 'Booked']);
+
+        return redirect()->route('admin.reservations.list')->with('success', 'Reservation created successfully.');
     }
+
 
     /**
      * Display the specified resource.

@@ -1,36 +1,26 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "@inertiajs/react";
 import AdminHeader from "./../../../Layouts/AdminHeader";
 import AdminSidebar from "./../../../Layouts/AdminSidebar";
-import { FaHotel, FaImage } from "react-icons/fa";
+import { FaHotel } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 export default function CreateRoom() {
     const { data, setData, post, processing, errors } = useForm({
-        nama_kamar: "",
         jenis_kamar: "",
         harga: "",
-        fasilitas: "",
+        fasilitas: [],
         status: "Available",
-        gambar_kamar: null,
     });
 
-    const [imagePreview, setImagePreview] = useState(null);
-
     const handleChange = (e) => {
-        const { id, value, files } = e.target;
+        const { id, value } = e.target;
 
-        if (id === "gambar_kamar") {
-            const file = files[0];
-            setData("gambar_kamar", file);
-
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setImagePreview(reader.result);
-            };
-            if (file) {
-                reader.readAsDataURL(file);
-            }
+        if (id === "fasilitas") {
+            setData(
+                id,
+                value ? value.split(",").map((item) => item.trim()) : []
+            );
         } else {
             setData(id, value);
         }
@@ -39,36 +29,21 @@ export default function CreateRoom() {
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        const formData = new FormData();
-        formData.append("nama_kamar", data.nama_kamar);
-        formData.append("jenis_kamar", data.jenis_kamar);
-        formData.append("harga", data.harga);
-        formData.append("fasilitas", data.fasilitas);
-        formData.append("status", data.status);
-
-        if (data.gambar_kamar) {
-            formData.append("gambar_kamar", data.gambar_kamar);
-        }
-
         post("/admin/rooms", {
-            data: formData,
-            forceFormData: true,
+            data,
             onSuccess: () => {
                 Swal.fire({
                     title: "Success!",
-                    text: `Room ${data.nama_kamar} has been created successfully.`,
+                    text: `Room has been created successfully.`,
                     icon: "success",
                     confirmButtonText: "OK",
                 }).then(() => {
                     setData({
-                        nama_kamar: "",
                         jenis_kamar: "",
                         harga: "",
                         fasilitas: "",
                         status: "Available",
-                        gambar_kamar: null,
                     });
-                    setImagePreview(null);
                 });
             },
             onError: (errors) => {
@@ -90,7 +65,7 @@ export default function CreateRoom() {
             <AdminHeader />
             <div className="flex flex-1">
                 <AdminSidebar />
-                <main className="flex-1 p-8 ml-50">
+                <main className="flex-1 p-8">
                     <div className="container mx-auto">
                         <div className="flex justify-between items-center mb-6">
                             <h1 className="text-2xl font-bold text-gray-800 flex items-center">
@@ -109,158 +84,103 @@ export default function CreateRoom() {
                                         {errors.harga}
                                     </div>
                                 )}
-                                {errors.gambar_kamar && (
-                                    <div className="text-red-500 mb-2">
-                                        {errors.gambar_kamar}
-                                    </div>
-                                )}
 
-                                <div className="flex space-x-4 mb-4">
-                                    <div className="w-1/2">
-                                        <label
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="nama_kamar"
-                                        >
-                                            Room Name
-                                        </label>
-                                        <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="nama_kamar"
-                                            type="text"
-                                            placeholder="Enter room name"
-                                            value={data.nama_kamar}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                    <div className="w-1/2">
-                                        <label
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="fasilitas"
-                                        >
-                                            Facilities
-                                        </label>
-                                        <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="fasilitas"
-                                            type="text"
-                                            placeholder="Enter room facilities"
-                                            value={data.fasilitas}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex space-x-4 mb-4">
-                                    <div className="w-1/2">
-                                        <label
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="jenis_kamar"
-                                        >
-                                            Room Type
-                                        </label>
-
-                                        <select
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="jenis_kamar"
-                                            value={data.jenis_kamar}
-                                            onChange={handleChange}
-                                        >
-                                            <option value="">
-                                                Select Room Type
-                                            </option>
-                                            <option value="Standard Room">
-                                                Standard Room
-                                            </option>
-                                            <option value="Deluxe Room">
-                                                Deluxe Room
-                                            </option>
-                                            <option value="Suite Room">
-                                                Suite Room
-                                            </option>
-                                        </select>
-                                    </div>
-                                    <div className="w-1/2">
-                                        <label
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="harga"
-                                        >
-                                            Price
-                                        </label>
-                                        <input
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="harga"
-                                            type="number"
-                                            placeholder="Enter room price"
-                                            value={data.harga}
-                                            onChange={handleChange}
-                                        />
-                                    </div>
-                                </div>
-
-                                <div className="flex space-x-4 mb-4">
-                                    <div className="w-1/2">
-                                        <label
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="gambar_kamar"
-                                        >
-                                            Room Image
-                                        </label>
-                                        <div className="flex items-center">
-                                            <input
-                                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                                id="gambar_kamar"
-                                                type="file"
-                                                accept="image/*"
-                                                onChange={handleChange}
-                                            />
-                                            <FaImage className="ml-2 text-gray-500" />
-                                        </div>
-                                        {imagePreview && (
-                                            <div className="mt-2">
-                                                <img
-                                                    src={imagePreview}
-                                                    alt="Room Preview"
-                                                    className="w-32 h-32 object-cover rounded"
-                                                />
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="w-1/2">
-                                        <label
-                                            className="block text-gray-700 text-sm font-bold mb-2"
-                                            htmlFor="status"
-                                        >
-                                            Status
-                                        </label>
-                                        <select
-                                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                            id="status"
-                                            value={data.status}
-                                            onChange={handleChange}
-                                        >
-                                            <option value="Available">
-                                                Available
-                                            </option>
-                                            <option value="Booked">
-                                                Booked
-                                            </option>
-                                            <option value="Not Available">
-                                                Not Available
-                                            </option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div className="flex items-center justify-between mt-4">
-                                    <button
-                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md focus:outline-none focus:shadow-outline"
-                                        type="submit"
-                                        disabled={processing}
+                                {/* Room Type */}
+                                <div className="mb-4">
+                                    <label
+                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        htmlFor="jenis_kamar"
                                     >
-                                        {processing
-                                            ? "Creating..."
-                                            : "Create Room"}
-                                    </button>
+                                        Room Type
+                                    </label>
+                                    <select
+                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
+                                        id="jenis_kamar"
+                                        value={data.jenis_kamar}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="">
+                                            Select Room Type
+                                        </option>
+                                        <option value="Standard Room">
+                                            Standard Room
+                                        </option>
+                                        <option value="Deluxe Room">
+                                            Deluxe Room
+                                        </option>
+                                        <option value="Suite Room">
+                                            Suite Room
+                                        </option>
+                                    </select>
                                 </div>
+
+                                {/* Price */}
+                                <div className="mb-4">
+                                    <label
+                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        htmlFor="harga"
+                                    >
+                                        Price
+                                    </label>
+                                    <input
+                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
+                                        id="harga"
+                                        type="number"
+                                        placeholder="Enter room price"
+                                        value={data.harga}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                {/* Facilities */}
+                                <div className="mb-4">
+                                    <label
+                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        htmlFor="fasilitas"
+                                    >
+                                        Facilities (separate by comma)
+                                    </label>
+                                    <textarea
+                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
+                                        id="fasilitas"
+                                        placeholder="Enter facilities, separated by commas (e.g., WiFi, AC, TV)"
+                                        value={data.fasilitas.join(", ")}
+                                        onChange={handleChange}
+                                    />
+                                </div>
+
+                                {/* Status */}
+                                <div className="mb-4">
+                                    <label
+                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        htmlFor="status"
+                                    >
+                                        Status
+                                    </label>
+                                    <select
+                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
+                                        id="status"
+                                        value={data.status}
+                                        onChange={handleChange}
+                                    >
+                                        <option value="Available">
+                                            Available
+                                        </option>
+                                        <option value="Booked">Booked</option>
+                                        <option value="Not Available">
+                                            Not Available
+                                        </option>
+                                    </select>
+                                </div>
+
+                                {/* Submit Button */}
+                                <button
+                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
+                                    type="submit"
+                                    disabled={processing}
+                                >
+                                    {processing ? "Creating..." : "Create Room"}
+                                </button>
                             </form>
                         </div>
                     </div>

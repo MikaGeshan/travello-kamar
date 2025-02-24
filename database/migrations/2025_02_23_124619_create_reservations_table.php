@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
-            $table->varchar('reservation_code', 50)->unique();
-            $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('room_id');
+            $table->string('reservation_code', 50)->unique();
+            $table->unsignedBigInteger('customer_id')->onDelete('cascade');
+            $table->unsignedBigInteger('room_id')->onDelete('cascade');
             $table->date('check_in');
             $table->date('check_out');
             $table->decimal('total_price', 10, 2);
