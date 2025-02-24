@@ -15,7 +15,6 @@ export default function CreateRoom() {
 
     const handleChange = (e) => {
         const { id, value } = e.target;
-
         if (id === "fasilitas") {
             setData(
                 id,
@@ -28,7 +27,6 @@ export default function CreateRoom() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         post("/admin/rooms", {
             data,
             onSuccess: () => {
@@ -41,7 +39,7 @@ export default function CreateRoom() {
                     setData({
                         jenis_kamar: "",
                         harga: "",
-                        fasilitas: "",
+                        fasilitas: [],
                         status: "Available",
                     });
                 });
@@ -73,31 +71,20 @@ export default function CreateRoom() {
                             </h1>
                         </div>
                         <div className="bg-white shadow-md rounded-lg p-8">
-                            <form onSubmit={handleSubmit}>
-                                {errors.jenis_kamar && (
-                                    <div className="text-red-500 mb-2">
-                                        {errors.jenis_kamar}
-                                    </div>
-                                )}
-                                {errors.harga && (
-                                    <div className="text-red-500 mb-2">
-                                        {errors.harga}
-                                    </div>
-                                )}
-
+                            <form onSubmit={handleSubmit} className="space-y-6">
                                 {/* Room Type */}
-                                <div className="mb-4">
+                                <div>
                                     <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        className="block text-gray-700 font-bold mb-2"
                                         htmlFor="jenis_kamar"
                                     >
                                         Room Type
                                     </label>
                                     <select
-                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
                                         id="jenis_kamar"
                                         value={data.jenis_kamar}
                                         onChange={handleChange}
+                                        className="w-full border rounded-lg px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                                     >
                                         <option value="">
                                             Select Room Type
@@ -112,56 +99,71 @@ export default function CreateRoom() {
                                             Suite Room
                                         </option>
                                     </select>
+                                    {errors.jenis_kamar && (
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.jenis_kamar}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Price */}
-                                <div className="mb-4">
+                                <div>
                                     <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        className="block text-gray-700 font-bold mb-2"
                                         htmlFor="harga"
                                     >
                                         Price
                                     </label>
                                     <input
-                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
                                         id="harga"
                                         type="number"
                                         placeholder="Enter room price"
                                         value={data.harga}
                                         onChange={handleChange}
+                                        className="w-full border rounded-lg px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                                     />
+                                    {errors.harga && (
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.harga}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Facilities */}
-                                <div className="mb-4">
+                                <div>
                                     <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        className="block text-gray-700 font-bold mb-2"
                                         htmlFor="fasilitas"
                                     >
                                         Facilities (separate by comma)
                                     </label>
                                     <textarea
-                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
                                         id="fasilitas"
                                         placeholder="Enter facilities, separated by commas (e.g., WiFi, AC, TV)"
                                         value={data.fasilitas.join(", ")}
                                         onChange={handleChange}
+                                        className="w-full border rounded-lg px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500 h-24"
                                     />
+                                    {errors.fasilitas && (
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.fasilitas}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Status */}
-                                <div className="mb-4">
+                                <div>
                                     <label
-                                        className="block text-gray-700 text-sm font-bold mb-2"
+                                        className="block text-gray-700 font-bold mb-2"
                                         htmlFor="status"
                                     >
                                         Status
                                     </label>
                                     <select
-                                        className="shadow border rounded w-full py-2 px-3 text-gray-700"
                                         id="status"
                                         value={data.status}
                                         onChange={handleChange}
+                                        className="w-full border rounded-lg px-4 py-2 shadow-sm focus:ring-blue-500 focus:border-blue-500"
                                     >
                                         <option value="Available">
                                             Available
@@ -171,16 +173,25 @@ export default function CreateRoom() {
                                             Not Available
                                         </option>
                                     </select>
+                                    {errors.status && (
+                                        <p className="text-red-500 text-sm mt-1">
+                                            {errors.status}
+                                        </p>
+                                    )}
                                 </div>
 
                                 {/* Submit Button */}
-                                <button
-                                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"
-                                    type="submit"
-                                    disabled={processing}
-                                >
-                                    {processing ? "Creating..." : "Create Room"}
-                                </button>
+                                <div className="flex justify-end">
+                                    <button
+                                        type="submit"
+                                        disabled={processing}
+                                        className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg shadow-md transition"
+                                    >
+                                        {processing
+                                            ? "Creating..."
+                                            : "Create Room"}
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>

@@ -35,11 +35,12 @@ export default function Welcome({ auth }) {
         <div className="flex flex-col items-center justify-center min-h-screen bg-white">
             <Header isVisible={isHeaderVisible} auth={auth} />
             <div
-                className="relative w-full min-h-[80vh] flex flex-col items-center justify-center"
+                className="relative w-full min-h-[90vh] md:min-h-[100vh] flex flex-col items-center justify-center"
                 style={{
                     backgroundImage: `url(${bghotel})`,
-                    backgroundSize: "cover",
+                    backgroundSize: "100% 100%",
                     backgroundPosition: "center",
+                    backgroundRepeat: "no-repeat",
                 }}
             >
                 <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center py-20 bg-black bg-opacity-50">
