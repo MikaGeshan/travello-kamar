@@ -127,9 +127,9 @@ Route::get('/home', function () {
         'userName' => $userName,
     ]);
 })->middleware('auth:customer');
-Route::get('/explore', function () {
-    return Inertia::render('Home/Explore');
-})->middleware('auth:customer');
+
+Route::get('/explore', [KamarController::class, 'show'])
+    ->middleware('auth:customer');
 
 // Profile Routes
 Route::get('/profile', function () {

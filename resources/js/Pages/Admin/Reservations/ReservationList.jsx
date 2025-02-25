@@ -168,6 +168,9 @@ function ReservationList({ reservations }) {
                                                     </td>
                                                     <td className="p-3">
                                                         <div className="flex gap-2 text-sm">
+                                                            <button className="text-green-500 hover:underline">
+                                                                View
+                                                            </button>
                                                             <Link
                                                                 href={`/admin/reservations/${reservation.id}/edit`}
                                                                 className="text-blue-500 hover:underline"
