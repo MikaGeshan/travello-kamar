@@ -92,6 +92,9 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/reservations/list', [ReservationController::class, 'index'])->name('admin.reservations.list');
     Route::get('/reservations/create', [ReservationController::class, 'create'])->name('admin.reservations.create');
     Route::post('/reservations/create', [ReservationController::class, 'store'])->name('admin.reservations.create');
+    Route::get('/reservations/{id}/edit', [ReservationController::class, 'edit'])->name('admin.reservations.edit');
+    Route::put('/reservations/{id}', [ReservationController::class, 'update'])->name('admin.reservations.update');
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy'])->name('admin.reservations.destroy');
 });
 
 

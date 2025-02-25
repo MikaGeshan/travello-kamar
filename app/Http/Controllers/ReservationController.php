@@ -49,7 +49,7 @@ class ReservationController extends Controller
             'check_in' => 'required|date',
             'check_out' => 'required|date|after:check_in',
             'guests' => 'required|integer|min:1',
-            'total_price' => 'required|integer|min:0',
+            'total_price' => 'required|numeric|min:0',
             'payment_status' => 'required|in:Paid,Pending,Cancelled',
         ]);
 
@@ -78,27 +78,65 @@ class ReservationController extends Controller
         //
     }
 
-    /**
+    /** 
      * Show the form for editing the specified resource.
      */
-    public function edit(Reservation $reservation)
+    public function edit($id)
     {
         //
+        $reservation = Reservation::findOrFail($id);
+        $customers = Customer::all();
+        $rooms = Kamar::all();
+        return Inertia::render('Admin/Reservations/UpdateReservation', [
+            'reservation' => $reservation,
+            'rooms' => $rooms,
+            'customers' => $customers,
+        ]);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Reservation $reservation)
+    public function update(Request $request, $id)
     {
-        //
+        $reservation = Reservation::findOrFail($id);
+
+        $validatedData = $request->validate([
+            'reservation_code' => 'required|string|unique:reservations,reservation_code,' . $reservation->id,
+            'customer_id' => 'required|exists:customers,id',
+            'room_id' => 'required|exists:kamars,id',
+            'check_in' => 'required|date',
+            'check_out' => 'required|date|after:check_in',
+            'guests' => 'required|integer|min:1',
+            'total_price' => 'required|numeric|min:0',
+            'payment_status' => 'required|in:Paid,Pending,Cancelled',
+        ]);
+
+        $reservation->update($validatedData);
+
+        return redirect()->route('admin.reservations.list')->with('success', 'Reservation updated successfully.');
     }
+
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Reservation $reservation)
+    public function destroy($id)
     {
-        //
+        try {
+            $reservation = Reservation::findOrFail($id);
+
+            $room = $reservation->room;
+
+            $reservation->delete();
+
+            if ($room) {
+                $room->update(['status' => 'available']);
+            }
+
+            return redirect()->route('admin.reservations.list')->with('success', 'Reservation deleted successfully and room is now available.');
+        } catch (\Exception $e) {
+            return back()->withErrors(['error' => 'Failed to delete reservation: ' . $e->getMessage()]);
+        }
     }
 }

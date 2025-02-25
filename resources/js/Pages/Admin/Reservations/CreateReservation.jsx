@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useForm } from "@inertiajs/react";
 import Select from "react-select";
 import { FaRegAddressBook } from "react-icons/fa";
@@ -16,7 +16,7 @@ function CreateReservation({ rooms, customers }) {
         guests: "",
         check_in: today,
         check_out: "",
-        total_price: "",
+        total_price: 0,
         payment_status: "Pending",
     });
 
@@ -24,22 +24,6 @@ function CreateReservation({ rooms, customers }) {
         value: customer.id,
         label: customer.name,
     }));
-
-    const handleCustomerChange = (selectedOption) => {
-        setData("customer_id", selectedOption ? selectedOption.value : "");
-    };
-
-    const handleCheckInChange = (e) => {
-        setData("check_in", e.target.value);
-    };
-
-    const handleCheckOutChange = (e) => {
-        setData("check_out", e.target.value);
-    };
-
-    const handleRoomChange = (selectedOption) => {
-        setData("room_id", selectedOption ? selectedOption.value : "");
-    };
 
     const roomOptions = rooms
         .filter((room) => room.status !== "Booked")
@@ -52,32 +36,34 @@ function CreateReservation({ rooms, customers }) {
 
     const calculateTotalPrice = (roomId, checkIn, checkOut) => {
         if (!roomId || !checkIn || !checkOut) return 0;
+
         const selectedRoom = rooms.find((room) => room.id === parseInt(roomId));
         if (!selectedRoom) return 0;
 
         const startDate = new Date(checkIn);
         const endDate = new Date(checkOut);
-        const stayDuration = Math.max(
-            1,
+        if (startDate >= endDate) return 0;
+
+        const stayDuration = Math.ceil(
             (endDate - startDate) / (1000 * 60 * 60 * 24)
         );
-
         return selectedRoom.harga * stayDuration;
     };
 
     useEffect(() => {
-        setData(
-            "total_price",
-            calculateTotalPrice(data.room_id, data.check_in, data.check_out)
+        const total = calculateTotalPrice(
+            data.room_id,
+            data.check_in,
+            data.check_out
         );
-    }, [data.room_id, data.check_in, data.check_out]);
+        setData("total_price", total);
+    }, [data]);
 
     const generateReservationCode = (checkIn, roomId) => {
         if (checkIn && roomId) {
             const selectedRoom = rooms.find(
                 (room) => room.id === parseInt(roomId)
             );
-
             if (!selectedRoom || !selectedRoom.nomor_kamar) return "";
 
             const roomNumber = selectedRoom.nomor_kamar;
@@ -95,40 +81,35 @@ function CreateReservation({ rooms, customers }) {
             "reservation_code",
             generateReservationCode(data.check_in, data.room_id)
         );
-        console.log(data);
     }, [data.check_in, data.room_id]);
 
     const handleSubmit = (e) => {
         e.preventDefault();
-
         const updatedTotalPrice = calculateTotalPrice(
             data.room_id,
             data.check_in,
             data.check_out
         );
         setData("total_price", updatedTotalPrice);
-
-        setTimeout(() => {
-            post("/admin/reservations/create", {
-                onSuccess: () => {
-                    Swal.fire({
-                        title: "Success!",
-                        text: "Reservation created successfully.",
-                        icon: "success",
-                        confirmButtonText: "OK",
-                    });
-                },
-                onError: (errors) => {
-                    console.error("Submission error:", errors);
-                    Swal.fire({
-                        title: "Error!",
-                        text: "Failed to create reservation. Please try again.",
-                        icon: "error",
-                        confirmButtonText: "OK",
-                    });
-                },
-            });
-        }, 100);
+        post("/admin/reservations/create", data, {
+            onSuccess: () => {
+                Swal.fire({
+                    title: "Success!",
+                    text: "Reservation created successfully.",
+                    icon: "success",
+                    confirmButtonText: "OK",
+                });
+            },
+            onError: (errors) => {
+                console.error("Submission error:", errors);
+                Swal.fire({
+                    title: "Error!",
+                    text: "Failed to create reservation. Please try again.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+            },
+        });
     };
 
     return (
@@ -146,6 +127,7 @@ function CreateReservation({ rooms, customers }) {
                         </div>
                         <div className="bg-white shadow-md rounded-lg p-8">
                             <form onSubmit={handleSubmit}>
+                                {/* Reservation Code */}
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
                                         Reservation Code
@@ -157,23 +139,78 @@ function CreateReservation({ rooms, customers }) {
                                         readOnly
                                     />
                                 </div>
+
+                                {/* Room Type (Dipindahkan ke atas Check-in & Check-out) */}
+                                <div className="mb-4">
+                                    <label className="block text-gray-700 text-sm font-bold mb-2">
+                                        Room Type
+                                    </label>
+                                    <Select
+                                        options={roomOptions}
+                                        onChange={(option) =>
+                                            setData(
+                                                "room_id",
+                                                option ? option.value : ""
+                                            )
+                                        }
+                                        isSearchable
+                                    />
+                                </div>
+
+                                {/* Check-in & Check-out */}
+                                <div className="flex space-x-4 mb-4">
+                                    <div className="w-1/2">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                                            Check In
+                                        </label>
+                                        <input
+                                            className="shadow border rounded w-full py-2 px-3 text-gray-700"
+                                            type="date"
+                                            value={data.check_in}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "check_in",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                    <div className="w-1/2">
+                                        <label className="block text-gray-700 text-sm font-bold mb-2">
+                                            Check Out
+                                        </label>
+                                        <input
+                                            className="shadow border rounded w-full py-2 px-3 text-gray-700"
+                                            type="date"
+                                            value={data.check_out}
+                                            onChange={(e) =>
+                                                setData(
+                                                    "check_out",
+                                                    e.target.value
+                                                )
+                                            }
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Customer Name (Dipindahkan ke bawah Check-in & Check-out) */}
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
                                         Customer Name
                                     </label>
                                     <Select
                                         options={customerOptions}
-                                        onChange={handleCustomerChange}
-                                        placeholder="Select / Search Customer"
+                                        onChange={(option) =>
+                                            setData(
+                                                "customer_id",
+                                                option ? option.value : ""
+                                            )
+                                        }
                                         isSearchable
-                                        className="shadow border rounded w-full"
                                     />
-                                    {errors.customer_id && (
-                                        <p className="text-red-500 text-xs">
-                                            {errors.customer_id}
-                                        </p>
-                                    )}
                                 </div>
+
+                                {/* Guests (Dipindahkan ke bawah Customer Name) */}
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
                                         Guests
@@ -187,47 +224,7 @@ function CreateReservation({ rooms, customers }) {
                                         }
                                     />
                                 </div>
-                                <div className="flex space-x-4 mb-4">
-                                    <div className="w-1/2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                                            Check In
-                                        </label>
-                                        <input
-                                            className="shadow border rounded w-full py-2 px-3 text-gray-700"
-                                            type="date"
-                                            value={data.check_in}
-                                            onChange={handleCheckInChange}
-                                        />
-                                    </div>
-                                    <div className="w-1/2">
-                                        <label className="block text-gray-700 text-sm font-bold mb-2">
-                                            Check Out
-                                        </label>
-                                        <input
-                                            className="shadow border rounded w-full py-2 px-3 text-gray-700"
-                                            type="date"
-                                            value={data.check_out}
-                                            onChange={handleCheckOutChange}
-                                        />
-                                    </div>
-                                </div>
-                                <div className="mb-4">
-                                    <label className="block text-gray-700 text-sm font-bold mb-2">
-                                        Room Type
-                                    </label>
-                                    <Select
-                                        options={roomOptions}
-                                        onChange={handleRoomChange}
-                                        placeholder="Select / Search Room"
-                                        isSearchable
-                                        className="shadow border rounded w-full"
-                                    />
-                                    {errors.room_id && (
-                                        <p className="text-red-500 text-xs">
-                                            {errors.room_id}
-                                        </p>
-                                    )}
-                                </div>
+
                                 {/* Total Price */}
                                 <div className="mb-4">
                                     <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -236,40 +233,13 @@ function CreateReservation({ rooms, customers }) {
                                     <input
                                         className="shadow border rounded w-full py-2 px-3 bg-gray-200 text-gray-700"
                                         type="text"
-                                        value={(() => {
-                                            const selectedRoom = rooms.find(
-                                                (room) =>
-                                                    room.id ===
-                                                    parseInt(data.room_id)
-                                            );
-                                            if (
-                                                !selectedRoom ||
-                                                !data.check_in ||
-                                                !data.check_out
-                                            )
-                                                return "Rp 0";
-
-                                            const hargaPerMalam =
-                                                selectedRoom.harga;
-                                            const startDate = new Date(
-                                                data.check_in
-                                            );
-                                            const endDate = new Date(
-                                                data.check_out
-                                            );
-                                            const stayDuration = Math.max(
-                                                1,
-                                                (endDate - startDate) /
-                                                    (1000 * 60 * 60 * 24)
-                                            );
-
-                                            return `Rp ${(
-                                                hargaPerMalam * stayDuration
-                                            ).toLocaleString()}`;
-                                        })()}
+                                        value={`Rp ${new Intl.NumberFormat(
+                                            "id-ID"
+                                        ).format(data.total_price)}`}
                                         readOnly
                                     />
                                 </div>
+
                                 <button
                                     type="submit"
                                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md"

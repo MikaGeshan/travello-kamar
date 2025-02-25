@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 import AdminHeader from "../../../Layouts/AdminHeader";
 import AdminSidebar from "../../../Layouts/AdminSidebar";
-import { Link } from "@inertiajs/react";
+import { Link, router } from "@inertiajs/react";
 import { FaRegAddressBook, FaSearch } from "react-icons/fa";
+import Swal from "sweetalert2";
 
 function ReservationList({ reservations }) {
     const [searchTerm, setSearchTerm] = useState("");
@@ -12,6 +13,36 @@ function ReservationList({ reservations }) {
             .toLowerCase()
             .includes(searchTerm.toLowerCase())
     );
+    const handleDeleteReservation = (reservationId) => {
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, delete it!",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                router.delete(`/admin/reservations/${reservationId}`, {
+                    onSuccess: () => {
+                        Swal.fire(
+                            "Deleted!",
+                            "Reservation has been deleted.",
+                            "success"
+                        );
+                    },
+                    onError: () => {
+                        Swal.fire(
+                            "Error!",
+                            "There was a problem deleting the reservation.",
+                            "error"
+                        );
+                    },
+                });
+            }
+        });
+    };
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
@@ -61,7 +92,9 @@ function ReservationList({ reservations }) {
                                                 className="rounded border-gray-300"
                                             />
                                         </th>
-                                        <th className="p-3">ID</th>
+                                        <th className="p-3">
+                                            Reservation Code
+                                        </th>
                                         <th className="p-3">Customer Name</th>
                                         <th className="p-3">
                                             Room Name / Type
@@ -89,7 +122,9 @@ function ReservationList({ reservations }) {
                                                         />
                                                     </td>
                                                     <td className="p-3">
-                                                        {reservation.id}
+                                                        {
+                                                            reservation.reservation_code
+                                                        }
                                                     </td>
                                                     <td className="p-3">
                                                         {reservation.customer
@@ -141,8 +176,8 @@ function ReservationList({ reservations }) {
                                                             </Link>
                                                             <button
                                                                 onClick={() =>
-                                                                    confirm(
-                                                                        "Are you sure you want to delete this?"
+                                                                    handleDeleteReservation(
+                                                                        reservation.id
                                                                     )
                                                                 }
                                                                 className="text-red-500 hover:underline"
