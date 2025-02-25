@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\AuthController;
@@ -86,6 +87,14 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/rooms/{room}/edit', [KamarController::class, 'edit'])->name('admin.rooms.edit');
     Route::put('/rooms/{room}', [KamarController::class, 'update'])->name('admin.rooms.update');
     Route::delete('/rooms/{room}', [KamarController::class, 'destroy'])->name('admin.rooms.destroy');
+
+    // Reservation Routes
+    Route::get('/reservations/list', [ReservationController::class, 'index'])->name('admin.reservations.list');
+    Route::get('/reservations/create', [ReservationController::class, 'create'])->name('admin.reservations.create');
+    Route::post('/reservations/create', [ReservationController::class, 'store'])->name('admin.reservations.create');
+    Route::get('/reservations/{id}/edit', [ReservationController::class, 'edit'])->name('admin.reservations.edit');
+    Route::put('/reservations/{id}', [ReservationController::class, 'update'])->name('admin.reservations.update');
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy'])->name('admin.reservations.destroy');
 });
 
 

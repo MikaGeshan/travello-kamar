@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Hotel;
 use App\Models\Kamar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
@@ -39,34 +38,47 @@ class KamarController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'nama_kamar' => 'required',
             'jenis_kamar' => 'required|in:Standard Room,Deluxe Room,Suite Room',
             'harga' => 'required|numeric|min:0',
-            'fasilitas' => 'nullable|max:1000',
+            'fasilitas' => 'required|array',
             'status' => 'nullable|in:Available,Booked,Not Available',
-            'gambar_kamar' => 'required|image|mimes:jpeg,png,jpg|max:2048',
         ]);
 
-        try {
-            $gambarPath = null;
+        $validatedData['fasilitas'] = json_encode($validatedData['fasilitas']);
 
-            if ($request->hasFile('gambar_kamar')) {
-                $gambarPath = $request->file('gambar_kamar')->store('gambar_kamar', 'public');
-            }
+        try {
+            $nomorKamar = $this->generateNomorKamar();
 
             $kamar = new Kamar();
-            $kamar->nama_kamar = $validatedData['nama_kamar'];
+            $kamar->nomor_kamar = $nomorKamar;
             $kamar->jenis_kamar = $validatedData['jenis_kamar'];
             $kamar->harga = $validatedData['harga'];
             $kamar->fasilitas = $validatedData['fasilitas'];
             $kamar->status = $validatedData['status'] ?? 'Available';
-            $kamar->gambar_kamar = $gambarPath;
             $kamar->save();
 
             return redirect()->route('admin.rooms.list')->with('success', 'Kamar berhasil ditambahkan.');
         } catch (\Exception $e) {
             return back()->withErrors(['error' => 'Gagal menambahkan kamar: ' . $e->getMessage()]);
         }
+    }
+
+    /**
+     * Fungsi untuk generate nomor kamar secara otomatis
+     */
+    private function generateNomorKamar()
+    {
+        $lastRoom = Kamar::orderBy('id', 'desc')->first();
+
+        if ($lastRoom && preg_match('/TRV-(\d+)[A-Z]/', $lastRoom->nomor_kamar, $matches)) {
+            $newNumber = intval($matches[1]) + 1;
+        } else {
+            $newNumber = 1;
+        }
+
+        $randomChar = 'A';
+
+        return "TRV-{$newNumber}{$randomChar}";
     }
 
     /**
@@ -99,28 +111,15 @@ class KamarController extends Controller
         $kamar = Kamar::findOrFail($id);
 
         $validatedData = $request->validate([
-            'nama_kamar' => 'required',
             'jenis_kamar' => 'required|in:Standard Room,Deluxe Room,Suite Room',
             'harga' => 'required|numeric|min:0',
             'fasilitas' => 'nullable|max:1000',
             'status' => 'nullable|in:Available,Booked,Not Available',
-            'gambar_kamar' => 'nullable|image|mimes:jpeg,png,jpg|max:2048',
         ]);
-
-        if ($request->hasFile('gambar_kamar')) {
-            $gambarPath = $request->file('gambar_kamar')->store('storage/gambar_kamar', options: 'public');
-            $validatedData['gambar_hotel'] = $gambarPath;
-
-            if ($kamar->gambar_kamar) {
-                Storage::disk('public')->delete($kamar->gambar_kamar);
-            }
-        } else {
-            $validatedData['gambar_kamar'] = $kamar->gambar_kamar;
-        }
 
         $kamar->update($validatedData);
 
-        return redirect()->back()->with('success', 'Hotel berhasil diperbarui.');
+        return redirect()->back()->with('success', 'Kamar berhasil diperbarui.');
     }
 
     /**
@@ -131,10 +130,6 @@ class KamarController extends Controller
         try {
             $kamar = Kamar::findOrFail($id);
 
-            if ($kamar->gambar_kamar && file_exists(storage_path('app/public/' . $kamar->gambar_kamar))) {
-                unlink(storage_path('app/public/' . $kamar->gambar_kamar));
-            }
-
             $kamar->delete();
 
             return redirect()->route('admin.rooms.list')->with('success', 'Kamar berhasil dihapus');
@@ -142,6 +137,8 @@ class KamarController extends Controller
             return back()->withErrors(['error' => 'Gagal menghapus kamar: ' . $e->getMessage()]);
         }
     }
+
+
     public function showComponentKamar($id)
     {
         $kamars = Kamar::findOrfail($id);

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, router, usePage } from "@inertiajs/react";
-import AdminHeader from "./../../../Layouts/AdminHeader";
-import AdminSidebar from "./../../../Layouts/AdminSidebar";
+import AdminHeader from "../../../Layouts/AdminHeader";
+import AdminSidebar from "../../../Layouts/AdminSidebar";
 import { FaSearch, FaTrash, FaBed } from "react-icons/fa";
 import Swal from "sweetalert2";
 
@@ -21,11 +21,11 @@ export default function RoomList() {
     };
 
     const handleSelectAll = () => {
-        if (selectedRooms.length === rooms.length) {
-            setSelectedRooms([]);
-        } else {
-            setSelectedRooms(rooms.map((room) => room.id));
-        }
+        setSelectedRooms(
+            selectedRooms.length === rooms.length
+                ? []
+                : rooms.map((room) => room.id)
+        );
     };
 
     const filteredRooms = rooms.filter((room) =>
@@ -37,7 +37,11 @@ export default function RoomList() {
     const start = (currentPage - 1) * perPage;
     const end = Math.min(currentPage * perPage, totalRooms);
 
-    const handlePageChange = (newPage) => setCurrentPage(newPage);
+    const handlePageChange = (newPage) => {
+        if (newPage >= 1 && newPage <= totalPages) {
+            setCurrentPage(newPage);
+        }
+    };
 
     const handlePerPageChange = (event) => {
         setPerPage(parseInt(event.target.value));
@@ -75,116 +79,62 @@ export default function RoomList() {
         });
     };
 
-    const handleDeleteSelectedRooms = () => {
-        if (selectedRooms.length === 0) return;
-
-        Swal.fire({
-            title: "Delete Selected Rooms?",
-            text: `You are about to delete ${selectedRooms.length} room(s)`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete them!",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setSelectedRooms([]);
-                Swal.fire(
-                    "Deleted!",
-                    `${selectedRooms.length} room(s) have been deleted.`,
-                    "success"
-                );
-            }
-        });
-    };
-
-    const formatPrice = (price) => {
-        return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".");
-    };
-
-    const getStatusColor = (status) => {
-        switch (status) {
-            case "Available":
-                return "text-green-500";
-            case "Booked":
-                return "text-yellow-500";
-            case "Not Available":
-                return "text-red-500";
-            default:
-                return "";
-        }
-    };
-
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col">
             <AdminHeader />
             <div className="flex flex-1">
                 <AdminSidebar />
-                <main className="flex-1 p-8 ml-50">
+                <main className="flex-1 p-8">
                     <div className="container mx-auto">
                         <div className="flex justify-between items-center mb-6">
-                            <h1 className="text-2xl font-bold text-gray-800 flex items-center">
-                                <FaBed className="mr-3" /> Room List
-                            </h1>
+                            <div className="flex items-center gap-2">
+                                <FaBed className="w-6 h-6 text-gray-700" />
+                                <h1 className="text-2xl font-bold text-gray-800">
+                                    Room List
+                                </h1>
+                            </div>
                             <Link
-                                href={"/admin/rooms/create"}
-                                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                                href="/admin/rooms/create"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 shadow"
                             >
                                 Add New Room
                             </Link>
                         </div>
-                        <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                            <div className="p-4 border-b">
-                                <div className="flex items-center">
-                                    <input
-                                        type="text"
-                                        placeholder="Search rooms by type"
-                                        value={searchTerm}
-                                        onChange={(e) =>
-                                            setSearchTerm(e.target.value)
-                                        }
-                                        className="w-full px-3 py-2 border rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                                    />
-                                    <button className="bg-blue-500 text-white px-4 py-3 rounded-r-md">
-                                        <FaSearch />
-                                    </button>
-                                </div>
+
+                        {/* SEARCH BAR */}
+                        <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center mb-4">
+                            <div className="flex items-center w-full">
+                                <input
+                                    type="text"
+                                    placeholder="Search rooms by type"
+                                    value={searchTerm}
+                                    onChange={(e) =>
+                                        setSearchTerm(e.target.value)
+                                    }
+                                    className="w-full px-4 py-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                />
+                                <button className="bg-blue-500 text-white px-4 py-2 rounded-r-lg">
+                                    <FaSearch />
+                                </button>
                             </div>
-                            <div className="p-4 bg-gray-50 border-b">
-                                {selectedRooms.length > 0 && (
-                                    <div className="flex items-center animate-fade-in">
-                                        <button
-                                            onClick={handleDeleteSelectedRooms}
-                                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center transition-all duration-200"
-                                        >
-                                            <FaTrash className="mr-2" />
-                                            Delete Selected (
-                                            {selectedRooms.length})
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
-                            <table className="w-full">
+                        </div>
+
+                        {/* TABLE */}
+                        <div className="bg-white rounded-lg shadow p-6">
+                            <table className="w-full border rounded-lg overflow-hidden">
                                 <thead>
-                                    <tr className="bg-white border-b text-left">
-                                        <th className="p-3 w-12">
+                                    <tr className="text-left bg-gray-50 border-b">
+                                        <th className="p-3 w-8">
                                             <input
                                                 type="checkbox"
-                                                className="w-4 h-4 rounded border-gray-300 cursor-pointer"
-                                                checked={
-                                                    selectedRooms.length ===
-                                                    filteredRooms.length
-                                                }
                                                 onChange={handleSelectAll}
                                             />
                                         </th>
-                                        <th className="p-3">ID</th>
-                                        <th className="p-3">Room Name</th>
+                                        <th className="p-3">Room Number</th>
                                         <th className="p-3">Room Type</th>
                                         <th className="p-3">Price</th>
                                         <th className="p-3">Facilities</th>
                                         <th className="p-3">Status</th>
-                                        <th className="p-3">Image</th>
                                         <th className="p-3">Actions</th>
                                     </tr>
                                 </thead>
@@ -194,15 +144,11 @@ export default function RoomList() {
                                         .map((room) => (
                                             <tr
                                                 key={room.id}
-                                                className="border-b"
+                                                className="border-b hover:bg-gray-50 transition"
                                             >
                                                 <td className="p-3">
                                                     <input
                                                         type="checkbox"
-                                                        className="w-4 h-4 rounded border-gray-300 cursor-pointer"
-                                                        checked={selectedRooms.includes(
-                                                            room.id
-                                                        )}
                                                         onChange={() =>
                                                             handleSelectRoom(
                                                                 room.id
@@ -211,114 +157,75 @@ export default function RoomList() {
                                                     />
                                                 </td>
                                                 <td className="p-3">
-                                                    {room.id}
-                                                </td>
-                                                <td className="p-3">
-                                                    {room.nama_kamar}
+                                                    {room.nomor_kamar}
                                                 </td>
                                                 <td className="p-3">
                                                     {room.jenis_kamar}
                                                 </td>
                                                 <td className="p-3">
-                                                    Rp {formatPrice(room.harga)}
+                                                    Rp{" "}
+                                                    {room.harga.toLocaleString()}
                                                 </td>
                                                 <td className="p-3">
-                                                    {room.fasilitas}
-                                                </td>
-                                                <td className={`p-3 ${getStatusColor(room.status)}`}>
-                                                    {room.status}
+                                                    {room.fasilitas || "N/A"}
                                                 </td>
                                                 <td className="p-3">
-                                                    <img
-                                                        src={room.gambar_kamar}
-                                                        alt={room.jenis_kamar}
-                                                        className="w-20 h-20 object-cover rounded-md"
-                                                    />
+                                                    <span
+                                                        className={`px-2 py-1 rounded-full text-sm ${
+                                                            room.status ===
+                                                            "Available"
+                                                                ? "bg-green-100 text-green-800"
+                                                                : room.status ===
+                                                                  "Booked"
+                                                                ? "bg-yellow-100 text-yellow-800"
+                                                                : "bg-red-100 text-red-800"
+                                                        }`}
+                                                    >
+                                                        {room.status}
+                                                    </span>
                                                 </td>
-                                                <td className="p-3 space-x-2">
-                                                    <div className="flex items-center space-x-2">
-                                                        <Link
-                                                            href={`/admin/rooms/${room.id}/edit`}
-                                                            className="text-blue-500 hover:text-blue-700 font-bold"
-                                                        >
-                                                            Edit
-                                                        </Link>
-                                                        <button
-                                                            onClick={() =>
-                                                                handleDeleteRoom(
-                                                                    room.id
-                                                                )
-                                                            }
-                                                            className="text-red-500 hover:text-red-700 font-bold"
-                                                        >
-                                                            Delete
-                                                        </button>
-                                                    </div>
+                                                <td className="p-3 flex gap-2 text-sm">
+                                                    <Link
+                                                        href={`/admin/rooms/${room.id}/edit`}
+                                                        className="text-blue-500 hover:underline"
+                                                    >
+                                                        Edit
+                                                    </Link>
+                                                    <button
+                                                        onClick={() =>
+                                                            handleDeleteRoom(
+                                                                room.id
+                                                            )
+                                                        }
+                                                        className="text-red-500 hover:underline"
+                                                    >
+                                                        Delete
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
                                 </tbody>
                             </table>
-
-                            <div className="flex items-center justify-between p-4">
-                                <span>
-                                    Showing {start + 1} to {end} of {totalRooms}{" "}
-                                    results
-                                </span>
-                                <div className="flex items-center space-x-2">
-                                    <select
-                                        value={perPage}
-                                        onChange={handlePerPageChange}
-                                        className="border p-2 rounded"
-                                    >
-                                        <option value="5">5</option>
-                                        <option value="10">10</option>
-                                        <option value="15">15</option>
+                            <div className="flex items-center justify-between mt-4">
+                                <div className="text-sm text-gray-600">
+                                    Showing 1 to {filteredRooms.length} of{" "}
+                                    {filteredRooms.length} results
+                                </div>
+                                <div className="flex items-center gap-2">
+                                    <select className="border rounded px-2 py-1">
+                                        <option>10</option>
+                                        <option>25</option>
+                                        <option>50</option>
                                     </select>
-                                    <div className="flex items-center space-x-1">
-                                        <button
-                                            disabled={currentPage === 1}
-                                            onClick={() =>
-                                                handlePageChange(
-                                                    currentPage - 1
-                                                )
-                                            }
-                                            className="px-2 py-1 border rounded-l-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-                                        >
-                                            {"<"}
+                                    <div className="flex gap-1">
+                                        <button className="px-3 py-1 border rounded-l-lg bg-gray-200 hover:bg-gray-300">
+                                            &lt;
                                         </button>
-                                        {[...Array(totalPages)].map(
-                                            (_, index) => (
-                                                <button
-                                                    key={index + 1}
-                                                    onClick={() =>
-                                                        handlePageChange(
-                                                            index + 1
-                                                        )
-                                                    }
-                                                    className={`px-3 py-1 border ${
-                                                        currentPage ===
-                                                        index + 1
-                                                            ? "bg-blue-500 text-white"
-                                                            : "bg-gray-200 hover:bg-gray-300"
-                                                    }`}
-                                                >
-                                                    {index + 1}
-                                                </button>
-                                            )
-                                        )}
-                                        <button
-                                            disabled={
-                                                currentPage === totalPages
-                                            }
-                                            onClick={() =>
-                                                handlePageChange(
-                                                    currentPage + 1
-                                                )
-                                            }
-                                            className="px-2 py-1 border rounded-r-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-                                        >
-                                            {">"}
+                                        <button className="px-3 py-1 bg-blue-500 text-white rounded">
+                                            1
+                                        </button>
+                                        <button className="px-3 py-1 border rounded-r-lg bg-gray-200 hover:bg-gray-300">
+                                            &gt;
                                         </button>
                                     </div>
                                 </div>

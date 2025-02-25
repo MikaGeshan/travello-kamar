@@ -54,7 +54,6 @@ export default function Home({ auth, userName }) {
                     <BookNow />
                 </div>
             </div>
-
             <div className="flex flex-col items-center mt-8 mb-8 text-black">
                 <h2 className="text-2xl font-bold mb-4">Travel the world!</h2>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">

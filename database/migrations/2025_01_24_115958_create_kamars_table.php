@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('kamars', function (Blueprint $table) {
             $table->id();
-            $table->string('nama_kamar');
+            $table->string('nomor_kamar');
             $table->enum('jenis_kamar', [
                 'Standard Room',
                 'Deluxe Room',
@@ -25,8 +25,7 @@ return new class extends Migration
                 'Booked',
                 'Not Available'
             ])->default('Available');
-            $table->text('fasilitas');
-            $table->string('gambar_kamar');
+            $table->json('fasilitas');
             $table->timestamps();
         });
     }
