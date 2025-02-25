@@ -15,10 +15,38 @@ function UpdateReservation({ reservation, rooms, customers }) {
         guests: reservation?.guests || "",
         check_in: reservation?.check_in || today,
         check_out: reservation?.check_out || "",
-        total_price: reservation?.total_price || "",
+        total_price: reservation?.total_price || 0,
         payment_status: reservation?.payment_status || "Pending",
     });
 
+    // Fungsi menghitung total harga
+    const calculateTotalPrice = (roomId, checkIn, checkOut) => {
+        if (!roomId || !checkIn || !checkOut) return 0;
+
+        const selectedRoom = rooms.find((room) => room.id === parseInt(roomId));
+        if (!selectedRoom) return 0;
+
+        const startDate = new Date(checkIn);
+        const endDate = new Date(checkOut);
+        if (startDate >= endDate) return 0; // Hindari durasi negatif
+
+        const stayDuration = Math.ceil(
+            (endDate - startDate) / (1000 * 60 * 60 * 24)
+        );
+        return selectedRoom.harga * stayDuration;
+    };
+
+    // Perbarui total_price setiap kali room_id, check_in, atau check_out berubah
+    useEffect(() => {
+        const total = calculateTotalPrice(
+            data.room_id,
+            data.check_in,
+            data.check_out
+        );
+        setData("total_price", total);
+    }, [data.room_id, data.check_in, data.check_out]);
+
+    // Generate kode reservasi
     const generateReservationCode = (checkIn, roomId) => {
         if (!checkIn || !roomId) return "";
 
@@ -34,15 +62,12 @@ function UpdateReservation({ reservation, rooms, customers }) {
         return `${roomPrefix}-${formattedCheckIn}-${roomSuffix}`;
     };
 
+    // Perbarui kode reservasi ketika check_in atau room_id berubah
     useEffect(() => {
-        setData((prevData) => ({
-            ...prevData,
-            reservation_code: generateReservationCode(
-                prevData.check_in,
-                prevData.room_id
-            ),
-        }));
-        console.log(data);
+        setData(
+            "reservation_code",
+            generateReservationCode(data.check_in, data.room_id)
+        );
     }, [data.check_in, data.room_id]);
 
     const handleSubmit = (e) => {
@@ -98,25 +123,12 @@ function UpdateReservation({ reservation, rooms, customers }) {
                                     readOnly
                                 />
 
-                                {/* Customer Selection */}
+                                {/* Room Selection */}
                                 <FormSelect
-                                    label="Customer Name"
-                                    options={customerOptions}
-                                    value={data.customer_id}
-                                    onChange={(val) =>
-                                        setData("customer_id", val)
-                                    }
-                                    isDisabled
-                                />
-
-                                {/* Guests */}
-                                <FormInput
-                                    label="Guests"
-                                    type="number"
-                                    value={data.guests}
-                                    onChange={(e) =>
-                                        setData("guests", e.target.value)
-                                    }
+                                    label="Room Type"
+                                    options={roomOptions}
+                                    value={data.room_id}
+                                    onChange={(val) => setData("room_id", val)}
                                 />
 
                                 {/* Check In & Check Out */}
@@ -139,20 +151,31 @@ function UpdateReservation({ reservation, rooms, customers }) {
                                     />
                                 </div>
 
-                                {/* Room Selection */}
+                                {/* Customer Selection */}
                                 <FormSelect
-                                    label="Room Type"
-                                    options={roomOptions}
-                                    value={data.room_id}
-                                    onChange={(val) => setData("room_id", val)}
+                                    label="Customer Name"
+                                    options={customerOptions}
+                                    value={data.customer_id}
+                                    onChange={(val) =>
+                                        setData("customer_id", val)
+                                    }
+                                    isDisabled
+                                />
+
+                                {/* Guests */}
+                                <FormInput
+                                    label="Guests"
+                                    type="number"
+                                    value={data.guests}
+                                    onChange={(e) =>
+                                        setData("guests", e.target.value)
+                                    }
                                 />
 
                                 {/* Total Price */}
                                 <FormInput
                                     label="Total Price"
-                                    value={`Rp ${(
-                                        data.total_price || 0
-                                    ).toLocaleString()}`}
+                                    value={`Rp ${data.total_price.toLocaleString()}`}
                                     readOnly
                                 />
 
@@ -192,6 +215,7 @@ function UpdateReservation({ reservation, rooms, customers }) {
     );
 }
 
+// Component Input
 const FormInput = ({
     label,
     type = "text",
@@ -215,6 +239,7 @@ const FormInput = ({
     </div>
 );
 
+// Component Select
 const FormSelect = ({
     label,
     options,
