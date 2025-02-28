@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Kamar;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -27,14 +28,18 @@ class ReservationController extends Controller
     public function showReservationForm()
     {
         $rooms = DB::table('kamars')
-            ->select('jenis_kamar', 'harga')
-            ->groupBy('jenis_kamar', 'harga')
+            ->select('jenis_kamar', 'harga', 'nomor_kamar', 'id')
+            ->groupBy('jenis_kamar', 'harga', 'nomor_kamar', 'id')
             ->get();
 
         return Inertia::render('Home/BookingDetails', [
             'rooms' => $rooms,
+            'auth' => [
+                'customer' => Auth::guard('customer')->user(),
+            ],
         ]);
     }
+
 
 
     /**

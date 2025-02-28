@@ -145,4 +145,5 @@ Route::middleware('auth:customer')->group(function () {
 
     // Booking Route
     Route::get('/booking-details', [ReservationController::class, 'showReservationForm']);
+    Route::post('/booking-details', [ReservationController::class, 'store']);
 });
