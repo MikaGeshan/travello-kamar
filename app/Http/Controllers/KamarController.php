@@ -83,10 +83,7 @@ class KamarController extends Controller
      */
     public function show(Kamar $kamar)
     {
-        $rooms = Kamar::all();
-        return Inertia::render('Home/Explore', props: [
-            'rooms' => $rooms,
-        ]);
+        #
     }
 
     /**

@@ -6,6 +6,7 @@ use App\Models\Customer;
 use App\Models\Kamar;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ReservationController extends Controller
@@ -20,6 +21,14 @@ class ReservationController extends Controller
 
         return Inertia::render('Admin/Reservations/ReservationList', [
             'reservations' => $reservations,
+        ]);
+    }
+
+    public function showReservationForm()
+    {
+        $rooms = DB::table('kamars')->select('jenis_kamar')->groupBy('jenis_kamar')->get();
+        return Inertia::render('Home/BookingDetails', [
+            'rooms' => $rooms,
         ]);
     }
 
@@ -78,7 +87,7 @@ class ReservationController extends Controller
         //
     }
 
-    /** 
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)

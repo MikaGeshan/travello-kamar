@@ -4,7 +4,7 @@ import bali from "../../../../public/storage/bali.jpg";
 import singapore from "../../../../public/storage/singapore.jpg";
 import france from "../../../../public/storage/france.jpeg";
 import rome from "../../../../public/storage/rome.jpg";
-import BookNow from "../../Layouts/BookNow";
+import ExploreNow from "../../Layouts/ExploreNow";
 import Header from "./../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
 
@@ -32,7 +32,7 @@ export default function Home({ auth, userName }) {
     }, [lastScrollY]);
 
     return (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-white">
+        <div className="flex flex-col items-center justify-center min-h-screen bg-[#d0ebff]">
             <Header
                 isVisible={isHeaderVisible}
                 auth={auth}
@@ -51,7 +51,7 @@ export default function Home({ auth, userName }) {
                     <h1 className="text-white text-4xl font-bold">
                         Booking Hotel & Penginapan Murah
                     </h1>
-                    <BookNow />
+                    <ExploreNow />
                 </div>
             </div>
             <div className="flex flex-col items-center mt-8 mb-8 text-black">

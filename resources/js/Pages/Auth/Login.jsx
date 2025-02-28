@@ -31,7 +31,7 @@ const Login = () => {
             <div className="w-1/2 bg-blue-400 flex items-center justify-center">
                 <div className="bg-white p-10 rounded-lg shadow-lg w-96">
                     <h2 className="text-2xl font-bold mb-2 text-gray-800">
-                        Sign in to Fly High
+                        Sign in to Travello
                     </h2>
                     <p className="text-md mb-3 text-gray-600">
                         Don't have an account?
