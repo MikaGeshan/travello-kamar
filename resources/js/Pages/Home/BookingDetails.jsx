@@ -12,7 +12,7 @@ function BookingDetails({ userName, auth, rooms }) {
     const today = new Date().toISOString().split("T")[0];
     const [totalDays, setTotalDays] = useState(1);
     const [totalPrice, setTotalPrice] = useState(0);
-    const { data, setData } = useForm({
+    const { data, setData, post, processing } = useForm({
         reservation_code: "",
         customer_id: auth?.customer?.id || "",
         room_id: "",
@@ -22,8 +22,6 @@ function BookingDetails({ userName, auth, rooms }) {
         total_price: 0,
         payment_status: "Pending",
     });
-
-    console.log(data.customer_id);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -43,16 +41,12 @@ function BookingDetails({ userName, auth, rooms }) {
                 ? String(selectedRoom.nomor_kamar)
                 : "XX";
 
-            // Ambil hanya huruf terakhir dari nomor_kamar
             const lastLetters = roomNumber.match(/[A-Za-z]+$/)?.[0] || "";
 
-            // Ambil angka dari nomor_kamar
             const numericPart = roomNumber.match(/\d+/)?.[0] || "XX";
 
-            // Format tanggal check-in: YYYY-MM-DD -> DDMMYYYY
             const checkInDate = data.check_in.split("-").reverse().join("");
 
-            // Gabungkan format yang diinginkan: TRV-{DDMMYYYY}-{ANGKA}{HURUF_TERAKHIR}
             const newReservationCode = `TRV-${checkInDate}-${numericPart}${lastLetters}`;
 
             setData("reservation_code", newReservationCode);
@@ -79,9 +73,9 @@ function BookingDetails({ userName, auth, rooms }) {
     }, [lastScrollY, selectedRoom, data.check_in, data.check_out]);
 
     const selectRoom = (selectedOption) => {
+        console.log("Selected Room Option:", selectedOption);
         setSelectedRoom(selectedOption);
         setData("room_id", selectedOption.value);
-        setData("reservation_code", "");
     };
 
     const uniqueRooms = Array.from(
@@ -117,9 +111,24 @@ function BookingDetails({ userName, auth, rooms }) {
         setData("guests", e.target.value);
     };
 
+    // const submitBook = (e) => {
+    //     e.preventDefault();
+    //     console.log("Data yang dikirim:", data);
+    // };
+
     const submitBook = (e) => {
         e.preventDefault();
-        console.log("Data yang dikirim:", data);
+        console.log(data);
+        post("/booking-details", {
+            preserveScroll: true,
+            onSuccess: () => {
+                alert("Booking berhasil disimpan!");
+            },
+            onError: (errors) => {
+                console.error("Terjadi kesalahan:", errors);
+                alert("Gagal menyimpan booking. Periksa kembali data Anda.");
+            },
+        });
     };
 
     useEffect(() => {

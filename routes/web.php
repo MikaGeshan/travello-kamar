@@ -122,7 +122,7 @@ Route::middleware('auth:customer')->group(function () {
         return Inertia::render('Home/Home', [
             'userName' => Auth::guard('customer')->user()->name,
         ]);
-    });
+    })->name('home');
 
     Route::get('/explore', fn() => Inertia::render('Home/Explore'));
 
@@ -145,5 +145,5 @@ Route::middleware('auth:customer')->group(function () {
 
     // Booking Route
     Route::get('/booking-details', [ReservationController::class, 'showReservationForm']);
-    Route::post('/booking-details', [ReservationController::class, 'store']);
+    Route::post('/booking-details', [ReservationController::class, 'store'])->name('booking-details.store');
 });

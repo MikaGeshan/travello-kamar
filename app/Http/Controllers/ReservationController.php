@@ -85,8 +85,15 @@ class ReservationController extends Controller
 
         Kamar::where('id', $request->room_id)->update(['status' => 'Booked']);
 
-        return redirect()->route('admin.reservations.list')->with('success', 'Reservation created successfully.');
+        if (auth('customer')->check()) {
+            return redirect()->route('home')->with('success', 'Booking berhasil!');
+        } elseif (auth('web')->check()) {
+            return redirect()->route('admin.reservations.list')->with('success', 'Reservation created successfully.');
+        }
+
+        return redirect()->route('login')->with('error', 'Anda harus login untuk melanjutkan.');
     }
+
 
 
     /**
