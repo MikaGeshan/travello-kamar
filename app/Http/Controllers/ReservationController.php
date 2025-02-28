@@ -26,11 +26,16 @@ class ReservationController extends Controller
 
     public function showReservationForm()
     {
-        $rooms = DB::table('kamars')->select('jenis_kamar')->groupBy('jenis_kamar')->get();
+        $rooms = DB::table('kamars')
+            ->select('jenis_kamar', 'harga')
+            ->groupBy('jenis_kamar', 'harga')
+            ->get();
+
         return Inertia::render('Home/BookingDetails', [
             'rooms' => $rooms,
         ]);
     }
+
 
     /**
      * Show the form for creating a new resource.

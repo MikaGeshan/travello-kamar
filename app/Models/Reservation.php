@@ -18,11 +18,13 @@ class Reservation extends Model
         'payment_status',
     ];
 
-    public function Customer () {
+    public function Customer()
+    {
         return $this->belongsTo(Customer::class);
     }
 
-    public function Room () {
+    public function Room()
+    {
         return $this->belongsTo(Kamar::class);
     }
 }
