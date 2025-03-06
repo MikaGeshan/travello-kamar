@@ -1,5 +1,5 @@
-import { Link } from "@inertiajs/react";
 import React from "react";
+import { Link } from "@inertiajs/react";
 import { FaUserCircle } from "react-icons/fa";
 
 const Header = ({ auth, isVisible }) => {
@@ -17,15 +17,18 @@ const Header = ({ auth, isVisible }) => {
             {auth.customer ? (
                 <>
                     <nav className="text-gray-800 font-semibold text-base flex-1 flex justify-end pr-20 space-x-6">
-                        <a href="/" className="hover:text-gray-600">
+                        <Link href="/" className="hover:text-gray-600">
                             Home
-                        </a>
-                        <a href="#" className="hover:text-gray-600">
+                        </Link>
+                        <Link
+                            href="/manage-booking/{id}"
+                            className="hover:text-gray-600"
+                        >
                             Manage Booking
-                        </a>
-                        <a href="#" className="hover:text-gray-600">
+                        </Link>
+                        <Link href="#" className="hover:text-gray-600">
                             Customer Service
-                        </a>
+                        </Link>
                     </nav>
                     <div className="flex items-center space-x-2">
                         <Link

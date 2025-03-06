@@ -28,10 +28,10 @@ export default function Profile({
         }
         post("/profile/update", {
             onSuccess: () => {
-                toast.success("Profile berhasil diperbarui");
+                toast.success("Profile successfully updated");
             },
-            onError: (errors) => {
-                toast.error("Terjadi kesalahan saat memperbarui profile");
+            onError: () => {
+                toast.error("An error occurred while updating profile");
             },
         });
     };

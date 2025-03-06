@@ -146,4 +146,7 @@ Route::middleware('auth:customer')->group(function () {
     // Booking Route
     Route::get('/booking-details', [ReservationController::class, 'showReservationForm']);
     Route::post('/booking-details', [ReservationController::class, 'store'])->name('booking-details.store');
+
+    // Manage Booking Route
+    Route::get('/manage-booking/{id}', [ReservationController::class, 'manageBooking'])->name('manage-booking');
 });

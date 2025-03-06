@@ -3,6 +3,7 @@ import Footer from "../../Layouts/Footer";
 import Header from "../../Layouts/Header";
 import Select from "react-select";
 import { useForm } from "@inertiajs/react";
+import { ToastContainer, toast } from "react-toastify";
 
 function BookingDetails({ userName, auth, rooms }) {
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -118,15 +119,30 @@ function BookingDetails({ userName, auth, rooms }) {
 
     const submitBook = (e) => {
         e.preventDefault();
-        console.log(data);
         post("/booking-details", {
             preserveScroll: true,
             onSuccess: () => {
-                alert("Booking berhasil disimpan!");
+                toast.success("Booking has been saved successfully!", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             },
             onError: (errors) => {
                 console.error("Terjadi kesalahan:", errors);
-                alert("Gagal menyimpan booking. Periksa kembali data Anda.");
+                toast.error("Failed to save booking. Double check your data.", {
+                    position: "top-right",
+                    autoClose: 3000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             },
         });
     };
@@ -243,15 +259,21 @@ function BookingDetails({ userName, auth, rooms }) {
                             <button
                                 type="submit"
                                 onClick={submitBook}
+                                disabled={processing}
                                 className="mt-6 block w-full bg-[#d0ebff] text-black text-center py-3 rounded-md font-bold uppercase text-lg shadow-[4px_4px_0px_#000] border-[3px] border-black hover:bg-[#b0d4f1] transition-all duration-200"
                             >
-                                Finish Order
+                                {processing ? "Finishing..." : "Finish Order"}
                             </button>
                         </div>
                     </div>
                 </div>
             </div>
             <Footer />
+            <ToastContainer
+                position="top-right"
+                autoClose={3000}
+                hideProgressBar={false}
+            />
         </div>
     );
 }

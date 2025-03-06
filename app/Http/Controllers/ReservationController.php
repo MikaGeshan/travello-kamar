@@ -25,6 +25,24 @@ class ReservationController extends Controller
         ]);
     }
 
+    public function manageBooking()
+    {
+        if (!Auth::guard('customer')->check()) {
+            return redirect()->route('login')->with('error', 'Anda harus login sebagai customer.');
+        }
+
+        $customer_id = Auth::guard('customer')->id();
+
+        $reservations = Reservation::with('customer', 'room')
+            ->where('customer_id', operator: $customer_id)
+            ->orderBy('check_in', 'desc')
+            ->get();
+
+        return Inertia::render('Home/ManageBooking', [
+            'reservations' => $reservations,
+        ]);
+    }
+
     public function showReservationForm()
     {
         $rooms = DB::table('kamars')
@@ -86,13 +104,16 @@ class ReservationController extends Controller
         Kamar::where('id', $request->room_id)->update(['status' => 'Booked']);
 
         if (auth('customer')->check()) {
-            return redirect()->route('home')->with('success', 'Booking berhasil!');
+            return redirect()->route('manage-booking', ['id' => $reservation->id])
+                ->with('success', 'Booking berhasil!');
         } elseif (auth('web')->check()) {
-            return redirect()->route('admin.reservations.list')->with('success', 'Reservation created successfully.');
+            return redirect()->route('admin.reservations.list')
+                ->with('success', 'Reservation created successfully.');
         }
 
         return redirect()->route('login')->with('error', 'Anda harus login untuk melanjutkan.');
     }
+
 
 
 
