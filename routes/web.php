@@ -103,64 +103,50 @@ Route::middleware(['auth'])->prefix('admin')->group(function () {
 
 // Welcome Route
 Route::get('/', function () {
-    if (Auth::guard('customer')->check()) {
-        return redirect('/home');
-    }
-    return Inertia::render('Welcome');
+    return Auth::guard('customer')->check()
+        ? redirect('/home')
+        : Inertia::render('Welcome');
 });
 
-// Auth Routes
-Route::get('/login', function () {
-    return Inertia::render('Auth/Login');
-})->name('login');
+// Authentication Routes
+Route::get('/login', fn() => Inertia::render('Auth/Login'))->name('login');
 Route::post('/login', [AuthController::class, 'login']);
-Route::get('/register', function () {
-    return Inertia::render('Auth/Register');
-});
+Route::get('/register', fn() => Inertia::render('Auth/Register'));
 Route::post('/register', [AuthController::class, 'register']);
 Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth:customer')->name('logout');
 
-// Home Routes
-Route::get('/home', function () {
-    $userName = Auth::guard('customer')->user()->name;
-    return Inertia::render('Home/Home', [
-        'userName' => $userName,
-    ]);
-})->middleware('auth:customer');
-Route::get('/explore', function () {
-    return Inertia::render('Home/Explore');
-})->middleware('auth:customer');
+Route::middleware('auth:customer')->group(function () {
 
-// Profile Routes
-Route::get('/profile', function () {
-    $userName = Auth::guard('customer')->user()->name;
-    $userEmail = Auth::guard('customer')->user()->email;
-    $userNomorTelepon = Auth::guard('customer')->user()->nomor_telepon;
-    $userJenisKelamin = Auth::guard('customer')->user()->jeniskelamin;
-    $userTanggalLahir = Auth::guard('customer')->user()->tanggallahir;
-    return Inertia::render('Profile/Profile', [
-        'userName' => $userName,
-        'userEmail' => $userEmail,
-        'userNomorTelepon' => $userNomorTelepon,
-        'userJenisKelamin' => $userJenisKelamin,
-        'userTanggalLahir' => $userTanggalLahir,
-    ]);
-})->middleware('auth:customer');
+    // Home Route
+    Route::get('/home', function () {
+        return Inertia::render('Home/Home', [
+            'userName' => Auth::guard('customer')->user()->name,
+        ]);
+    })->name('home');
 
-Route::post('/profile/update', [ProfileController::class, 'updateProfile'])->middleware('auth:customer');
+    Route::get('/explore', fn() => Inertia::render('Home/Explore'));
 
-Route::get('/profile/password', function () {
-    return Inertia::render('Profile/Password');
-})->middleware('auth:customer');
+    // Profile Route
+    Route::get('/profile', function () {
+        $user = Auth::guard('customer')->user();
+        return Inertia::render('Profile/Profile', [
+            'userName' => $user->name,
+            'userEmail' => $user->email,
+            'userNomorTelepon' => $user->nomor_telepon,
+            'userJenisKelamin' => $user->jeniskelamin,
+            'userTanggalLahir' => $user->tanggallahir,
+        ]);
+    });
 
-Route::post('/profile/update-password', [ProfileController::class, 'updatePassword'])->middleware('auth:customer');
-Route::delete('/profile/delete-account', [ProfileController::class, 'deleteAccount'])->middleware('auth:customer');
+    Route::post('/profile/update', [ProfileController::class, 'updateProfile']);
+    Route::get('/profile/password', fn() => Inertia::render('Profile/Password'));
+    Route::post('/profile/update-password', [ProfileController::class, 'updatePassword']);
+    Route::delete('/profile/delete-account', [ProfileController::class, 'deleteAccount']);
 
+    // Booking Route
+    Route::get('/booking-details', [ReservationController::class, 'showReservationForm']);
+    Route::post('/booking-details', [ReservationController::class, 'store'])->name('booking-details.store');
 
-// Memilih Kamar
-Route::get('/pilihkamar/{id}', [KamarController::class, 'showComponentKamar'])
-    ->middleware('auth:customer');
-
-// Booking
-Route::get('/booking/{id}', [KamarController::class, 'showBooking'])
-    ->middleware('auth:customer');
+    // Manage Booking Route
+    Route::get('/manage-booking/{id}', [ReservationController::class, 'manageBooking'])->name('manage-booking');
+});

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "@inertiajs/react";
 
-function BookNow() {
+function ExploreNow() {
     return (
         <div className="mt-8 p-6 w-full max-w-4xl">
             <div className="flex justify-center mt-6">
@@ -15,7 +15,7 @@ function BookNow() {
                     active:translate-x-[2px] active:translate-y-[2px] active:shadow-[0px_0px_0px_rgba(0,0,0,1)]"
                 >
                     <span className="flex items-center justify-center w-full">
-                        Book Now
+                        Explore Now
                     </span>
                 </Link>
             </div>
@@ -23,4 +23,4 @@ function BookNow() {
     );
 }
 
-export default BookNow;
+export default ExploreNow;

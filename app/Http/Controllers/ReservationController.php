@@ -6,6 +6,8 @@ use App\Models\Customer;
 use App\Models\Kamar;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class ReservationController extends Controller
@@ -22,6 +24,41 @@ class ReservationController extends Controller
             'reservations' => $reservations,
         ]);
     }
+
+    public function manageBooking()
+    {
+        if (!Auth::guard('customer')->check()) {
+            return redirect()->route('login')->with('error', 'Anda harus login sebagai customer.');
+        }
+
+        $customer_id = Auth::guard('customer')->id();
+
+        $reservations = Reservation::with('customer', 'room')
+            ->where('customer_id', operator: $customer_id)
+            ->orderBy('check_in', 'desc')
+            ->get();
+
+        return Inertia::render('Home/ManageBooking', [
+            'reservations' => $reservations,
+        ]);
+    }
+
+    public function showReservationForm()
+    {
+        $rooms = DB::table('kamars')
+            ->select('jenis_kamar', 'harga', 'nomor_kamar', 'id')
+            ->groupBy('jenis_kamar', 'harga', 'nomor_kamar', 'id')
+            ->get();
+
+        return Inertia::render('Home/BookingDetails', [
+            'rooms' => $rooms,
+            'auth' => [
+                'customer' => Auth::guard('customer')->user(),
+            ],
+        ]);
+    }
+
+
 
     /**
      * Show the form for creating a new resource.
@@ -66,8 +103,18 @@ class ReservationController extends Controller
 
         Kamar::where('id', $request->room_id)->update(['status' => 'Booked']);
 
-        return redirect()->route('admin.reservations.list')->with('success', 'Reservation created successfully.');
+        if (auth('customer')->check()) {
+            return redirect()->route('manage-booking', ['id' => $reservation->id])
+                ->with('success', 'Booking berhasil!');
+        } elseif (auth('web')->check()) {
+            return redirect()->route('admin.reservations.list')
+                ->with('success', 'Reservation created successfully.');
+        }
+
+        return redirect()->route('login')->with('error', 'Anda harus login untuk melanjutkan.');
     }
+
+
 
 
     /**
@@ -78,7 +125,7 @@ class ReservationController extends Controller
         //
     }
 
-    /** 
+    /**
      * Show the form for editing the specified resource.
      */
     public function edit($id)

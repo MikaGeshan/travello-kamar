@@ -51,7 +51,7 @@ const Register = () => {
                 <div className="bg-white p-10 rounded-lg shadow-lg w-96">
                     <form onSubmit={handleSubmit}>
                         <h2 className="text-2xl font-bold mb-2 text-gray-800">
-                            Register to FlyHigh
+                            Register to Travello
                         </h2>
                         <p className="text-md mb-3 text-gray-600">
                             Already have an account?

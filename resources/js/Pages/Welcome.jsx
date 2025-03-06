@@ -4,9 +4,9 @@ import bali from "../../../public/storage/bali.jpg";
 import singapore from "../../../public/storage/singapore.jpg";
 import france from "../../../public/storage/france.jpeg";
 import rome from "../../../public/storage/rome.jpg";
-import BookNow from "../Layouts/BookNow";
 import Header from "./../Layouts/Header";
 import Footer from "../Layouts/Footer";
+import ExploreNow from "../Layouts/ExploreNow";
 
 export default function Welcome({ auth }) {
     const [isHeaderVisible, setIsHeaderVisible] = useState(true);
@@ -47,7 +47,7 @@ export default function Welcome({ auth }) {
                     <h1 className="text-white text-4xl font-bold">
                         Booking Hotel & Penginapan Murah
                     </h1>
-                    <BookNow />
+                    <ExploreNow />
                 </div>
             </div>
             <div className="flex flex-col items-center mt-8 mb-8 text-black">

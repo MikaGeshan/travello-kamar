@@ -14,10 +14,7 @@ class KamarController extends Controller
      */
     public function index()
     {
-        $rooms = Kamar::all()->map(function ($room) {
-            $room->gambar_kamar = asset('storage/' . $room->gambar_kamar);
-            return $room;
-        });
+        $rooms = Kamar::all();
 
         return Inertia::render('Admin/Rooms/RoomList', [
             'rooms' => $rooms,
@@ -86,11 +83,7 @@ class KamarController extends Controller
      */
     public function show(Kamar $kamar)
     {
-        $kamar->gambar_kamar = asset('storage/' . $kamar->gambar_kamar);
-
-        return response()->json([
-            'data' => $kamar,
-        ]);
+        #
     }
 
     /**
