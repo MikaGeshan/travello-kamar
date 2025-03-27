@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import Header from "../../Layouts/Header";
 import Footer from "../../Layouts/Footer";
-import Standard from "../../../../public/storage/standard.jpg";
-import Deluxe from "../../../../public/storage/deluxe.jpg";
-import Suite from "../../../../public/storage/suite.jpg";
+import Standard from "../../../../public/storage/standard.png";
+import Deluxe from "../../../../public/storage/deluxe.png";
+import Suite from "../../../../public/storage/suite.png";
 import { Link } from "@inertiajs/react";
 
 export default function Explore({ userName, auth }) {

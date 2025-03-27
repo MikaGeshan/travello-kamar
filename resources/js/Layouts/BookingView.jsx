@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { QRCodeCanvas } from "qrcode.react";
+import { FiUser } from "react-icons/fi";
+import { jsPDF } from "jspdf";
 
 function BookingView({
     reservation_code,
@@ -9,67 +10,50 @@ function BookingView({
     total_price,
     payment_status,
 }) {
-    const [isOpen, setIsOpen] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const openModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
+
+    const downloadTicket = () => {
+        const doc = new jsPDF();
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(20);
+        doc.text("Booking Ticket", 20, 20);
+
+        doc.setFontSize(12);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Reservation Code: ${reservation_code}`, 20, 40);
+        doc.text(`Check-in: ${check_in}`, 20, 50);
+        doc.text(`Check-out: ${check_out}`, 20, 60);
+        doc.text(`Guests: ${guests}`, 20, 70);
+        doc.text(`Total Price: $${total_price}`, 20, 80);
+        doc.text(`Payment Status: ${payment_status}`, 20, 90);
+
+        doc.save(`Ticket_${reservation_code}.pdf`);
+    };
 
     return (
-        <div
-            className={`relative bg-white shadow-xl rounded-3xl p-10 border-4 border-gray-400 w-full max-w-2xl overflow-hidden cursor-pointer transition-transform duration-500`}
-            onClick={() => setIsOpen(!isOpen)}
-        >
-            {/* ✂ Bagian Atas (Lingkaran Sobekan Kiri & Kanan) */}
-            <div className="absolute -top-4 left-0 right-0 flex justify-between">
-                <div className="w-8 h-8 bg-[#d0ebff] rounded-full"></div>
-                <div className="w-8 h-8 bg-[#d0ebff] rounded-full"></div>
-            </div>
-
-            {/* 🏷️ Bagian Tiket */}
-            <div className="flex justify-between items-center">
-                {/* 🎫 Bagian Kiri */}
-                <div>
-                    <p className="text-gray-500 text-sm uppercase font-bold">
-                        Reservation Code
-                    </p>
-                    <p className="text-blue-600 font-extrabold text-3xl">
+        <>
+            <div className="bg-white shadow-lg rounded-l p-4 w-full border border-gray-300 mx-auto flex items-center justify-between">
+                <div className="flex flex-col">
+                    <h2 className="text-xl font-extrabold text-gray-900">
                         {reservation_code}
-                    </p>
-
-                    <p className="text-gray-500 text-sm mt-4 uppercase font-bold">
-                        Check-in
-                    </p>
-                    <p className="text-black font-semibold text-xl">
-                        {check_in}
-                    </p>
-
-                    <p className="text-gray-500 text-sm mt-4 uppercase font-bold">
-                        Check-out
-                    </p>
-                    <p className="text-black font-semibold text-xl">
-                        {check_out}
-                    </p>
-                </div>
-
-                {/* ✂ Garis Putus-putus Tengah */}
-                <div className="h-32 border-l-4 border-dashed mx-10"></div>
-
-                {/* 🎟️ Bagian Kanan */}
-                <div className="text-right">
-                    <p className="text-gray-500 text-sm uppercase font-bold">
-                        Guests
-                    </p>
-                    <p className="text-black font-semibold text-xl">{guests}</p>
-
-                    <p className="text-gray-500 text-sm mt-4 uppercase font-bold">
-                        Total Price
-                    </p>
-                    <p className="text-black font-extrabold text-2xl">
-                        Rp {total_price.toLocaleString()}
-                    </p>
-
-                    <p className="text-gray-500 text-sm mt-4 uppercase font-bold">
-                        Payment Status
-                    </p>
+                    </h2>
+                    <div className="flex items-center text-gray-700 mt-1">
+                        <FiUser className="mr-2 text-gray-500 text-xl" />
+                        <span className="text-md font-medium">
+                            Tamu ({guests})
+                        </span>
+                    </div>
+                    <p className="text-md text-gray-500 mt-1">{check_in}</p>
                     <p
-                        className={`font-extrabold text-2xl ${
+                        className={`text-lg font-bold mt-2 ${
                             payment_status === "Paid"
                                 ? "text-green-500"
                                 : "text-yellow-500"
@@ -78,34 +62,69 @@ function BookingView({
                         {payment_status}
                     </p>
                 </div>
+                <button
+                    onClick={openModal}
+                    className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full shadow-md"
+                >
+                    View
+                </button>
             </div>
 
-            {/* ✂ Bagian Bawah (Lingkaran Sobekan Kiri & Kanan) */}
-            <div className="absolute -bottom-4 left-0 right-0 flex justify-between">
-                <div className="w-8 h-8 bg-[#d0ebff] rounded-full"></div>
-                <div className="w-8 h-8 bg-[#d0ebff] rounded-full"></div>
-            </div>
+            {isModalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                    <div className="bg-white rounded-lg shadow-lg p-6 w-full max-w-lg">
+                        <h2 className="text-2xl font-bold text-gray-800 mb-4">
+                            Ticket Details
+                        </h2>
+                        <p className="text-md text-gray-700">
+                            <strong>Reservation Code:</strong>{" "}
+                            {reservation_code}
+                        </p>
+                        <p className="text-md text-gray-700">
+                            <strong>Check-in:</strong> {check_in}
+                        </p>
+                        <p className="text-md text-gray-700">
+                            <strong>Check-out:</strong> {check_out}
+                        </p>
+                        <p className="text-md text-gray-700">
+                            <strong>Guests:</strong> {guests}
+                        </p>
+                        <p className="text-md text-gray-700">
+                            <strong>Total Price:</strong>{" "}
+                            {new Intl.NumberFormat("id-ID", {
+                                style: "currency",
+                                currency: "IDR",
+                                minimumFractionDigits: 0,
+                            }).format(total_price)}
+                        </p>
+                        <p
+                            className={`text-lg font-bold mt-2 ${
+                                payment_status === "Paid"
+                                    ? "text-green-500"
+                                    : "text-yellow-500"
+                            }`}
+                        >
+                            <strong>Payment Status:</strong> {payment_status}
+                        </p>
 
-            {/* 🛠️ Bagian QR Code (Muncul Saat Tiket Dibuka) */}
-            <div
-                className={`mt-6 transition-opacity duration-500 ${
-                    isOpen ? "opacity-100 max-h-40" : "opacity-0 max-h-0"
-                }`}
-            >
-                <p className="text-center text-gray-500 text-sm uppercase font-bold">
-                    Scan QR Code
-                </p>
-                <div className="flex justify-center mt-2">
-                    <QRCodeCanvas
-                        value={reservation_code}
-                        size={128}
-                        bgColor="#ffffff"
-                        fgColor="#000000"
-                        level="H"
-                    />
+                        <div className="flex justify-end mt-6 space-x-4">
+                            <button
+                                onClick={closeModal}
+                                className="bg-gray-400 hover:bg-gray-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md"
+                            >
+                                Close
+                            </button>
+                            <button
+                                onClick={downloadTicket}
+                                className="bg-teal-500 hover:bg-teal-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md"
+                            >
+                                Download Ticket
+                            </button>
+                        </div>
+                    </div>
                 </div>
-            </div>
-        </div>
+            )}
+        </>
     );
 }
 

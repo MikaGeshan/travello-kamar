@@ -27,7 +27,6 @@ ChartJS.register(
 export default function Dashboard() {
     const { auth } = usePage().props;
 
-    // Data dummy
     const roomStats = {
         labels: ["Deluxe", "Suite", "Standard"],
         datasets: [

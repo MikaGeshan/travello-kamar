@@ -34,34 +34,42 @@ const Register = () => {
     };
 
     return (
-        <div className="flex h-screen">
+        <div className="flex flex-col md:flex-row h-screen">
             <ToastContainer />
-            <div className="w-1/2 bg-white flex items-center justify-center">
-                <div className="text-center flex flex-col items-center">
-                    <FiHome className="mb-2 text-3xl" />
-                    <h1 className="text-4xl font-bold text-blue-500 mb-2">
-                        Travello
-                    </h1>
-                    <p className="text-gray-600">
+
+            {/* Bagian Kiri (Branding) */}
+            <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-8">
+                <div className="text-center">
+                    <div className="flex items-center justify-center gap-2">
+                        <FiHome className="text-4xl text-blue-500" />
+                        <h1 className="text-4xl font-bold text-blue-500">
+                            Travello
+                        </h1>
+                    </div>
+                    <p className="text-gray-600 text-lg mt-2">
                         Kenyamanan Tanpa Batas, Pengalaman Tak Terbatas
                     </p>
                 </div>
             </div>
-            <div className="w-1/2 bg-blue-400 flex items-center justify-center">
-                <div className="bg-white p-10 rounded-lg shadow-lg w-96">
+
+            {/* Bagian Kanan (Form Register) */}
+            <div className="w-full md:w-1/2 bg-blue-400 flex items-center justify-center p-8">
+                <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg w-full max-w-md">
                     <form onSubmit={handleSubmit}>
-                        <h2 className="text-2xl font-bold mb-2 text-gray-800">
+                        <h2 className="text-2xl font-bold mb-2 text-gray-800 text-center">
                             Register to Travello
                         </h2>
-                        <p className="text-md mb-3 text-gray-600">
+                        <p className="text-md mb-3 text-gray-600 text-center">
                             Already have an account?
                             <Link
                                 href="/login"
-                                className="text-gray-400 hover:underline ml-1"
+                                className="text-blue-400 hover:underline ml-1"
                             >
                                 Sign in now!
                             </Link>
                         </p>
+
+                        {/* Input Name */}
                         <div className="mb-4">
                             <label
                                 htmlFor="name"
@@ -76,7 +84,7 @@ const Register = () => {
                                 onChange={(e) =>
                                     setData("name", e.target.value)
                                 }
-                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm"
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-400 focus:border-blue-400"
                                 required
                             />
                             {errors.name && (
@@ -85,6 +93,8 @@ const Register = () => {
                                 </span>
                             )}
                         </div>
+
+                        {/* Input Email */}
                         <div className="mb-4">
                             <label
                                 htmlFor="email"
@@ -99,7 +109,7 @@ const Register = () => {
                                 onChange={(e) =>
                                     setData("email", e.target.value)
                                 }
-                                className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm"
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-400 focus:border-blue-400"
                                 required
                             />
                             {errors.email && (
@@ -108,6 +118,8 @@ const Register = () => {
                                 </span>
                             )}
                         </div>
+
+                        {/* Input Password */}
                         <div className="mb-4">
                             <label
                                 htmlFor="password"
@@ -123,7 +135,7 @@ const Register = () => {
                                     onChange={(e) =>
                                         setData("password", e.target.value)
                                     }
-                                    className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2 pr-10 focus:ring-blue-400 focus:border-blue-400"
                                     required
                                 />
                                 <button
@@ -131,7 +143,7 @@ const Register = () => {
                                     onClick={() =>
                                         setShowPassword(!showPassword)
                                     }
-                                    className="absolute inset-y-0 right-0 flex items-center pr-3"
+                                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
                                 >
                                     {showPassword ? <FiEye /> : <FiEyeOff />}
                                 </button>
@@ -142,6 +154,8 @@ const Register = () => {
                                 </span>
                             )}
                         </div>
+
+                        {/* Input Confirm Password */}
                         <div className="mb-4">
                             <label
                                 htmlFor="password_confirmation"
@@ -164,7 +178,7 @@ const Register = () => {
                                             e.target.value
                                         )
                                     }
-                                    className="mt-1 p-1 text-sm block w-full border rounded-md shadow-sm "
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2 pr-10 focus:ring-blue-400 focus:border-blue-400"
                                     required
                                 />
                                 <button
@@ -174,7 +188,7 @@ const Register = () => {
                                             !showConfirmPassword
                                         )
                                     }
-                                    className="absolute inset-y-0 right-0 flex items-center pr-3"
+                                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
                                 >
                                     {showConfirmPassword ? (
                                         <FiEye />
@@ -189,7 +203,9 @@ const Register = () => {
                                 </span>
                             )}
                         </div>
-                        <div className="mb-4">
+
+                        {/* Checkbox Agreement */}
+                        <div className="mb-4 flex items-center">
                             <input
                                 type="checkbox"
                                 id="agreement"
@@ -204,12 +220,13 @@ const Register = () => {
                                 I agree to the terms and conditions
                             </label>
                         </div>
+
                         <button
                             type="submit"
-                            className="bg-blue-400 text-white font-bold py-2 px-4 rounded"
+                            className="w-full bg-blue-500 text-white font-bold py-2 rounded-md transition duration-300 hover:bg-blue-600"
                             disabled={processing}
                         >
-                            Register
+                            {processing ? "Registering..." : "Register"}
                         </button>
                     </form>
                 </div>

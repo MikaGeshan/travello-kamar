@@ -225,17 +225,6 @@ export default function AdminSidebar() {
                             </li>
                         </>
                     )}
-                    <li>
-                        <Link
-                            href="/admin/settings"
-                            className="flex items-center space-x-3 p-3 hover:bg-gray-100 rounded-lg transition-colors duration-200"
-                        >
-                            <span className="text-xl text-gray-600">
-                                <FaCog />
-                            </span>
-                            <span className="font-medium">Settings</span>
-                        </Link>
-                    </li>
                 </ul>
             </nav>
         </div>

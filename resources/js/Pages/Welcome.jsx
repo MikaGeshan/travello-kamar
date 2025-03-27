@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
-import bghotel from "../../../public/storage/bghotel.jpg";
+import bghotel from "../../../public/storage/bghotel.png";
 import bali from "../../../public/storage/bali.jpg";
 import singapore from "../../../public/storage/singapore.jpg";
-import france from "../../../public/storage/france.jpeg";
+import france from "../../../public/storage/france.jpg";
 import rome from "../../../public/storage/rome.jpg";
 import Header from "./../Layouts/Header";
 import Footer from "../Layouts/Footer";
@@ -15,11 +15,7 @@ export default function Welcome({ auth }) {
     const imageScroll = () => {
         if (typeof window !== "undefined") {
             const scrollY = window.scrollY;
-            if (scrollY > lastScrollY) {
-                setIsHeaderVisible(false);
-            } else {
-                setIsHeaderVisible(true);
-            }
+            setIsHeaderVisible(scrollY <= lastScrollY);
             setLastScrollY(scrollY);
         }
     };
@@ -35,73 +31,41 @@ export default function Welcome({ auth }) {
         <div className="flex flex-col items-center justify-center min-h-screen bg-white">
             <Header isVisible={isHeaderVisible} auth={auth} />
             <div
-                className="relative w-full min-h-[90vh] md:min-h-[100vh] flex flex-col items-center justify-center"
-                style={{
-                    backgroundImage: `url(${bghotel})`,
-                    backgroundSize: "100% 100%",
-                    backgroundPosition: "center",
-                    backgroundRepeat: "no-repeat",
-                }}
+                className="relative w-full h-[80vh] md:h-[100vh] flex flex-col items-center justify-center bg-cover bg-center"
+                style={{ backgroundImage: `url(${bghotel})` }}
             >
-                <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center py-20 bg-black bg-opacity-50">
-                    <h1 className="text-white text-4xl font-bold">
+                <div className="absolute top-0 left-0 w-full h-full flex flex-col justify-center items-center text-center p-6 md:p-20 bg-black bg-opacity-50">
+                    <h1 className="text-white text-3xl md:text-5xl font-bold leading-tight">
                         Booking Hotel & Penginapan Murah
                     </h1>
                     <ExploreNow />
                 </div>
             </div>
-            <div className="flex flex-col items-center mt-8 mb-8 text-black">
-                <h2 className="text-2xl font-bold mb-4">Travel the world!</h2>
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                    <div className="rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 bg-white">
-                        <img
-                            src={bali}
-                            alt="Bali"
-                            className="w-full h-48 object-cover"
-                        />
-                        <div className="p-4">
-                            <h3 className="font-bold">Bali</h3>
-                            <p>Indonesia</p>
+            <div className="flex flex-col items-center mt-8 mb-8 text-black w-full px-4">
+                <h2 className="text-2xl md:text-3xl font-bold mb-6">Travel the world!</h2>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 w-full max-w-6xl">
+                    {[
+                        { img: bali, title: "Bali", location: "Indonesia" },
+                        { img: singapore, title: "Merlion", location: "Singapore" },
+                        { img: france, title: "Paris", location: "France" },
+                        { img: rome, title: "Rome", location: "Italy" },
+                    ].map((place, index) => (
+                        <div key={index} className="rounded-lg overflow-hidden shadow-lg transition-transform duration-300 hover:scale-105 bg-white">
+                            <img
+                                src={place.img}
+                                alt={place.title}
+                                className="w-full h-48 sm:h-56 md:h-64 object-cover"
+                            />
+                            <div className="p-4 text-center">
+                                <h3 className="font-bold text-lg md:text-xl">{place.title}</h3>
+                                <p className="text-sm md:text-base text-gray-600">{place.location}</p>
+                            </div>
                         </div>
-                    </div>
-                    <div className="rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 bg-white">
-                        <img
-                            src={singapore}
-                            alt="Merlion"
-                            className="w-full h-48 object-cover"
-                        />
-                        <div className="p-4">
-                            <h3 className="font-bold">Merlion</h3>
-                            <p>Singapore</p>
-                        </div>
-                    </div>
-                    <div className="rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 bg-white">
-                        <img
-                            src={france}
-                            alt="Paris"
-                            className="w-full h-48 object-cover"
-                        />
-                        <div className="p-4">
-                            <h3 className="font-bold">Paris</h3>
-                            <p>France</p>
-                        </div>
-                    </div>
-                    <div className="rounded-lg overflow-hidden shadow-lg transform transition-transform duration-300 hover:scale-105 bg-white">
-                        <img
-                            src={rome}
-                            alt="Rome"
-                            className="w-full h-48 object-cover"
-                        />
-                        <div className="p-4">
-                            <h3 className="font-bold">Rome</h3>
-                            <p>Italy</p>
-                        </div>
-                    </div>
+                    ))}
                 </div>
             </div>
-            <div className="w-screen">
-                <Footer />
-            </div>
+            <Footer />
         </div>
     );
 }

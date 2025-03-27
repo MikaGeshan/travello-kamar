@@ -16,33 +16,34 @@ const Login = () => {
     };
 
     return (
-        <div className="flex h-screen">
-            <div className="w-1/2 bg-white flex items-center justify-center">
-                <div className="text-center flex flex-col items-center">
-                    <FiHome className="mb-2 text-3xl" />
-                    <h1 className="text-4xl font-bold text-blue-500 mb-2">
-                        Travello
-                    </h1>
-                    <p className="text-gray-600">
+        <div className="flex flex-col md:flex-row h-screen">
+            <div className="w-full md:w-1/2 bg-white flex items-center justify-center p-8">
+                <div className="text-center">
+                    <div className="flex items-center justify-center gap-2">
+                        <FiHome className="text-4xl text-blue-500" />
+                        <h1 className="text-4xl font-bold text-blue-500">
+                            Travello
+                        </h1>
+                    </div>
+                    <p className="text-gray-600 text-lg mt-2">
                         Kenyamanan Tanpa Batas, Pengalaman Tak Terbatas
                     </p>
                 </div>
             </div>
-            <div className="w-1/2 bg-blue-400 flex items-center justify-center">
-                <div className="bg-white p-10 rounded-lg shadow-lg w-96">
-                    <h2 className="text-2xl font-bold mb-2 text-gray-800">
+            <div className="w-full md:w-1/2 bg-blue-400 flex items-center justify-center p-8">
+                <div className="bg-white p-6 md:p-10 rounded-lg shadow-lg w-full max-w-md">
+                    <h2 className="text-2xl font-bold mb-2 text-gray-800 text-center">
                         Sign in to Travello
                     </h2>
-                    <p className="text-md mb-3 text-gray-600">
+                    <p className="text-md mb-3 text-gray-600 text-center">
                         Don't have an account?
                         <Link
                             href="/register"
-                            className="text-gray-400 hover:underline ml-1"
+                            className="text-blue-400 hover:underline ml-1"
                         >
                             Register
                         </Link>
                     </p>
-
                     <form onSubmit={handleSubmit}>
                         <div className="mb-4">
                             <label
@@ -58,11 +59,11 @@ const Login = () => {
                                 onChange={(e) =>
                                     setData("email", e.target.value)
                                 }
-                                className="mt-1 block w-full border rounded-md p-2"
+                                className="mt-1 block w-full border border-gray-300 rounded-md p-2 focus:ring-blue-400 focus:border-blue-400"
                                 required
                             />
                             {errors.email && (
-                                <span className="text-red-500">
+                                <span className="text-red-500 text-sm">
                                     {errors.email}
                                 </span>
                             )}
@@ -82,7 +83,7 @@ const Login = () => {
                                     onChange={(e) =>
                                         setData("password", e.target.value)
                                     }
-                                    className="mt-1 block w-full border rounded-md p-2"
+                                    className="mt-1 block w-full border border-gray-300 rounded-md p-2 pr-10 focus:ring-blue-400 focus:border-blue-400"
                                     required
                                 />
                                 <button
@@ -90,21 +91,20 @@ const Login = () => {
                                     onClick={() =>
                                         setShowPassword(!showPassword)
                                     }
-                                    className="absolute inset-y-0 right-0 flex items-center pr-3"
+                                    className="absolute inset-y-0 right-3 flex items-center text-gray-500 hover:text-gray-700"
                                 >
                                     {showPassword ? <FiEye /> : <FiEyeOff />}
                                 </button>
                             </div>
                             {errors.password && (
-                                <span className="text-red-500">
+                                <span className="text-red-500 text-sm">
                                     {errors.password}
                                 </span>
                             )}
                         </div>
-
                         <button
                             type="submit"
-                            className={`w-full bg-blue-400 text-white font-bold py-2 rounded-md ${
+                            className={`w-full bg-blue-500 text-white font-bold py-2 rounded-md transition duration-300 hover:bg-blue-600 ${
                                 processing
                                     ? "opacity-50 cursor-not-allowed"
                                     : ""
