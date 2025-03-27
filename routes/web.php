@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -27,9 +28,10 @@ Route::post('/admin/logout', [AdminController::class, 'logout'])->name('admin.lo
 // Admin Dashboard
 Route::middleware(['auth'])->prefix('admin')->group(function () {
     Route::get('/dashboard', function () {
-        Log::info('Dashboard route hit');
         return Inertia::render('Admin/Dashboard');
     })->name('admin.dashboard');
+
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
 
     // User Routes
     Route::get('/users/list', function () {

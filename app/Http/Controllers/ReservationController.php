@@ -114,9 +114,6 @@ class ReservationController extends Controller
         return redirect()->route('login')->with('error', 'Anda harus login untuk melanjutkan.');
     }
 
-
-
-
     /**
      * Display the specified resource.
      */

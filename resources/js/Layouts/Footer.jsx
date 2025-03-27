@@ -4,7 +4,7 @@ import tokopedia from "../../../public/storage/logo-tokopedia.png";
 import mastercard from "../../../public/storage/mastercard.png";
 import bca from "../../../public/storage/bca.png";
 import telkomsel from "../../../public/storage/telkomsel.png";
-import bri from "../../../public/storage/Bank BRI Logo.png";
+import bri from "../../../public/storage/bri.png";
 import mandiri from "../../../public/storage/mandiri.png";
 import sekolah from "../../../storage/app/public/sekolah.png";
 import { FaInstagram, FaFacebook, FaYoutube, FaLinkedin } from "react-icons/fa";
