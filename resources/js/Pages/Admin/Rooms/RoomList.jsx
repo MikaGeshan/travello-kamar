@@ -2,31 +2,14 @@ import React, { useState } from "react";
 import { Link, router, usePage } from "@inertiajs/react";
 import AdminHeader from "../../../Layouts/AdminHeader";
 import AdminSidebar from "../../../Layouts/AdminSidebar";
-import { FaSearch, FaTrash, FaBed } from "react-icons/fa";
+import { FaSearch, FaBed } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 export default function RoomList() {
     const { rooms = [] } = usePage().props;
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedRooms, setSelectedRooms] = useState([]);
     const [searchTerm, setSearchTerm] = useState("");
-
-    const handleSelectRoom = (roomId) => {
-        setSelectedRooms((prev) =>
-            prev.includes(roomId)
-                ? prev.filter((id) => id !== roomId)
-                : [...prev, roomId]
-        );
-    };
-
-    const handleSelectAll = () => {
-        setSelectedRooms(
-            selectedRooms.length === rooms.length
-                ? []
-                : rooms.map((room) => room.id)
-        );
-    };
 
     const filteredRooms = rooms.filter((room) =>
         room.jenis_kamar.toLowerCase().includes(searchTerm.toLowerCase())
@@ -101,7 +84,6 @@ export default function RoomList() {
                             </Link>
                         </div>
 
-                        {/* SEARCH BAR */}
                         <div className="bg-white rounded-lg shadow p-4 flex justify-between items-center mb-4">
                             <div className="flex items-center w-full">
                                 <input
@@ -119,17 +101,10 @@ export default function RoomList() {
                             </div>
                         </div>
 
-                        {/* TABLE */}
                         <div className="bg-white rounded-lg shadow p-6">
                             <table className="w-full border rounded-lg overflow-hidden">
                                 <thead>
                                     <tr className="text-left bg-gray-50 border-b">
-                                        <th className="p-3 w-8">
-                                            <input
-                                                type="checkbox"
-                                                onChange={handleSelectAll}
-                                            />
-                                        </th>
                                         <th className="p-3">Room Number</th>
                                         <th className="p-3">Room Type</th>
                                         <th className="p-3">Price</th>
@@ -147,16 +122,6 @@ export default function RoomList() {
                                                 className="border-b hover:bg-gray-50 transition"
                                             >
                                                 <td className="p-3">
-                                                    <input
-                                                        type="checkbox"
-                                                        onChange={() =>
-                                                            handleSelectRoom(
-                                                                room.id
-                                                            )
-                                                        }
-                                                    />
-                                                </td>
-                                                <td className="p-3">
                                                     {room.nomor_kamar}
                                                 </td>
                                                 <td className="p-3">
@@ -167,8 +132,17 @@ export default function RoomList() {
                                                     {room.harga.toLocaleString()}
                                                 </td>
                                                 <td className="p-3">
-                                                    {room.fasilitas || "N/A"}
+                                                    <ul className="list-disc list-inside">
+                                                        {JSON.parse(
+                                                            room.fasilitas
+                                                        ).map((item, index) => (
+                                                            <li key={index}>
+                                                                {item}
+                                                            </li>
+                                                        ))}
+                                                    </ul>
                                                 </td>
+
                                                 <td className="p-3">
                                                     <span
                                                         className={`px-2 py-1 rounded-full text-sm ${
@@ -212,20 +186,61 @@ export default function RoomList() {
                                     {filteredRooms.length} results
                                 </div>
                                 <div className="flex items-center gap-2">
-                                    <select className="border rounded px-2 py-1">
-                                        <option>10</option>
-                                        <option>25</option>
-                                        <option>50</option>
+                                    <select
+                                        value={perPage}
+                                        onChange={handlePerPageChange}
+                                        className="border p-2 rounded mr-2"
+                                    >
+                                        <option value="5">5</option>
+                                        <option value="10">10</option>
+                                        <option value="15">15</option>
+                                        <option value="20">20</option>
                                     </select>
-                                    <div className="flex gap-1">
-                                        <button className="px-3 py-1 border rounded-l-lg bg-gray-200 hover:bg-gray-300">
-                                            &lt;
+                                    <span>per page</span>
+                                    <div className="flex items-center space-x-1">
+                                        <button
+                                            disabled={currentPage === 1}
+                                            onClick={() =>
+                                                handlePageChange(
+                                                    currentPage - 1
+                                                )
+                                            }
+                                            className="px-2 py-1 border rounded-l-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                        >
+                                            {"<"}
                                         </button>
-                                        <button className="px-3 py-1 bg-blue-500 text-white rounded">
-                                            1
-                                        </button>
-                                        <button className="px-3 py-1 border rounded-r-lg bg-gray-200 hover:bg-gray-300">
-                                            &gt;
+                                        {[...Array(totalPages)].map(
+                                            (_, index) => (
+                                                <button
+                                                    key={index + 1}
+                                                    onClick={() =>
+                                                        handlePageChange(
+                                                            index + 1
+                                                        )
+                                                    }
+                                                    className={`px-3 py-1 border ${
+                                                        currentPage ===
+                                                        index + 1
+                                                            ? "bg-blue-500 text-white"
+                                                            : "bg-gray-200 hover:bg-gray-300"
+                                                    }`}
+                                                >
+                                                    {index + 1}
+                                                </button>
+                                            )
+                                        )}
+                                        <button
+                                            disabled={
+                                                currentPage === totalPages
+                                            }
+                                            onClick={() =>
+                                                handlePageChange(
+                                                    currentPage + 1
+                                                )
+                                            }
+                                            className="px-2 py-1 border rounded-r-md bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+                                        >
+                                            {">"}
                                         </button>
                                     </div>
                                 </div>
