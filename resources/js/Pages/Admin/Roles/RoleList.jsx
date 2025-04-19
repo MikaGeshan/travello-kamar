@@ -9,7 +9,6 @@ export default function RoleList() {
     const { roles = [] } = usePage().props;
     const [perPage, setPerPage] = useState(10);
     const [currentPage, setCurrentPage] = useState(1);
-    const [selectedRoles, setSelectedRoles] = useState([]);
 
     console.log(roles);
 
@@ -34,58 +33,6 @@ export default function RoleList() {
                         );
                     },
                 });
-            }
-        });
-    };
-
-    const handleDeleteSelected = () => {
-        if (selectedRoles.length === 0) {
-            Swal.fire("Error", "Select at least one role to delete", "error");
-            return;
-        }
-        Swal.fire({
-            title: "Are you sure?",
-            text: `You are about to delete ${selectedRoles.length} selected roles!`,
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "Cancel",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                router.delete(`/admin/roles`, {
-                    data: { ids: selectedRoles },
-                    onSuccess: () => {
-                        Swal.fire(
-                            "Deleted!",
-                            `${selectedRoles.length} roles have been deleted successfully.`,
-                            "success"
-                        );
-                        setSelectedRoles([]);
-                    },
-                });
-            }
-        });
-    };
-
-    const handleSelectAll = (e) => {
-        if (e.target.checked) {
-            const currentPageRoleIds = roles
-                .slice(start - 1, end)
-                .map((role) => role.id);
-            setSelectedRoles(currentPageRoleIds);
-        } else {
-            setSelectedRoles([]);
-        }
-    };
-
-    const handleSelectOne = (roleId) => {
-        setSelectedRoles((prev) => {
-            if (prev.includes(roleId)) {
-                return prev.filter((id) => id !== roleId);
-            } else {
-                return [...prev, roleId];
             }
         });
     };
@@ -135,39 +82,9 @@ export default function RoleList() {
                                     </button>
                                 </div>
                             </div>
-                            <div className="p-4 bg-gray-50 border-b">
-                                {selectedRoles.length > 0 && (
-                                    <div className="flex items-center animate-fade-in">
-                                        <button
-                                            onClick={handleDeleteSelected}
-                                            className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 flex items-center transition-all duration-200"
-                                        >
-                                            <FaTrash className="mr-2" />
-                                            Delete Selected (
-                                            {selectedRoles.length})
-                                        </button>
-                                    </div>
-                                )}
-                            </div>
                             <table className="w-full">
                                 <thead>
                                     <tr className="bg-white border-b text-left">
-                                        <th className="p-3 w-12">
-                                            <input
-                                                type="checkbox"
-                                                onChange={handleSelectAll}
-                                                checked={
-                                                    selectedRoles.length ===
-                                                        roles.slice(
-                                                            start - 1,
-                                                            end
-                                                        ).length &&
-                                                    roles.slice(start - 1, end)
-                                                        .length > 0
-                                                }
-                                                className="w-4 h-4 rounded border-gray-300 cursor-pointer"
-                                            />
-                                        </th>
                                         <th className="p-3">ID</th>
                                         <th className="p-3">Role Name</th>
                                         <th className="p-3">Actions</th>
@@ -176,18 +93,6 @@ export default function RoleList() {
                                 <tbody>
                                     {roles.slice(start - 1, end).map((role) => (
                                         <tr key={role.id} className="border-b">
-                                            <td className="p-3">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={selectedRoles.includes(
-                                                        role.id
-                                                    )}
-                                                    onChange={() =>
-                                                        handleSelectOne(role.id)
-                                                    }
-                                                    className="w-4 h-4 rounded border-gray-300 cursor-pointer"
-                                                />
-                                            </td>
                                             <td className="p-3">{role.id}</td>
                                             <td className="p-3">{role.name}</td>
                                             <td className="p-3">

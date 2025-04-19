@@ -51,7 +51,6 @@ function ReservationList({ reservations }) {
                 <AdminSidebar />
                 <main className="flex-1 p-8">
                     <div className="container mx-auto">
-                        {/* HEADER */}
                         <div className="flex justify-between items-center mb-6">
                             <div className="flex items-center gap-2">
                                 <FaRegAddressBook className="w-6 h-6 text-gray-700" />
@@ -67,7 +66,6 @@ function ReservationList({ reservations }) {
                             </Link>
                         </div>
 
-                        {/* SEARCH BAR */}
                         <div className="bg-white rounded-lg shadow p-4 mb-4 flex items-center">
                             <input
                                 type="text"
@@ -81,17 +79,11 @@ function ReservationList({ reservations }) {
                             </button>
                         </div>
 
-                        {/* RESERVATION TABLE */}
                         <div className="bg-white rounded-lg shadow p-6">
                             <table className="w-full border rounded-lg overflow-hidden">
                                 <thead>
                                     <tr className="text-left bg-gray-50 border-b">
-                                        <th className="p-3 w-8">
-                                            <input
-                                                type="checkbox"
-                                                className="rounded border-gray-300"
-                                            />
-                                        </th>
+                                        <th className="p-3 w-8"></th>
                                         <th className="p-3">
                                             Reservation Code
                                         </th>
@@ -115,33 +107,29 @@ function ReservationList({ reservations }) {
                                                     key={reservation.id}
                                                     className="border-b hover:bg-gray-50 transition"
                                                 >
-                                                    <td className="p-3">
-                                                        <input
-                                                            type="checkbox"
-                                                            className="rounded border-gray-300"
-                                                        />
-                                                    </td>
+                                                    <td className="p-3"></td>
                                                     <td className="p-3">
                                                         {
                                                             reservation.reservation_code
                                                         }
                                                     </td>
                                                     <td className="p-3">
-                                                        {reservation.customer
-                                                            ?.name || "N/A"}
+                                                        {
+                                                            reservation.customer
+                                                                .name
+                                                        }
                                                     </td>
                                                     <td className="p-3">
-                                                        {reservation.room
-                                                            ?.jenis_kamar ||
-                                                            "N/A"}
+                                                        {
+                                                            reservation.room
+                                                                .jenis_kamar
+                                                        }
                                                     </td>
                                                     <td className="p-3">
-                                                        {reservation.check_in ||
-                                                            "N/A"}
+                                                        {reservation.check_in}
                                                     </td>
                                                     <td className="p-3">
-                                                        {reservation.check_out ||
-                                                            "N/A"}
+                                                        {reservation.check_out}
                                                     </td>
                                                     <td className="p-3">
                                                         Rp{" "}
@@ -150,8 +138,7 @@ function ReservationList({ reservations }) {
                                                             : "0"}
                                                     </td>
                                                     <td className="p-3">
-                                                        {reservation.guests ||
-                                                            "N/A"}
+                                                        {reservation.guests}
                                                     </td>
                                                     <td className="p-3">
                                                         <span
@@ -168,9 +155,6 @@ function ReservationList({ reservations }) {
                                                     </td>
                                                     <td className="p-3">
                                                         <div className="flex gap-2 text-sm">
-                                                            <button className="text-green-500 hover:underline">
-                                                                View
-                                                            </button>
                                                             <Link
                                                                 href={`/admin/reservations/${reservation.id}/edit`}
                                                                 className="text-blue-500 hover:underline"
